@@ -255,6 +255,7 @@ Claude Code works primarily as a CLI but integrates with:
 
 ## See Also
 
+- [Tool Permissions](permissions.md) - Allowlists, denylists, and MCP permission patterns
 - [MCP Overview](../mcp/overview.md) - External tool integration
 - [Superpowers Plugin](../plugins/superpowers.md) - Structured workflows
 - [Environment & Secrets](../env-secrets.md) - Safe secrets handling

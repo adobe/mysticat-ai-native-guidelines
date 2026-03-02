@@ -213,6 +213,25 @@ Include MUST rules in your CLAUDE.md:
 - MUST NOT hardcode credentials
 ```
 
+### In settings.json
+
+Use [deny rules](../04-configuration/ai-tools/permissions.md#deny-rules-as-defense-in-depth) to hard-block operations that violate MUST rules:
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push --force)",
+      "Bash(git reset --hard *)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}
+```
+
+CLAUDE.md rules are advisory - the AI follows them but can be overridden. Deny rules are enforced - the tool call is blocked regardless. Use both for critical rules.
+
 ### In Code Review
 
 Reviewers should:

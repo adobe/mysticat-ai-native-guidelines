@@ -67,6 +67,7 @@ nav:
     - Overview: 04-configuration/README.md
     - AI Tools:
       - Claude Code: 04-configuration/ai-tools/claude-code.md
+      - Tool Permissions: 04-configuration/ai-tools/permissions.md
       - Cursor: 04-configuration/ai-tools/cursor.md
       - Copilot: 04-configuration/ai-tools/copilot.md
     - Plugins:

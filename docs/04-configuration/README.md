@@ -27,6 +27,7 @@ This section covers configuration for AI-assisted development tools, plugins, an
 | Tool | Config File | Documentation |
 |------|-------------|---------------|
 | [Claude Code](ai-tools/claude-code.md) | `CLAUDE.md` | Setup, CLAUDE.md patterns, CLI usage |
+| [Tool Permissions](ai-tools/permissions.md) | `settings.json` | Allowlists, denylists, MCP permissions |
 | [Cursor](ai-tools/cursor.md) | `.cursorrules` | Setup, rules file patterns |
 | [GitHub Copilot](ai-tools/copilot.md) | VS Code settings | Setup, prompting strategies |
 

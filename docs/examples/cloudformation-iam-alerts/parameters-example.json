@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "NotificationEmail",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "SlackWebhookUrl",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ExcludedUserNames",
+    "ParameterValue": "portalsvc1,klam-sts-user"
+  },
+  {
+    "ParameterKey": "AlertRuleName",
+    "ParameterValue": "iam-user-creation-alert"
+  }
+]

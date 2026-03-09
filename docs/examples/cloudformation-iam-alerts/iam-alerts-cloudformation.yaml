@@ -1,0 +1,281 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'IAM Activity Monitoring - Alerts for CreateUser, CreateAccessKey, and CreateLoginProfile events'
+
+Parameters:
+  NotificationEmail:
+    Type: String
+    Description: Email address to receive IAM activity alerts (leave empty if using Slack only)
+    Default: ''
+
+  SlackWebhookUrl:
+    Type: String
+    Description: Slack webhook URL for notifications (leave empty if using email only)
+    Default: ''
+    NoEcho: true
+
+  ExcludedUserNames:
+    Type: CommaDelimitedList
+    Description: Comma-separated list of usernames to exclude from alerts
+    Default: 'portalsvc1,klam-sts-user'
+
+  AlertRuleName:
+    Type: String
+    Description: Name for the EventBridge rule
+    Default: 'iam-user-creation-alert'
+
+Conditions:
+  UseEmail: !Not [!Equals [!Ref NotificationEmail, '']]
+  UseSlack: !Not [!Equals [!Ref SlackWebhookUrl, '']]
+  HasNotifications: !Or [!Condition UseEmail, !Condition UseSlack]
+
+Resources:
+  # SNS Topic for email notifications
+  IAMAlertTopic:
+    Type: AWS::SNS::Topic
+    Condition: UseEmail
+    Properties:
+      TopicName: !Sub '${AlertRuleName}-topic'
+      DisplayName: IAM Activity Alerts
+      Subscription:
+        - Endpoint: !Ref NotificationEmail
+          Protocol: email
+
+  # SNS Topic Policy
+  IAMAlertTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Condition: UseEmail
+    Properties:
+      Topics:
+        - !Ref IAMAlertTopic
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowEventBridgeToPublish
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: 'sns:Publish'
+            Resource: !Ref IAMAlertTopic
+
+  # Lambda function for Slack notifications
+  SlackNotificationFunction:
+    Type: AWS::Lambda::Function
+    Condition: UseSlack
+    Properties:
+      FunctionName: !Sub '${AlertRuleName}-slack-notifier'
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt SlackNotificationFunctionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          SLACK_WEBHOOK_URL: !Ref SlackWebhookUrl
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import urllib3
+          from datetime import datetime
+
+          http = urllib3.PoolManager()
+
+          def lambda_handler(event, context):
+              webhook_url = os.environ['SLACK_WEBHOOK_URL']
+
+              # Parse the EventBridge event
+              detail = event.get('detail', {})
+              event_name = detail.get('eventName', 'Unknown')
+              user_name = detail.get('requestParameters', {}).get('userName', 'Unknown')
+              event_time = detail.get('eventTime', 'Unknown')
+              source_ip = detail.get('sourceIPAddress', 'Unknown')
+              user_identity = detail.get('userIdentity', {})
+              principal = user_identity.get('principalId', 'Unknown')
+              arn = user_identity.get('arn', 'Unknown')
+              account_id = event.get('account', 'Unknown')
+              region = event.get('region', 'Unknown')
+
+              # Determine color and emoji based on event type
+              color_map = {
+                  'CreateUser': '#FF9900',
+                  'CreateAccessKey': '#FF6600',
+                  'CreateLoginProfile': '#FF3300'
+              }
+
+              emoji_map = {
+                  'CreateUser': '👤',
+                  'CreateAccessKey': '🔑',
+                  'CreateLoginProfile': '🔐'
+              }
+
+              color = color_map.get(event_name, '#FF0000')
+              emoji = emoji_map.get(event_name, '⚠️')
+
+              # Build Slack message
+              slack_message = {
+                  'text': f'{emoji} IAM Activity Alert: {event_name}',
+                  'attachments': [
+                      {
+                          'color': color,
+                          'title': f'{event_name} Event Detected',
+                          'fields': [
+                              {
+                                  'title': 'Target User',
+                                  'value': user_name,
+                                  'short': True
+                              },
+                              {
+                                  'title': 'Event Time',
+                                  'value': event_time,
+                                  'short': True
+                              },
+                              {
+                                  'title': 'Account ID',
+                                  'value': account_id,
+                                  'short': True
+                              },
+                              {
+                                  'title': 'Region',
+                                  'value': region,
+                                  'short': True
+                              },
+                              {
+                                  'title': 'Source IP',
+                                  'value': source_ip,
+                                  'short': True
+                              },
+                              {
+                                  'title': 'Principal',
+                                  'value': principal,
+                                  'short': True
+                              },
+                              {
+                                  'title': 'Principal ARN',
+                                  'value': arn,
+                                  'short': False
+                              }
+                          ],
+                          'footer': 'AWS CloudTrail',
+                          'ts': int(datetime.now().timestamp())
+                      }
+                  ]
+              }
+
+              # Send to Slack
+              encoded_data = json.dumps(slack_message).encode('utf-8')
+              response = http.request(
+                  'POST',
+                  webhook_url,
+                  body=encoded_data,
+                  headers={'Content-Type': 'application/json'}
+              )
+
+              return {
+                  'statusCode': response.status,
+                  'body': json.dumps('Notification sent to Slack')
+              }
+
+  # IAM Role for Lambda
+  SlackNotificationFunctionRole:
+    Type: AWS::IAM::Role
+    Condition: UseSlack
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+
+  # Permission for EventBridge to invoke Lambda
+  SlackNotificationFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Condition: UseSlack
+    Properties:
+      FunctionName: !Ref SlackNotificationFunction
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt IAMEventRule.Arn
+
+  # EventBridge Rule
+  IAMEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Ref AlertRuleName
+      Description: Alert on IAM user creation and access key/login profile creation
+      State: ENABLED
+      EventPattern:
+        source:
+          - aws.iam
+        detail-type:
+          - AWS API Call via CloudTrail
+        detail:
+          eventSource:
+            - iam.amazonaws.com
+          eventName:
+            - CreateUser
+            - CreateAccessKey
+            - CreateLoginProfile
+          requestParameters:
+            userName:
+              - anything-but: !Ref ExcludedUserNames
+      Targets:
+        - !If
+          - UseEmail
+          - Arn: !Ref IAMAlertTopic
+            Id: email-target
+            InputTransformer:
+              InputPathsMap:
+                eventName: $.detail.eventName
+                userName: $.detail.requestParameters.userName
+                eventTime: $.detail.eventTime
+                sourceIP: $.detail.sourceIPAddress
+                principalId: $.detail.userIdentity.principalId
+                arn: $.detail.userIdentity.arn
+                accountId: $.account
+                region: $.region
+              InputTemplate: |
+                "IAM Activity Alert"
+                "=================="
+                ""
+                "Event: <eventName>"
+                "Target User: <userName>"
+                "Time: <eventTime>"
+                "Account ID: <accountId>"
+                "Region: <region>"
+                ""
+                "Performed by:"
+                "Principal: <principalId>"
+                "ARN: <arn>"
+                "Source IP: <sourceIP>"
+                ""
+                "This alert was triggered because a new IAM user, access key, or login profile was created."
+          - !Ref AWS::NoValue
+        - !If
+          - UseSlack
+          - Arn: !GetAtt SlackNotificationFunction.Arn
+            Id: slack-target
+          - !Ref AWS::NoValue
+
+Outputs:
+  EventRuleName:
+    Description: Name of the EventBridge rule
+    Value: !Ref IAMEventRule
+    Export:
+      Name: !Sub '${AWS::StackName}-RuleName'
+
+  SNSTopicArn:
+    Condition: UseEmail
+    Description: ARN of the SNS topic for email notifications
+    Value: !Ref IAMAlertTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-TopicArn'
+
+  LambdaFunctionArn:
+    Condition: UseSlack
+    Description: ARN of the Lambda function for Slack notifications
+    Value: !GetAtt SlackNotificationFunction.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaArn'

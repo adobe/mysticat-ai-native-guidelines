@@ -100,6 +100,7 @@ Concrete configuration examples:
 | [Workspace CLAUDE.md](examples/workspace-claude-md.md) | Workspace-level configuration |
 | [Project CLAUDE.md](examples/project-claude-md.md) | Project-specific overrides |
 | [.mcp.json](examples/mcp-json-example.json) | MCP server configuration |
+| [CloudFormation IAM Alerts](examples/cloudformation-iam-alerts.md) | Production-ready infrastructure automation with real-time alerting |
 
 ### [Presentations](presentations/)
 

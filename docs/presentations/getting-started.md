@@ -53,18 +53,20 @@ claude --version
 # Step 2: Workspace Setup
 
 ```
-my-workspace/           # Parent directory
-├── CLAUDE.md           # Workspace-wide AI rules
-├── .mcp.json           # MCP server configuration
-├── project-a/          # Your projects
-│   └── CLAUDE.md       # Project-specific rules
-└── project-b/
-    └── CLAUDE.md
+my-workspace/              # Workspace repository
+├── init.sh                # Bootstrap script (idempotent)
+├── mani.yaml              # Repo manifest - repos organized with tags
+├── CLAUDE.md              # Workspace-wide AI rules (@import)
+├── AGENTS.md              # Cross-tool agent conventions
+├── .claude/agents/        # Role-based and service-specific agents
+├── .mcp.json.template     # MCP config template (committed)
+└── project-a/             # Cloned by init.sh
+    └── CLAUDE.md          # Project-specific rules
 ```
 
-- **Workspace CLAUDE.md** = shared rules across projects
-- **Project CLAUDE.md** = overrides for specific needs
-- **.mcp.json** = external tool access (Jira, GitHub, etc.)
+- **Workspace repository** = single bootstrap for your entire team setup
+- **init.sh** = automated clone, install, and configure
+- **Agent definitions** = deep context for AI per role and service
 
 ---
 
@@ -326,14 +328,14 @@ Real example: S3 backup generating $111K/year in costs
 # Start Now
 
 ```bash
-# 1. Clone the repo
-git clone github.com/solaris007/ai-first-guidelines
+# 1. Clone your team's workspace repo
+git clone github.com/your-team/workspace
 
-# 2. Copy example CLAUDE.md to your project
-cp docs/examples/project-claude-md.md ~/my-project/CLAUDE.md
+# 2. Run the bootstrap script
+cd workspace && ./init.sh
 
-# 3. Run Claude Code
-cd ~/my-project && claude
+# 3. Start working
+claude
 ```
 
 **You're ready to go.**

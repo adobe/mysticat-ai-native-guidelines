@@ -27,7 +27,7 @@ Do not rush this step. The philosophy shapes every practice that follows.
 
 Every AI-first team encodes its standards in configuration files. Find and read yours:
 
-1. **Read CLAUDE.md** (or equivalent). Start at the workspace level, then check the project level. These files contain the MUST and SHOULD rules that govern how both humans and AI assistants work on the codebase.
+1. **Read CLAUDE.md** (or equivalent). Start at the workspace level, then check the project level. These files contain the MUST and SHOULD rules that govern how both humans and AI assistants work on the codebase. If your team uses a workspace repository, these files are provided automatically when you run `init.sh` - but you still need to read and understand them.
 2. **Understand the rule hierarchy.** MUST rules are non-negotiable - violations cause real problems (security breaches, broken builds, data loss). SHOULD rules are strong recommendations with valid exceptions. See [MUST Rules](../05-guardrails/must-rules.md) and [SHOULD Rules](../05-guardrails/should-rules.md).
 3. **Check for tool-specific configs.** If the team uses Cursor, look for `.cursorrules`. If the team uses Copilot, check for `.github/copilot-instructions.md`. These extend the base rules for specific editors.
 4. **Read the anti-patterns.** Knowing what not to do is as valuable as knowing the workflow. See [Anti-Patterns](../05-guardrails/anti-patterns.md).
@@ -38,7 +38,7 @@ You do not need to memorize every rule. The AI assistant reads these files and e
 
 This is where AI-first onboarding diverges from traditional onboarding. Instead of reading code in isolation, use your AI assistant as a guide:
 
-1. **Ask the AI to explain the architecture.** Point it at the codebase and ask high-level questions: "What are the main components?", "How does data flow from the API to the database?", "Where does authentication happen?"
+1. **Ask the AI to explain the architecture.** Point it at the codebase and ask high-level questions: "What are the main components?", "How does data flow from the API to the database?", "Where does authentication happen?" If your workspace includes agent definitions (role-based or service-specific), these give the AI deep context about individual components - use them to get more targeted explanations.
 2. **Walk through a recent PR.** Pick a merged PR from the last sprint and ask the AI to explain each change - what it does, why it was needed, and how it fits into the broader system.
 3. **Trace a feature end-to-end.** Pick a user-facing feature and follow it through the stack with AI help. This builds a mental model faster than reading files in isolation.
 4. **Read the specs.** If the team keeps design specs in the repo, read a few recent ones. They capture not just what was built, but why certain alternatives were rejected.

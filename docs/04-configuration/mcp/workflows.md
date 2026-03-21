@@ -150,10 +150,9 @@ Deploy code changes with pre-flight validation and post-deployment monitoring.
 ┌─────────────────────────────────────────────────────────────────┐
 │ 5. MONITOR LOGS                                                  │
 │    search_splunk(                                               │
-│      search_query="index=app_logs                               │
-│        sourcetype=my_app_backend_dev             │
-│        level=ERROR | head 50",                                  │
-│      earliest_time="-15m"                                       │
+│      query="search index=app_logs                               │
+│        sourcetype=my_app_backend_dev                            │
+│        level=ERROR earliest=-15m | head 50"                     │
 │    )                                                             │
 │    → Check for errors post-deployment                            │
 └─────────────────────────────────────────────────────────────────┘
@@ -207,9 +206,9 @@ Based on a real incident: AWS Backup was generating 1.6-2.1 million S3 requests/
 ┌─────────────────────────────────────────────────────────────────┐
 │ 2. GATHER INITIAL DATA                                           │
 │    search_splunk(                                               │
-│      search_query="index=aws_cloudwatch                         │
+│      query="search index=aws_cloudwatch                         │
 │        metric_name=AllRequests                                  │
-│        bucket=myapp-*-assets                        │
+│        bucket=myapp-*-assets                                    │
 │        | timechart span=5m sum(value)"                          │
 │    )                                                             │
 │    → Confirmed: 1.6-2.1M req/sec, 99.87% GET requests           │
@@ -252,11 +251,10 @@ Based on a real incident: AWS Backup was generating 1.6-2.1 million S3 requests/
 ┌─────────────────────────────────────────────────────────────────┐
 │ 6. VERIFY MITIGATION                                             │
 │    search_splunk(                                               │
-│      search_query="index=aws_cloudwatch                         │
+│      query="search index=aws_cloudwatch                         │
 │        metric_name=AllRequests                                  │
-│        bucket=myapp-dev-assets                      │
-│        | timechart span=1m sum(value)",                         │
-│      earliest_time="-30m"                                       │
+│        bucket=myapp-dev-assets                                  │
+│        earliest=-30m | timechart span=1m sum(value)"            │
 │    )                                                             │
 │    → Confirmed: 1.6M → 977 req/sec (>99% reduction)             │
 └─────────────────────────────────────────────────────────────────┘

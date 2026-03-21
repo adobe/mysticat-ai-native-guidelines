@@ -195,36 +195,45 @@ conversations_search_messages(
 
 **Supports**: Claude Code
 
+**Source**: [Adobe-AIFoundations/adobe-mcp-servers](https://github.com/Adobe-AIFoundations/adobe-mcp-servers) (`src/splunk-mcp-server`)
+
 **Configuration**:
 ```json
 {
   "mcpServers": {
     "splunk": {
-      "command": "mcp-splunk",
+      "command": "node",
+      "args": [
+        "<PATH_TO_ADOBE_MCP_SERVERS>/src/splunk-mcp-server/dist/index.js"
+      ],
       "env": {
-        "SPLUNK_URL": "https://splunk-api.example.com",
-        "SPLUNK_USERNAME": "${SPLUNK_USERNAME}",
-        "SPLUNK_PASSWORD": "${SPLUNK_PASSWORD}"
+        "SPLUNK_API_URL": "https://splunk-api.or1.adobe.net",
+        "SPLUNK_API_USER": "${SPLUNK_USERNAME}",
+        "SPLUNK_API_PASSWORD": "${SPLUNK_PASSWORD}"
       }
     }
   }
 }
 ```
 
+> **Note**: Clone the repo and run `npm install --ignore-scripts && npx tsc` in `src/splunk-mcp-server` to build the server before first use.
+
 **Key Tools**:
 | Tool | Purpose |
 |------|---------|
-| `search_splunk` | Execute SPL query |
-| `list_indexes` | List available indexes |
-| `get_index_info` | Get index metadata |
+| `search_splunk` | Execute SPL query (synchronous) |
+| `create_search_job` | Start async search job |
+| `get_job_status` | Check async job status |
+| `get_job_results` | Get async job results |
+| `get_job_results_with_offset` | Get results with pagination |
+| `find_index` | List available indexes |
+| `find_field_from_index` | List fields in an index |
 
 **Example Usage**:
 ```
 # Search for errors in the last hour
 search_splunk(
-  search_query="index=app_logs level=ERROR | head 100",
-  earliest_time="-1h",
-  latest_time="now"
+  query="search index=app_logs level=ERROR | head 100"
 )
 ```
 
@@ -385,11 +394,12 @@ Create a wrapper script that reads secrets from 1Password and launches the MCP s
 # Wrapper script to inject 1Password secrets into MCP server
 
 # Read secrets from 1Password
-export SPLUNK_USERNAME=$(op read "op://Private/Splunk/username")
-export SPLUNK_PASSWORD=$(op read "op://Private/Splunk/password")
+export SPLUNK_API_URL="https://splunk-api.or1.adobe.net"
+export SPLUNK_API_USER="$(op item get 'Splunk' --fields username)"
+export SPLUNK_API_PASSWORD="$(op item get 'Splunk' --fields password --reveal)"
 
 # Launch the MCP server
-exec uvx mcp-splunk
+exec node /path/to/adobe-mcp-servers/src/splunk-mcp-server/dist/index.js
 ```
 
 **Configuration using the wrapper**:

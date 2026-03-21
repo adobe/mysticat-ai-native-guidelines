@@ -205,9 +205,10 @@ Restart Claude Code after changes.
 **`run-with-op.sh`:**
 ```bash
 #!/bin/bash
-export SPLUNK_USERNAME=$(op read "op://Private/Splunk/username")
-export SPLUNK_PASSWORD=$(op read "op://Private/Splunk/password")
-exec uvx mcp-splunk
+export SPLUNK_API_URL="https://splunk-api.or1.adobe.net"
+export SPLUNK_API_USER="$(op item get 'Splunk' --fields username)"
+export SPLUNK_API_PASSWORD="$(op item get 'Splunk' --fields password --reveal)"
+exec node /path/to/adobe-mcp-servers/src/splunk-mcp-server/dist/index.js
 ```
 
 **`.mcp.json`:**

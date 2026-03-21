@@ -432,3 +432,5 @@ const posts = await getPostsForUsers(userIds); // Single query
 
 - [MUST Rules](must-rules.md) - Non-negotiable requirements
 - [SHOULD Rules](should-rules.md) - Strong recommendations
+- [Mechanical Enforcement](mechanical-enforcement.md) - Prevent anti-patterns with automated gates
+- [Multi-Session Patterns](../02-lifecycle/multi-session-patterns.md) - Avoid amnesia loops and shared worktree problems

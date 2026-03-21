@@ -277,6 +277,7 @@ Uses a cross-tool bridge via `.cursor/rules/follow-claude-md.mdc` to point Curso
 
 ## See Also
 
+- [ACI Design](aci-design.md) - Agent-Computer Interface design principles, progressive disclosure as a general pattern, and documentation patterns for agents
 - [Agent Skills Ecosystem](skills/overview.md) - The SKILL.md standard, progressive disclosure, and package management
 - [Claude Code Configuration](ai-tools/claude-code.md) - CLAUDE.md patterns and hierarchy
 - [Cursor Configuration](ai-tools/cursor.md) - .cursor/rules/ patterns and MCP setup

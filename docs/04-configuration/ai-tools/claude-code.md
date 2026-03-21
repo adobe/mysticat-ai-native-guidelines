@@ -324,6 +324,7 @@ Claude Code works primarily as a CLI but integrates with:
 
 ## See Also
 
+- [ACI Design](../aci-design.md) - Agent-Computer Interface design principles, progressive disclosure, and feedback loop patterns
 - [Tool Permissions](permissions.md) - Allowlists, denylists, and MCP permission patterns
 - [MCP Overview](../mcp/overview.md) - External tool integration
 - [Superpowers Plugin](../plugins/superpowers.md) - Structured workflows

@@ -264,6 +264,7 @@ gh upskill adobe/skills
 
 ## See Also
 
+- [ACI Design](../aci-design.md) - Progressive disclosure as a general harness pattern (beyond skills)
 - [Cross-Tool Configuration](../cross-tool-setup.md) - Setting up AGENTS.md, multi-tool configs, and shared skills directories
 - [Superpowers Plugin](../plugins/superpowers.md) - Development workflow skills
 - [Adobe Skills](../plugins/adobe-skills.md) - AEM Edge Delivery Services skills

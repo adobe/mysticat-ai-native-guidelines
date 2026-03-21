@@ -271,4 +271,5 @@ For significant deviations:
 ## See Also
 
 - [MUST Rules](must-rules.md) - Non-negotiable requirements
+- [Mechanical Enforcement](mechanical-enforcement.md) - Automated gates and throughput-aware merge philosophy
 - [Anti-Patterns](anti-patterns.md) - Common mistakes

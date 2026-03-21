@@ -194,6 +194,17 @@ Transition when:
 - ✅ Tickets are closed
 - ✅ Branch is cleaned up
 
+## Multi-Session and Parallel Work
+
+The lifecycle above assumes a single human-AI session. For features that span multiple sessions or involve multiple agents working in parallel, additional patterns apply:
+
+- **State persistence** - Feature lists and progress files that carry context across sessions
+- **Handoff protocols** - Git commits as session boundaries with structured start/end sequences
+- **Worktree isolation** - One git worktree per agent to prevent interference
+- **Work decomposition** - Breaking features into items that are independently completable and verifiable
+
+[Multi-Session Patterns Guide →](multi-session-patterns.md)
+
 ## Adapting the Lifecycle
 
 ### Small Changes
@@ -237,6 +248,7 @@ See [Configuration Evolution](06-config-evolution.md) for detailed guidance on m
 - [Implementation Phase](03-implementation.md)
 - [Validation Phase](04-validation.md)
 - [Closure Phase](05-closure.md)
+- [Multi-Session Patterns](multi-session-patterns.md)
 - [Configuration Evolution](06-config-evolution.md)
 - [Spec Template](../03-templates/spec-proposal.md)
 - [TODO Template](../03-templates/TODO.md)

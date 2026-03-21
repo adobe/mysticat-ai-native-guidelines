@@ -250,5 +250,6 @@ Automate where possible:
 ## See Also
 
 - [SHOULD Rules](should-rules.md) - Strong recommendations
+- [Mechanical Enforcement](mechanical-enforcement.md) - Automated gates, structural tests, agent-friendly errors
 - [Anti-Patterns](anti-patterns.md) - Common mistakes
 - [Environment & Secrets](../04-configuration/env-secrets.md) - Secure secrets handling

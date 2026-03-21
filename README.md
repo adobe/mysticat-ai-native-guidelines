@@ -2,6 +2,8 @@
 
 Comprehensive guidelines for teams adopting AI-first development practices with Claude Code, Cursor, and Copilot.
 
+**[What's New](docs/LATEST.md)** - recent changes and additions
+
 ## Quick Start
 
 1. **New to AI-first development?** Start with [Philosophy](docs/01-foundations/philosophy.md)
@@ -19,6 +21,7 @@ Core concepts and environment setup:
 | Document | Description |
 |----------|-------------|
 | [Philosophy](docs/01-foundations/philosophy.md) | Why AI-first, core principles |
+| [Harness Engineering](docs/01-foundations/harness-engineering.md) | The designed environment: harness stack, context management, environment audit |
 | [Substrate Model](docs/01-foundations/substrate-model.md) | Durable vs fluid layers, hiring implications |
 | [Workspace Setup](docs/01-foundations/workspace-setup.md) | Directory structure, multi-repo layout |
 | [Tools Checklist](docs/01-foundations/tools-checklist.md) | CLI tools, authentication, MCP servers |
@@ -35,6 +38,7 @@ The 5-phase development cycle:
 | 3 | [Implementation](docs/02-lifecycle/03-implementation.md) | Branch/PR workflow |
 | 4 | [Validation](docs/02-lifecycle/04-validation.md) | Testing, CI/CD monitoring |
 | 5 | [Closure](docs/02-lifecycle/05-closure.md) | Docs, Jira, cleanup |
+| + | [Multi-Session Patterns](docs/02-lifecycle/multi-session-patterns.md) | State persistence, handoff, parallel agents |
 | + | [Config Evolution](docs/02-lifecycle/06-config-evolution.md) | Maintaining AI configuration |
 
 ### [03 - Templates](docs/03-templates/)
@@ -56,6 +60,7 @@ AI tool configuration, plugins, and MCP integration:
 
 | Category | Documents |
 |----------|-----------|
+| **ACI Design** | [Agent-Computer Interface](docs/04-configuration/aci-design.md) - design principles, progressive disclosure, documentation patterns, audit checklist |
 | **AI Tools** | [Claude Code](docs/04-configuration/ai-tools/claude-code.md), [Cursor](docs/04-configuration/ai-tools/cursor.md), [Copilot](docs/04-configuration/ai-tools/copilot.md) |
 | **Plugins** | [Overview](docs/04-configuration/plugins/README.md), [Superpowers](docs/04-configuration/plugins/superpowers.md), [Adobe Skills](docs/04-configuration/plugins/adobe-skills.md) |
 | **Skills** | [Skills Ecosystem](docs/04-configuration/skills/overview.md) - agentskills.io standard, SKILL.md format, package management |
@@ -72,6 +77,7 @@ Rules and anti-patterns:
 | [MUST Rules](docs/05-guardrails/must-rules.md) | Non-negotiable requirements |
 | [SHOULD Rules](docs/05-guardrails/should-rules.md) | Strong recommendations |
 | [AI Task Boundaries](docs/05-guardrails/ai-task-boundaries.md) | What to delegate to AI vs own manually |
+| [Mechanical Enforcement](docs/05-guardrails/mechanical-enforcement.md) | Automated gates, agent-friendly errors, structural tests |
 | [Anti-Patterns](docs/05-guardrails/anti-patterns.md) | Common mistakes to avoid |
 
 ### [06 - Adoption](docs/06-adoption/)

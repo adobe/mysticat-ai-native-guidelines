@@ -350,6 +350,8 @@ Before moving to Validation:
 ## See Also
 
 - [Validation Phase](04-validation.md)
+- [Multi-Session Patterns](multi-session-patterns.md) - State persistence and handoff for multi-session features
 - [Contract Template](../03-templates/contract.md) - Template for component-level contracts
+- [Mechanical Enforcement](../05-guardrails/mechanical-enforcement.md) - Automated gates for agent workflows
 - [MUST Rules](../05-guardrails/must-rules.md) - Critical rules for implementation
 - [Anti-Patterns](../05-guardrails/anti-patterns.md) - Common mistakes to avoid

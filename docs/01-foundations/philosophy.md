@@ -99,11 +99,22 @@ New team members can:
 - Ask AI questions about the codebase with context
 - Contribute confidently with guardrails preventing critical mistakes
 
+## Harness Engineering
+
+The principles above describe *what* to do. Harness engineering describes *how to build the environment* that makes these principles work reliably.
+
+A **harness** is the complete designed environment around an AI coding agent - the instructions, tools, feedback loops, isolation boundaries, and orchestration that determine how well the agent performs. Research consistently shows that the harness matters more than the model: the same model's performance can vary dramatically depending on the environment it operates in.
+
+Most of what these guidelines cover - workspace setup, CLAUDE.md configuration, guardrails, lifecycle phases - is harness engineering. The concept gives you a framework for thinking about all of it as a coherent system rather than a collection of unrelated configuration steps.
+
+See [Harness Engineering](harness-engineering.md) for the full treatment: the harness stack, context management patterns, the environment audit mindset, and application legibility.
+
 ## Getting Started
 
-1. **Set up your workspace** - See [Workspace Setup](workspace-setup.md)
-2. **Install required tools** - See [Tools Checklist](tools-checklist.md)
-3. **Learn the workflow** - See [Development Lifecycle](../02-lifecycle/overview.md)
+1. **Understand the harness** - See [Harness Engineering](harness-engineering.md)
+2. **Set up your workspace** - See [Workspace Setup](workspace-setup.md)
+3. **Install required tools** - See [Tools Checklist](tools-checklist.md)
+4. **Learn the workflow** - See [Development Lifecycle](../02-lifecycle/overview.md)
 
 ## The Risks of AI-First Development
 

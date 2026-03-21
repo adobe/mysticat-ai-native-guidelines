@@ -6,6 +6,7 @@ This section covers configuration for AI-assisted development tools, plugins, an
 
 ```
 04-configuration/
+├── aci-design.md       # Agent-Computer Interface design principles
 ├── ai-tools/           # AI coding assistant setup
 │   ├── claude-code.md  # Claude Code + CLAUDE.md patterns
 │   ├── cursor.md       # Cursor + .cursorrules
@@ -48,6 +49,12 @@ This section covers configuration for AI-assisted development tools, plugins, an
 |----------|-------------|
 | [Skills Overview](skills/overview.md) | agentskills.io standard, SKILL.md format, progressive loading, package management |
 
+### ACI Design
+
+| Document | Description |
+|----------|-------------|
+| [ACI Design](aci-design.md) | Agent-Computer Interface principles, progressive disclosure, documentation patterns, audit checklist |
+
 ### Cross-Tool Configuration
 
 | Document | Description |
@@ -87,6 +94,7 @@ Start with one AI tool and add MCP servers as needed:
 
 ## See Also
 
+- [ACI Design](aci-design.md) - Agent-Computer Interface design principles and audit checklist
 - [Workspace Setup](../01-foundations/workspace-setup.md) - Initial workspace configuration
 - [Tools Checklist](../01-foundations/tools-checklist.md) - Required tools and installation
 - [MUST Rules](../05-guardrails/must-rules.md) - Security and quality rules

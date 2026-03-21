@@ -47,8 +47,10 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - What's New: LATEST.md
   - Foundations:
     - Philosophy: 01-foundations/philosophy.md
+    - Harness Engineering: 01-foundations/harness-engineering.md
     - Substrate Model: 01-foundations/substrate-model.md
     - Workspace Setup: 01-foundations/workspace-setup.md
     - Tools Checklist: 01-foundations/tools-checklist.md
@@ -59,6 +61,7 @@ nav:
     - 3. Implementation: 02-lifecycle/03-implementation.md
     - 4. Validation: 02-lifecycle/04-validation.md
     - 5. Closure: 02-lifecycle/05-closure.md
+    - Multi-Session Patterns: 02-lifecycle/multi-session-patterns.md
     - 6. Configuration Evolution: 02-lifecycle/06-config-evolution.md
   - Templates:
     - Spec Proposal: 03-templates/spec-proposal.md
@@ -86,11 +89,13 @@ nav:
       - Workflows: 04-configuration/mcp/workflows.md
     - Skills:
       - Ecosystem Overview: 04-configuration/skills/overview.md
+    - ACI Design: 04-configuration/aci-design.md
     - Cross-Tool Setup: 04-configuration/cross-tool-setup.md
     - Environment & Secrets: 04-configuration/env-secrets.md
   - Guardrails:
     - MUST Rules: 05-guardrails/must-rules.md
     - SHOULD Rules: 05-guardrails/should-rules.md
+    - Mechanical Enforcement: 05-guardrails/mechanical-enforcement.md
     - Anti-Patterns: 05-guardrails/anti-patterns.md
     - AI Task Boundaries: 05-guardrails/ai-task-boundaries.md
   - Examples:
@@ -106,3 +111,5 @@ nav:
     - For Domain Experts: 07-leadership/domain-experts.md
   - Presentations:
     - Overview: presentations/README.md
+    - Intro: presentations/intro.md
+    - Getting Started: presentations/getting-started.md

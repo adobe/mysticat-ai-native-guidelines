@@ -1,8 +1,6 @@
 # AI-First Guidelines Repository
 
-This repository contains documentation for AI-first development practices. When contributing with AI assistance, follow these meta-rules.
-
-## Repository Purpose
+Read [AGENTS.md](AGENTS.md) for the content map and navigation. This file covers contribution rules for AI-assisted editing.
 
 This is a **documentation-only** repository. All content is markdown files organized in numbered folders.
 
@@ -55,7 +53,7 @@ docs/
 
 1. Determine the correct folder based on content type
 2. Use consistent naming: `lowercase-with-dashes.md`
-3. Add navigation entry to both README.md and docs/index.md
+3. Add navigation entry to README.md, mkdocs.yml, and AGENTS.md (if it's a new section)
 4. Cross-link from related documents
 
 ### Modifying Existing Content

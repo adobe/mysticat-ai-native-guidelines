@@ -136,7 +136,7 @@ A P20 runs the spec-driven lifecycle independently for well-scoped tasks. They e
 A P30 designs services with AI effectiveness in mind. Their APIs have explicit contracts, their logs are structured, and their tests run without production dependencies. They drive features through the full lifecycle and use multi-session patterns for larger work. They write guardrails that prevent AI mistakes and create reference implementations that accelerate the team. They review AI output from others and know the difference between a style preference and a structural defect.
 
 **P40:**
-A P40 makes design decisions that determine whether AI can be effective in their service. They design APIs with explicit contracts, build integration tests that run without production dependencies, and ensure structured logs flow end-to-end. They own their service's scorecard and actively work to improve its weakest dimension. They mentor P20s and P30s on AI-directed development and contribute harness patterns back to the team. When reviewing AI-generated code from any contributor, they evaluate system-level impact, not just correctness.
+A P40 owns their service's AI-native maturity. They actively improve the weakest scorecard dimension, whether that's validation speed, traceability, or environment fidelity. They mentor P20s and P30s on AI-directed development and contribute reusable harness patterns back to the team. When reviewing AI-generated code from any contributor - engineer, domain expert, or AI - they evaluate system-level impact, not just correctness. They're the person who makes the service AI-debuggable, not just AI-assisted.
 
 **P50:**
 A P50 operates across team boundaries to remove the system-level bottlenecks that cap AI effectiveness. They design shared infrastructure (correlation IDs, unified logging, replayable workflows) that makes entire service chains AI-debuggable. They build the skills, tools, and patterns that other teams adopt. They define how AI-directed development works at scale and mentor the next generation of frontier engineers. Their harness contributions are used by people who've never met them.
@@ -279,7 +279,7 @@ A D4 shapes how domain expertise flows into the product. They've built harness p
 
 ## Conventions Across All Three Documents
 
-1. **Cumulative progression** - each level builds on the prior. Use "(+)" notation where a higher level inherits all lower-level expectations.
+1. **Cumulative progression** - each level builds on the prior. The prose vignettes convey this narratively; the matrix cells focus on what is new or distinct at each level rather than restating lower-level content.
 2. **Observable behaviors** - cells describe what someone does, not what they know. "Designs services with structured logs" not "understands observability."
 3. **No overlap with existing guides** - these documents cover only the AI-native dimension. They complement, not replace, the existing ESDEP/ESDEM leveling content.
 4. **Grounded in existing frameworks** - every category and cell traces back to concepts in the Phase 1 white paper or the AI-native guidelines repo. No invented terminology.

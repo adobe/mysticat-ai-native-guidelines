@@ -195,7 +195,7 @@ Creating the conditions for domain experts to be productive - engineering buddy 
 |------|-------------|
 | M2-M3 | Assigns engineering buddies for domain experts. Reviews domain expert PRs with appropriate expectations (not engineer-level code style, but correctness and safety). Creates sandbox environments where domain experts can experiment safely. |
 | M4 | Establishes domain expert progression paths across teams. Calibrates review standards that are rigorous without being gatekeeping. Ensures harnesses and CI pipelines support non-engineer contributors. |
-| M5-M6 | Defines the domain expert operating model for the org. Creates career paths and growth frameworks (D1-D4). Advocates for domain expert roles in headcount planning. Ensures domain expertise flows into product, not just into reports. |
+| M5-M6 | Defines the domain expert operating model for the org. Creates career paths and growth frameworks (D10-D55). Advocates for domain expert roles in headcount planning. Ensures domain expertise flows into product, not just into reports. |
 
 #### Sample Level Vignettes (Manager)
 
@@ -213,31 +213,35 @@ An M5-M6 defines AI-native strategy for their org. They evolved the operating mo
 ### Document 3: AI-Native Leveling - Domain Expert
 
 **File:** `docs/07-leadership/ai-native-leveling-domain-expert.md`
-**Level mapping:** D1 through D4
+**Level mapping:** D10 through D55 (parallel to ESDEP numbering, own ladder)
 
 | Level | Name | Description |
 |-------|------|-------------|
-| D1 | Sandbox | Isolated prototypes, learning the tools |
-| D2 | Guided Producer | Fluid layer with engineering review |
-| D3 | Autonomous Producer | Fluid layer with ownership, PoC-to-production |
-| D4 | Platform-Aware Leader | Durable-aware, shapes how domain expertise flows into product |
+| D10 | Sandbox | Learning tools, isolated prototypes |
+| D20 | Guided Contributor | First PRs with heavy engineering review |
+| D30 | Independent Producer | Runs spec-driven lifecycle independently, produces reviewable PoCs |
+| D40 | Autonomous Producer | PoC-to-production, owns quality gates, joins on-call |
+| D50 | Domain Platform Builder | Architects harness patterns for other domain experts, mentors D10-D40 |
+| D55 | Domain Strategy Leader | Shapes how domain expertise flows into product at org level |
 
 #### Document Structure
 
-Same as IC/Manager: header, how-to-use, vignettes (one per level), matrix table (4 columns, 3 rows), glossary.
+Same as IC: header, how-to-use, levels overview table, vignettes (one per level), matrix table (6 columns, 4 rows), glossary.
 
 #### Domain Expert Categories
 
-**1. AI-Assisted Production**
+**1. AI-Native Production** (renamed from AI-Assisted Production)
 
-Using AI harnesses to go from domain insight to working artifact - prototypes, PoCs, production code. The progression from "uses AI to explore" to "uses AI to ship."
+Using AI harnesses to go from domain insight to working artifact - prototypes, PoCs, production code. The progression from "uses AI to explore" to "uses AI to ship and scale."
 
 | Level | Description |
 |-------|-------------|
-| D1 | Uses AI tools to create isolated prototypes that demonstrate domain insights. Works in sandbox environments. Output is exploratory - validates ideas, not production-ready. Learns basic AI tool usage (prompting, iteration). |
-| D2 | Produces working PoCs using the team's established harness. Follows the spec-driven lifecycle with engineering review at each stage. Understands quality gates (tests, CI) and works to meet them. Output is functional and reviewable. |
-| D3 | Independently produces PoCs that are productizable - code meets quality standards, tests exist, CI passes. Can shepherd work through the full pipeline. Understands when a PoC should become a product feature and how to propose it. Uses AI harnesses fluently, adapts them to domain-specific needs. |
-| D4 | Architects harness patterns that enable other domain experts to be productive. Creates reusable templates and workflows for common domain-to-product paths. Mentors D1-D3 domain experts. Shapes the tools and processes that make domain expert production scalable. |
+| D10 | Uses AI tools to create isolated prototypes that demonstrate domain insights. Works in sandbox environments. Output is exploratory - validates ideas, not production-ready. Learns basic AI tool usage (prompting, iteration). |
+| D20 | Produces first working artifacts using the team's established harness. Follows the spec-driven lifecycle with engineering review at each stage. Understands quality gates (tests, CI) and works to meet them. Output is functional and reviewable. |
+| D30 | Independently runs the spec-driven lifecycle for domain-scoped work. Produces PoCs that engineers can review without rewriting. Uses AI harnesses fluently for common domain tasks. Adapts prompts and workflows to domain-specific needs. |
+| D40 | Produces PoCs that are productizable - code meets quality standards, tests exist, CI passes. Can shepherd work through the full pipeline. Understands when a PoC should become a product feature and how to propose it. Adapts harnesses to novel domain problems. |
+| D50 | Architects harness patterns that enable other domain experts to be productive. Creates reusable templates and workflows for common domain-to-product paths. Shapes the tools and processes that make domain expert production scalable. |
+| D55 | Defines the AI-native production model for domain experts across the org. Evaluates and integrates new AI capabilities into domain workflows. Sets the standard for what domain expert production looks like at scale. |
 
 **2. Domain-to-System Translation**
 
@@ -245,10 +249,12 @@ Turning domain expertise into artifacts the system can use - specs, validation c
 
 | Level | Description |
 |-------|-------------|
-| D1 | Articulates domain knowledge in conversations and informal docs. Can explain what "correct" looks like from a domain perspective. Provides input to specs written by engineers. |
-| D2 | Writes specs that AI and engineers can act on. Defines acceptance criteria grounded in domain expertise. Creates test data from real-world scenarios. Reviews AI output for domain correctness. |
-| D3 | Creates validation frameworks rooted in domain expertise (e.g., "this SEO audit is correct when X, Y, Z"). Defines domain models that engineers implement as system contracts. Encodes domain knowledge into CLAUDE.md and reference docs that make AI more effective in the domain. |
-| D4 | Designs domain models that become system contracts and product differentiators. Shapes product direction through encoded expertise. Creates knowledge systems that persist beyond any individual - the domain's institutional memory is durable because of artifacts this person built. |
+| D10 | Articulates domain knowledge in conversations and informal docs. Can explain what "correct" looks like from a domain perspective. Provides input to specs written by engineers. |
+| D20 | Writes specs that AI and engineers can act on. Defines acceptance criteria grounded in domain expertise. Creates test data from real-world scenarios. Reviews AI output for domain correctness. |
+| D30 | Creates validation criteria and test cases rooted in domain expertise. Encodes domain knowledge into CLAUDE.md and reference docs that make AI more effective in the domain. Defines what "correct" means for domain-specific features. |
+| D40 | Creates validation frameworks rooted in domain expertise (e.g., "this SEO audit is correct when X, Y, Z"). Defines domain models that engineers implement as system contracts. Shapes how domain concepts map to system architecture. |
+| D50 | Designs domain models that become system contracts and product differentiators. Creates knowledge systems that persist beyond any individual - the domain's institutional memory is durable because of artifacts this person built. |
+| D55 | Shapes product direction through encoded expertise. Defines the domain taxonomy and ontology that the org's systems are built on. The product's domain intelligence is architecturally grounded because of frameworks this person designed. |
 
 **3. Production Awareness**
 
@@ -256,24 +262,45 @@ Understanding how code gets to production and stays healthy - deployment, observ
 
 | Level | Description |
 |-------|-------------|
-| D1 | Understands that production differs from localhost. Asks before deploying. Knows who their engineering buddy is and when to escalate. Treats the substrate boundary as a hard stop. |
-| D2 | Can read logs and understand CI pipeline output. Knows the deployment process for their team. Recognizes when something is a domain-level bug vs a platform issue. Escalates appropriately. |
-| D3 | Joins on-call rotation for domain-relevant alerts. Can diagnose domain-level failures in production. Understands the substrate boundary instinctively - knows which changes are safe to own and which need engineering review. Contributes to incident response for domain-related issues. |
-| D4 | Contributes to observability design for domain-relevant metrics. Defines what "healthy" looks like from the domain perspective and ensures monitoring reflects it. Mentors other domain experts on production judgment. Bridges the gap between domain insight and operational reality. |
+| D10 | Understands that production differs from localhost. Asks before deploying. Knows who their engineering buddy is and when to escalate. Treats the substrate boundary as a hard stop. |
+| D20 | Can read logs and understand CI pipeline output. Knows the deployment process for their team. Recognizes when something is a domain-level bug vs a platform issue. Escalates appropriately. |
+| D30 | Navigates the deployment pipeline independently for domain-scoped changes. Can read structured logs to verify domain logic in non-production environments. Knows the substrate boundary and respects it without prompting. |
+| D40 | Joins on-call rotation for domain-relevant alerts. Can diagnose domain-level failures in production. Understands the substrate boundary instinctively - knows which changes are safe to own and which need engineering review. Contributes to incident response for domain-related issues. |
+| D50 | Contributes to observability design for domain-relevant metrics. Defines what "healthy" looks like from the domain perspective and ensures monitoring reflects it. Bridges the gap between domain insight and operational reality. |
+| D55 | Shapes the org's approach to domain-aware observability. Defines SLIs and quality signals rooted in domain expertise. Ensures production systems reflect domain correctness, not just technical health. |
+
+**4. Domain Leadership & Mentoring** (new)
+
+Scaling domain impact beyond individual production - mentoring other domain experts, building the domain expert community, contributing to hiring and progression frameworks, bridging domain and engineering cultures.
+
+| Level | Description |
+|-------|-------------|
+| D10 | Shares domain knowledge informally with the team. Asks questions that help engineers understand the domain better. Participates in domain-relevant discussions. |
+| D20 | Documents domain patterns and gotchas for the team. Helps new domain experts get oriented. Provides domain-specific input during planning and review. |
+| D30 | Mentors D10-D20 domain experts on tooling and workflow. Creates reusable domain-specific examples and templates. Bridges communication between domain and engineering perspectives. |
+| D40 | Serves as engineering buddy for junior domain experts. Contributes to domain expert progression criteria. Leads domain-relevant retrospectives and knowledge-sharing sessions. |
+| D50 | Builds the domain expert community - organizes guild meetings, creates onboarding paths, defines what "good" looks like at each level. Shapes hiring criteria for domain expert roles. |
+| D55 | Defines how domain expertise scales in the org. Advocates for domain expert roles at leadership level. Creates frameworks that other teams adopt for integrating domain experts. The domain expert program is stronger because of this person's leadership. |
 
 #### Sample Level Vignettes (Domain Expert)
 
-**D1:**
-A D1 is an SEO specialist, product manager, or other domain expert who has started using AI tools to explore ideas. They create prototypes in sandbox environments - a quick analysis, a proof-of-concept dashboard, a draft audit rule. Their output demonstrates domain insight but isn't production-ready, and that's fine. They're learning the tools, building confidence, and discovering what's possible. They have an engineering buddy who reviews their experiments and explains what production would require.
+**D10:**
+A D10 is an SEO specialist, product manager, or other domain expert who has started using AI tools to explore ideas. They create prototypes in sandbox environments - a quick analysis, a proof-of-concept dashboard, a draft audit rule. Their output demonstrates domain insight but isn't production-ready, and that's fine. They're learning the tools, building confidence, and discovering what's possible. They have an engineering buddy who reviews their experiments and explains what production would require.
 
-**D2:**
-A D2 produces working PoCs that engineers can review and build on. They write specs grounded in domain expertise, follow the team's established harness patterns, and submit PRs that pass CI. An engineer reviews their work and provides feedback - not rewrites. They're learning to think about edge cases, test coverage, and what happens when their domain logic meets real-world data at scale. Their domain expertise makes the specs better than what an engineer alone would write.
+**D20:**
+A D20 submits their first PRs. They write specs grounded in domain expertise, follow the team's established harness patterns, and produce artifacts that pass basic quality gates. An engineer reviews their work closely and provides substantial feedback - not rewrites, but real guidance on edge cases, test coverage, and production concerns. They're learning to think like a producer, not just a domain expert. Their domain knowledge already makes the specs better than what an engineer alone would write.
 
-**D3:**
-A D3 takes a domain insight - say, a new GEO ranking signal - from observation to working PoC independently. They write a spec, use the team's AI harness to implement it, validate it against real-world data, and shepherd it through CI. Engineers review their PRs but rarely need to rewrite them. They've joined on-call for domain-relevant alerts and can diagnose whether a failure is in the domain logic or the platform. They're starting to see patterns across their PoCs that could become product features.
+**D30:**
+A D30 runs the spec-driven lifecycle independently for domain-scoped work. They write a spec, use the team's AI harness to implement it, and produce PoCs that engineers can review without needing to rewrite. They've internalized the substrate boundary and know what's safe to own. They mentor newer domain experts on tooling and workflow, and they create reusable templates that help others get started faster.
 
-**D4:**
-A D4 shapes how domain expertise flows into the product. They've built harness patterns and templates that other domain experts use to go from insight to PoC. They design domain models that become system contracts - the scoring rubrics, audit rules, and validation frameworks that define what "correct" means. They bridge domain and engineering fluently, mentoring D1-D3 domain experts while contributing to architectural decisions that affect the domain. The product is measurably better because domain expertise is encoded into it, not locked in someone's head.
+**D40:**
+A D40 takes a domain insight - say, a new GEO ranking signal - from observation to production-ready code. They write a spec, implement it, validate it against real-world data, and shepherd it through CI. Engineers review their PRs but rarely need changes. They've joined on-call for domain-relevant alerts and can diagnose whether a failure is in the domain logic or the platform. They serve as engineering buddy for junior domain experts and lead domain-relevant knowledge-sharing sessions.
+
+**D50:**
+A D50 builds the infrastructure that makes other domain experts productive. They've created harness patterns, templates, and onboarding paths that D10-D40 domain experts use daily. They design domain models that become system contracts - the scoring rubrics, audit rules, and validation frameworks that define what "correct" means. They organize the domain expert guild, shape hiring criteria, and define what progression looks like at each level. The domain expert community exists as a functioning group because of this person's work.
+
+**D55:**
+A D55 defines how domain expertise flows into the product at org level. They've built the frameworks that other teams adopt for integrating domain experts. They advocate for domain expert roles at leadership level and shape the talent strategy. They design domain taxonomies and ontologies that the org's systems are built on. The product is measurably better because domain expertise is architecturally encoded, not locked in someone's head. They bridge domain and engineering at the highest level, influencing product direction through deep domain authority.
 
 ---
 

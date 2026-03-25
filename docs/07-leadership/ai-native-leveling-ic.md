@@ -18,6 +18,7 @@ This guide defines AI-native skill expectations for individual contributor engin
     - [3. System Design for AI Effectiveness](#3-system-design-for-ai-effectiveness)
     - [4. Knowledge Encoding and Amplification](#4-knowledge-encoding-and-amplification)
     - [5. Ownership and Judgment](#5-ownership-and-judgment)
+    - [6. Improvement Leverage (Capacity Reinvestment)](#6-improvement-leverage-capacity-reinvestment)
 - [Glossary](#glossary)
 - [See Also](#see-also)
 
@@ -130,6 +131,19 @@ The human side - reviewing AI output critically, knowing when AI is wrong, produ
 | P50 | Defines the accountability model for AI-assisted work across teams. Creates mechanical enforcement (automated gates, structural tests) that catch issues before review. Models the judgment others learn from. |
 | P55 | Sets the quality and accountability bar for the org. Defines what "invest in brakes" means in practice. Ensures AI-native practices do not erode production judgment, security, or reliability. |
 
+### 6. Improvement Leverage (Capacity Reinvestment)
+
+The deliberate direction of AI-generated capacity toward improvements, quality, security, and learning - rather than absorbing it into feature velocity. Evolves the pre-AI "5% Rule" into a scalable framework.
+
+| Level | Description |
+|-------|-------------|
+| P10 | Uses time saved by AI to learn deeper skills (debugging, architecture, production systems) rather than just shipping more features. Tracks what AI handles well and invests freed time in areas AI can't. |
+| P20 | Identifies recurring manual work that AI could automate and proposes improvements. Uses AI-generated capacity to improve test coverage, documentation, and code quality in areas they touch. |
+| P30 | Systematically uses AI to create capacity for system-level improvements - better validation pipelines, structured logging, environment fidelity. Maintains an improvement backlog alongside the feature backlog. |
+| P40 | Designs workflows where AI-generated efficiency gains are visibly redirected to improvements. Quantifies the capacity AI creates and advocates for reinvesting it. Models this behavior for the team. |
+| P50 | Builds tools and patterns that make improvement leverage structural - not dependent on individual discipline. Creates automated quality improvements that scale with AI usage across teams. |
+| P55 | Defines the org's approach to improvement leverage. Designs systems where increased AI effectiveness automatically generates increased investment in quality, security, and learning. The org gets better as it gets faster. |
+
 ## Glossary
 
 Key terms used in this guide, linked to their definitions in the AI-native guidelines.
@@ -142,7 +156,8 @@ Key terms used in this guide, linked to their definitions in the AI-native guide
 | Maturity Model | L0-L4 scale of how effectively AI can operate in a codebase | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
 | Scorecard | 5-dimension assessment (validation speed, environment fidelity, traceability, coupling, ownership) scored 0-3 | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
 | Frontier Engineer | Catalysts of AI-native transformation - Harness Engineer and/or AI Orchestrator specializations | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
-| The 5% Rule | Baseline allocation to proactive engineering work (quality, security, learning) | [AI-First Leadership](ai-first-leadership.md) |
+| Improvement Leverage | The deliberate direction of AI-generated capacity toward improvements, quality, security, and learning - rather than absorbing it into feature velocity | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
+| The 5% Rule (historical) | Pre-AI baseline allocation of human capacity to proactive engineering work. In AI-native orgs, this concept evolves into Improvement Leverage. | [AI-First Leadership](ai-first-leadership.md) |
 | Engineering Buddy | Assigned engineering mentor for domain experts | [Domain Experts](domain-experts.md) |
 | Substrate Boundary | The line between fluid (safe for domain experts to own) and durable (requires engineering rigor) changes | [Substrate Model](../01-foundations/substrate-model.md) |
 

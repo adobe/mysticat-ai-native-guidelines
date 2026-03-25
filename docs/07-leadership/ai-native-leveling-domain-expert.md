@@ -16,6 +16,7 @@ This guide defines AI-native skill expectations for domain experts at each level
     - [2. Domain-to-System Translation](#2-domain-to-system-translation)
     - [3. Production Awareness](#3-production-awareness)
     - [4. Domain Leadership and Mentoring](#4-domain-leadership-and-mentoring)
+    - [5. Improvement Leverage (Capacity Reinvestment)](#5-improvement-leverage-capacity-reinvestment)
 - [Glossary](#glossary)
 - [See Also](#see-also)
 
@@ -126,6 +127,19 @@ Scaling domain impact beyond individual production - mentoring other domain expe
 | D50 | Builds the domain expert community - organizes guild meetings, creates onboarding paths, defines what "good" looks like at each level. Shapes hiring criteria for domain expert roles. |
 | D55 | Defines how domain expertise scales in the org. Advocates for domain expert roles at leadership level. Creates frameworks that other teams adopt for integrating domain experts. The domain expert program is stronger because of this person's leadership. |
 
+### 5. Improvement Leverage (Capacity Reinvestment)
+
+The deliberate direction of AI-generated capacity toward domain quality improvements - rather than absorbing it into producing more PoCs or features.
+
+| Level | Description |
+|-------|-------------|
+| D10 | Uses time saved by AI to deepen domain knowledge and learn production skills, not just produce more prototypes. Invests in understanding why things work, not just what works. |
+| D20 | Identifies domain-specific quality improvements that AI makes possible - better validation data, more thorough acceptance criteria, improved domain documentation. |
+| D30 | Uses AI-generated capacity to invest in domain knowledge encoding - creating reusable validation frameworks, domain-specific test suites, and reference implementations that raise quality for everyone. |
+| D40 | Systematically directs AI-generated efficiency toward domain quality improvements - better audit rules, more comprehensive scoring rubrics, improved domain models. Maintains a domain improvement backlog. |
+| D50 | Builds domain-specific improvement patterns that other domain experts adopt. Creates tools and templates that make domain quality investment structural, not dependent on individual initiative. |
+| D55 | Defines how domain expertise investment scales with AI across the org. Ensures AI-generated capacity in domain work flows toward deeper domain intelligence, not just higher output volume. |
+
 ## Glossary
 
 Key terms used in this guide, linked to their definitions in the AI-native guidelines.
@@ -138,7 +152,8 @@ Key terms used in this guide, linked to their definitions in the AI-native guide
 | Maturity Model | L0-L4 scale of how effectively AI can operate in a codebase | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
 | Scorecard | 5-dimension assessment (validation speed, environment fidelity, traceability, coupling, ownership) scored 0-3 | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
 | Frontier Engineer | Catalysts of AI-native transformation - Harness Engineer and/or AI Orchestrator specializations | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
-| The 5% Rule | Baseline allocation to proactive engineering work (quality, security, learning) | [AI-First Leadership](ai-first-leadership.md) |
+| Improvement Leverage | The deliberate direction of AI-generated capacity toward improvements, quality, security, and learning - rather than absorbing it into feature velocity | [Phase 1 White Paper](ai-native-engineering-phase1.md) |
+| The 5% Rule (historical) | Pre-AI baseline allocation of human capacity to proactive engineering work. In AI-native orgs, this concept evolves into Improvement Leverage. | [AI-First Leadership](ai-first-leadership.md) |
 | Engineering Buddy | Assigned engineering mentor for domain experts | [Domain Experts](domain-experts.md) |
 | Substrate Boundary | The line between fluid (safe for domain experts to own) and durable (requires engineering rigor) changes | [Substrate Model](../01-foundations/substrate-model.md) |
 

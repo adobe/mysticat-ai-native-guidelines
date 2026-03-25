@@ -124,6 +124,19 @@ The human side - reviewing AI output critically, knowing when AI is wrong, produ
 | P50 | Defines the accountability model for AI-assisted work across teams. Creates mechanical enforcement (automated gates, structural tests) that catch issues before review. Models the judgment others learn from. |
 | P55 | Sets the quality and accountability bar for the org. Defines what "invest in brakes" means in practice. Ensures AI-native practices do not erode production judgment, security, or reliability. |
 
+**6. Improvement Leverage (Capacity Reinvestment)**
+
+The deliberate direction of AI-generated capacity toward improvements, quality, security, and learning - rather than absorbing it into feature velocity. Evolves the pre-AI "5% Rule" into a scalable framework.
+
+| Level | Description |
+|-------|-------------|
+| P10 | Uses time saved by AI to learn deeper skills (debugging, architecture, production systems) rather than just shipping more features. Tracks what AI handles well and invests freed time in areas AI can't. |
+| P20 | Identifies recurring manual work that AI could automate and proposes improvements. Uses AI-generated capacity to improve test coverage, documentation, and code quality in areas they touch. |
+| P30 | Systematically uses AI to create capacity for system-level improvements - better validation pipelines, structured logging, environment fidelity. Maintains an improvement backlog alongside the feature backlog. |
+| P40 | Designs workflows where AI-generated efficiency gains are visibly redirected to improvements. Quantifies the capacity AI creates and advocates for reinvesting it. Models this behavior for the team. |
+| P50 | Builds tools and patterns that make improvement leverage structural - not dependent on individual discipline. Creates automated quality improvements that scale with AI usage across teams. |
+| P55 | Defines the org's approach to improvement leverage. Designs systems where increased AI effectiveness automatically generates increased investment in quality, security, and learning. The org gets better as it gets faster. |
+
 #### Sample Level Vignettes (IC)
 
 **P10:**
@@ -149,11 +162,11 @@ A P55 defines what AI-native means for the org. They architect systems where AI 
 ### Document 2: AI-Native Leveling - Engineering Manager (ESDEM)
 
 **File:** `docs/07-leadership/ai-native-leveling-manager.md`
-**Level mapping:** Banded - M2-M3, M4, M5-M6
+**Level mapping:** Banded - M2-M3, M4, M5, M6
 
 #### Document Structure
 
-Same as IC: header, how-to-use, vignettes (one per band), matrix table (3 columns, 4 rows), glossary.
+Same as IC: header, how-to-use, vignettes (one per band), matrix table (4 columns, 4 rows), glossary.
 
 #### Manager Categories
 
@@ -165,17 +178,19 @@ Using the Phase 1 framework - assessing systems on the maturity model, running s
 |------|-------------|
 | M2-M3 | Participates in scorecard assessments for own team's systems. Understands the maturity model and can explain where systems are and why. Identifies the dominant bottleneck in own team's systems and proposes a plan to address it. |
 | M4 | Owns scorecard cadence across multiple systems. Drives bottleneck removal with clear ownership assignments. Reports on maturity trends and connects them to delivery outcomes. Exercises autonomy to adjust priorities based on scorecard findings. |
-| M5-M6 | Defines the AI-native strategy for the org. Evolves the operating model (scorecard, cadence, participants) as the org matures. Connects maturity progress to business outcomes and uses it to inform investment decisions. Sets maturity targets and holds system owners accountable. |
+| M5 | Defines the AI-native strategy for the org. Evolves the operating model (scorecard, cadence, participants) as the org matures. Connects maturity progress to business outcomes and uses it to inform investment decisions. Sets maturity targets and holds system owners accountable. |
+| M6 | Shapes AI-native strategy across OneAEM or CXO level. Influences peer organizations' adoption of maturity models and scorecards. Connects AI-native maturity to enterprise-level business outcomes. Represents the org's AI-native transformation to senior leadership and cross-functional partners. |
 
 **2. Team Enablement & Adoption**
 
-Building AI-native capability in the team - onboarding, mentoring, frontier engineer cultivation, managing mutual mentorship (seniors teach judgment, juniors teach AI fluency), the 5% allocation.
+Building AI-native capability in the team - onboarding, mentoring, frontier engineer cultivation, managing mutual mentorship (seniors teach judgment, juniors teach AI fluency). AI is an accelerator - the proactive allocation (5% floor) should rise as AI frees up capacity.
 
 | Band | Description |
 |------|-------------|
-| M2-M3 | Ensures every team member has a working AI harness and knows how to use it. Pairs frontier engineers with those ramping up. Allocates the 5% for proactive quality and learning. Creates psychological safety for domain experts and juniors shipping code. |
-| M4 | Cultivates frontier engineers across managed teams. Establishes adoption patterns that work (not just tool rollout, but workflow change). Measures adoption meaningfully (not tool usage, but system-level impact). Manages the mutual mentorship dynamic between senior and junior engineers. |
-| M5-M6 | Grows the frontier engineer guild as an org-level asset. Shapes the talent strategy for new role types (domain experts, harness engineers, AI orchestrators). Defines what AI-native looks like in hiring rubrics. Ensures adoption is sustainable, not a one-time push. |
+| M2-M3 | Ensures every team member has a working AI harness and knows how to use it. Pairs frontier engineers with those ramping up. Protects the 5% floor for proactive quality and learning, and uses AI efficiency gains to expand it. Creates psychological safety for domain experts and juniors shipping code. |
+| M4 | Cultivates frontier engineers across managed teams. Establishes adoption patterns that work (not just tool rollout, but workflow change). Measures adoption meaningfully (not tool usage, but system-level impact). Manages the mutual mentorship dynamic between senior and junior engineers. Quantifies time reclaimed through AI and reinvests it in improvements. |
+| M5 | Grows the frontier engineer guild as an org-level asset. Shapes the talent strategy for new role types (domain experts, harness engineers, AI orchestrators). Defines what AI-native looks like in hiring rubrics. Ensures adoption is sustainable, not a one-time push. |
+| M6 | Drives AI-native talent strategy across OneAEM or CXO. Champions frontier engineer programs that span organizational boundaries. Influences industry hiring standards for AI-native roles. Builds partnerships with external organizations (Anthropic, OpenAI) to stay at the cutting edge of enablement. |
 
 **3. Operational Excellence for AI**
 
@@ -185,7 +200,8 @@ The operational side of the scorecard - validation speed, environment fidelity, 
 |------|-------------|
 | M2-M3 | Ensures team's systems have fast validation loops and production-like non-prod environments. Advocates for investment in environment fidelity. Tracks and reduces time-to-feedback for the development cycle. |
 | M4 | Owns end-to-end validation and traceability across managed systems. Drives investment in non-production environments that behave like production. Establishes operational standards that make systems AI-debuggable. |
-| M5-M6 | Sets org-wide standards for validation speed, traceability, and environment fidelity. Connects operational investment to AI leverage (quantifies the ROI). Ensures new systems meet Level 4 operational requirements from day one. |
+| M5 | Sets org-wide standards for validation speed, traceability, and environment fidelity. Connects operational investment to AI leverage (quantifies the ROI). Ensures new systems meet Level 4 operational requirements from day one. |
+| M6 | Drives operational excellence standards across OneAEM or CXO. Influences platform teams and shared infrastructure to support AI-native development patterns. Champions cross-org investment in shared validation and traceability infrastructure. |
 
 **4. Domain Expert Integration**
 
@@ -195,18 +211,33 @@ Creating the conditions for domain experts to be productive - engineering buddy 
 |------|-------------|
 | M2-M3 | Assigns engineering buddies for domain experts. Reviews domain expert PRs with appropriate expectations (not engineer-level code style, but correctness and safety). Creates sandbox environments where domain experts can experiment safely. |
 | M4 | Establishes domain expert progression paths across teams. Calibrates review standards that are rigorous without being gatekeeping. Ensures harnesses and CI pipelines support non-engineer contributors. |
-| M5-M6 | Defines the domain expert operating model for the org. Creates career paths and growth frameworks (D10-D55). Advocates for domain expert roles in headcount planning. Ensures domain expertise flows into product, not just into reports. |
+| M5 | Defines the domain expert operating model for the org. Creates career paths and growth frameworks (D10-D55). Advocates for domain expert roles in headcount planning. Ensures domain expertise flows into product, not just into reports. |
+| M6 | Champions the domain expert model across OneAEM or CXO. Influences how other organizations integrate non-engineer contributors. Advocates for domain expert career paths at the enterprise level. Shapes how domain expertise is valued in cross-org planning and strategy. |
+
+**5. Improvement Leverage (Capacity Reinvestment)**
+
+The deliberate direction of AI-generated capacity toward improvements, quality, security, and learning. Ensures freed capacity is structurally invested, not absorbed into feature velocity.
+
+| Band | Description |
+|------|-------------|
+| M2-M3 | Tracks where AI-generated capacity goes on the team. Ensures freed time is visibly allocated to improvements, not silently absorbed into more feature work. Makes improvement investment a standing agenda item. |
+| M4 | Establishes structural mechanisms (improvement sprints, dedicated backlog, frontier engineer allocation) that direct AI-generated capacity toward improvements across managed teams. Reports on improvement investment as a metric. |
+| M5 | Defines org-level policies for improvement leverage. Sets expectations that AI efficiency gains are reinvested, not just harvested for velocity. Connects improvement investment to system maturity and team capability growth. |
+| M6 | Champions improvement leverage across OneAEM or CXO. Influences enterprise-level expectations that AI adoption includes investment in quality and capability, not just speed. Shapes how the broader org measures the return on AI-native practices. |
 
 #### Sample Level Vignettes (Manager)
 
 **M2-M3:**
-An M2-M3 manager ensures their team is equipped and enabled for AI-native work. Every team member has a working harness, knows the spec-driven lifecycle, and has access to a frontier engineer for guidance. They participate in scorecard assessments and can explain where their systems sit on the maturity model. They create space for learning - the 5% allocation is real, not theoretical. They pair domain experts with engineering buddies and make sure AI-assisted contributions are reviewed fairly.
+An M2-M3 manager ensures their team is equipped and enabled for AI-native work. Every team member has a working harness, knows the spec-driven lifecycle, and has access to a frontier engineer for guidance. They participate in scorecard assessments and can explain where their systems sit on the maturity model. They protect the 5% floor for proactive work and actively look for ways AI can help the team invest more in quality, security, and learning. They pair domain experts with engineering buddies and make sure AI-assisted contributions are reviewed fairly.
 
 **M4:**
-An M4 owns the AI-native operating rhythm across their systems. They run scorecard assessments on a regular cadence, have assigned ownership for every identified bottleneck, and track maturity trends over time. They've cultivated frontier engineers who pull teams forward and established adoption patterns that survive beyond initial enthusiasm. They balance the pressure to adopt AI faster with the discipline to maintain quality - they know the Phase 1 goal is visibility and alignment, not speed.
+An M4 owns the AI-native operating rhythm across their systems. They run scorecard assessments on a regular cadence, have assigned ownership for every identified bottleneck, and track maturity trends over time. They've cultivated frontier engineers who pull teams forward and established adoption patterns that survive beyond initial enthusiasm. They quantify time reclaimed through AI and reinvest it in improvements rather than just shipping faster. They balance the pressure to adopt AI faster with the discipline to maintain quality.
 
-**M5-M6:**
-An M5-M6 defines AI-native strategy for their org. They evolved the operating model from Phase 1's initial framework into something that fits their teams' reality. They connect maturity progress to business outcomes in ways leadership understands. They've shaped hiring to include domain experts and harness engineers as first-class roles. They ensure every new system starts at Level 4 and hold system owners accountable for documented blockers on existing systems. They grow the frontier engineer guild as the org's engine of continuous adoption.
+**M5:**
+An M5 defines AI-native strategy for their org. They evolved the operating model from Phase 1's initial framework into something that fits their teams' reality. They connect maturity progress to business outcomes in ways leadership understands. They've shaped hiring to include domain experts and harness engineers as first-class roles. They ensure every new system starts at Level 4 and hold system owners accountable for documented blockers on existing systems. They grow the frontier engineer guild as the org's engine of continuous adoption.
+
+**M6:**
+An M6 drives AI-native transformation beyond their org. They influence peer organizations across OneAEM or CXO to adopt maturity models, scorecards, and frontier engineer programs. They represent the org's AI-native journey to senior leadership and shape enterprise-level investment decisions. They champion domain expert integration and operational excellence standards that span organizational boundaries. They build external partnerships that keep the org at the cutting edge of AI-native practices.
 
 ---
 
@@ -282,6 +313,19 @@ Scaling domain impact beyond individual production - mentoring other domain expe
 | D50 | Builds the domain expert community - organizes guild meetings, creates onboarding paths, defines what "good" looks like at each level. Shapes hiring criteria for domain expert roles. |
 | D55 | Defines how domain expertise scales in the org. Advocates for domain expert roles at leadership level. Creates frameworks that other teams adopt for integrating domain experts. The domain expert program is stronger because of this person's leadership. |
 
+**5. Improvement Leverage (Capacity Reinvestment)**
+
+The deliberate direction of AI-generated capacity toward domain quality improvements - rather than absorbing it into producing more PoCs or features.
+
+| Level | Description |
+|-------|-------------|
+| D10 | Uses time saved by AI to deepen domain knowledge and learn production skills, not just produce more prototypes. Invests in understanding why things work, not just what works. |
+| D20 | Identifies domain-specific quality improvements that AI makes possible - better validation data, more thorough acceptance criteria, improved domain documentation. |
+| D30 | Uses AI-generated capacity to invest in domain knowledge encoding - creating reusable validation frameworks, domain-specific test suites, and reference implementations that raise quality for everyone. |
+| D40 | Systematically directs AI-generated efficiency toward domain quality improvements - better audit rules, more comprehensive scoring rubrics, improved domain models. Maintains a domain improvement backlog. |
+| D50 | Builds domain-specific improvement patterns that other domain experts adopt. Creates tools and templates that make domain quality investment structural, not dependent on individual initiative. |
+| D55 | Defines how domain expertise investment scales with AI across the org. Ensures AI-generated capacity in domain work flows toward deeper domain intelligence, not just higher output volume. |
+
 #### Sample Level Vignettes (Domain Expert)
 
 **D10:**
@@ -322,7 +366,8 @@ A D55 defines how domain expertise flows into the product at org level. They've 
 | Maturity Model | L0-L4 scale of how effectively AI can operate in a codebase | `07-leadership/ai-native-engineering-phase1.md` |
 | Scorecard | 5-dimension assessment (validation speed, environment fidelity, traceability, coupling, ownership) scored 0-3 | `07-leadership/ai-native-engineering-phase1.md` |
 | Frontier Engineer | Catalysts of AI-native transformation - Harness Engineer and/or AI Orchestrator specializations | `07-leadership/ai-native-engineering-phase1.md` |
-| The 5% Rule | Baseline allocation to proactive engineering work (quality, security, learning) | `07-leadership/ai-first-leadership.md` |
+| Improvement Leverage | The deliberate direction of AI-generated capacity toward improvements, quality, security, and learning - rather than absorbing it into feature velocity. Replaces the pre-AI "5% Rule" as the active framework. | `07-leadership/ai-native-engineering-phase1.md` |
+| The 5% Rule (historical) | Pre-AI baseline allocation of human capacity to proactive engineering work. In AI-native orgs, this concept evolves into Improvement Leverage. | `07-leadership/ai-first-leadership.md` |
 | Engineering Buddy | Assigned engineering mentor for domain experts | `07-leadership/domain-experts.md` |
 | Substrate Boundary | The line between fluid (safe for domain experts to own) and durable (requires engineering rigor) changes | `01-foundations/substrate-model.md` |
 

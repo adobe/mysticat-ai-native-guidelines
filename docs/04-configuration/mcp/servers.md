@@ -161,6 +161,65 @@ create_branch(owner="my-org", repo="my-app", branch="feature/new-api")
 
 **Note**: Uses `npx` with the `slack-mcp-server` package. Requires a user token (`xoxp-...`) not a bot token.
 
+**Getting your `xoxp` token**:
+
+Each engineer needs their own user token - there is no way to share one via a team app.
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) and click **Create New App** > **From a manifest**
+2. Select your workspace, paste the manifest below, and click **Create**
+3. Go to **Install App** and click **Install to Workspace**, then authorize
+4. Copy the **User OAuth Token** (`xoxp-...`) - this is your `SLACK_MCP_XOXP_TOKEN`
+
+<details>
+<summary>Slack App Manifest</summary>
+
+```json
+{
+  "display_information": {
+    "name": "Claude MCP - [Your Name]",
+    "description": "Personal Slack MCP integration for AI-assisted development",
+    "background_color": "#c55100"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Claude MCP",
+      "always_online": false
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "user": [
+        "channels:history",
+        "channels:read",
+        "chat:write",
+        "groups:history",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "im:write",
+        "mpim:history",
+        "mpim:read",
+        "mpim:write",
+        "search:read",
+        "users:read"
+      ],
+      "bot": [
+        "chat:write"
+      ]
+    }
+  },
+  "settings": {
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}
+```
+
+</details>
+
+> **Why not use the SpaceCat Slack app?** Being a "Collaborator" on an existing Slack app lets you manage its settings, but does not give you a user token. `xoxp` tokens are per-user and per-installation - each person must install their own app. The SpaceCat app uses a bot token (`xoxb`) for server-side operations, which is a different token type.
+
 **Key Tools**:
 | Tool | Purpose |
 |------|---------|

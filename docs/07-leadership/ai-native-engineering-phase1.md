@@ -131,15 +131,16 @@ We will use a shared scorecard as the operating model for this phase. The purpos
 
 There are three parts to the scorecard: dimensions we score each system on, scoring model, and scope and cadence.
 
-### The Five Scorecard Dimensions
+### The Six Scorecard Dimensions
 
-Each system that is currently worked on will be assessed across all five. See [appendix](#appendix) for detailed explanations.
+Each system that is currently worked on will be assessed across all six. See [appendix](#appendix) for detailed explanations.
 
 1. **Validation Speed** - Can realistic feedback be obtained without deploying to production?
 2. **Environment Fidelity** - Do non-production environments behave like production in the ways that matter?
 3. **End-to-End Traceability** - Can humans and AI explain what happened across systems?
 4. **System Coupling** - How predictable is system behavior from local context?
 5. **Ownership & Mandate** - Is there clear ownership to remove system-level bottlenecks?
+6. **Improvement Leverage** - Is AI-generated capacity being reinvested in improvements, or absorbed into more feature work?
 
 ### Scoring Model
 
@@ -184,6 +185,7 @@ A Phase-1 scorecard might look like:
 | End-to-End Traceability | 0 |
 | System Coupling | 2 |
 | Ownership & Mandate | 1 |
+| Improvement Leverage | 1 |
 
 The conclusion is: AI impact is capped at unit scope because validation and traceability are system-level bottlenecks. In Phase 1, this system would likely select Validation Speed and Traceability as its focus areas.
 
@@ -358,6 +360,17 @@ A service:
 - Has no reliable mocks
 
 Now: unit tests pass, production fails, root cause is outside the service. Behavior is not predictable from local context and AI collapses beyond unit scope.
+
+#### 6) Improvement Leverage (Capacity Reinvestment)
+
+Is AI-generated capacity being reinvested in improvements, or absorbed into more feature work?
+
+In pre-AI orgs, proactive investment in quality, security, and learning was negotiated as the "5% Rule" - a hard-won floor of human capacity. In AI-native orgs, AI multiplies capacity. The question shifts from "can we protect 5% of human time?" to "are we structurally directing the capacity AI creates toward making our systems, quality, and people better?"
+
+- **Good**: Team tracks AI-generated efficiency gains and has explicit mechanisms (improvement backlogs, frontier engineer time, sprint allocation) that direct freed capacity toward quality, security, learning, and system-level improvements. Investment scales with AI effectiveness.
+- **Bad**: AI makes the team faster, but all gains are absorbed into shipping more features. No structural mechanism redirects capacity. The 5% floor erodes under delivery pressure, and AI amplifies the erosion.
+
+This dimension is unique because it measures an organizational choice, not a technical property. A system can score 3 on every other dimension but 0 on Improvement Leverage if all AI-generated capacity goes to feature velocity.
 
 ## See Also
 

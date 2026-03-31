@@ -187,6 +187,9 @@ Each engineer needs their own user token - there is no way to share one via a te
     }
   },
   "oauth_config": {
+    "redirect_urls": [
+      "https://localhost:3000/oauth/callback"
+    ],
     "scopes": {
       "user": [
         "channels:history",
@@ -204,9 +207,25 @@ Each engineer needs their own user token - there is no way to share one via a te
         "users:read"
       ],
       "bot": [
-        "chat:write"
+        "channels:history",
+        "channels:read",
+        "chat:write",
+        "files:read",
+        "files:write",
+        "groups:history",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "mpim:history",
+        "mpim:read",
+        "reactions:read",
+        "reactions:write",
+        "users:read",
+        "users:read.email",
+        "users.profile:read"
       ]
-    }
+    },
+    "pkce_enabled": false
   },
   "settings": {
     "org_deploy_enabled": false,

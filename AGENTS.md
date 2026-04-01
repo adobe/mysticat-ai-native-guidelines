@@ -20,7 +20,7 @@ Documentation organized in numbered sections covering the full AI-first developm
 | [01 - Foundations](docs/01-foundations/) | Philosophy, harness engineering, substrate model, workspace setup, tools |
 | [02 - Lifecycle](docs/02-lifecycle/) | 5-phase development cycle, multi-session patterns, config evolution |
 | [03 - Templates](docs/03-templates/) | Spec proposals, contracts, migrations, ADRs, PR templates |
-| [04 - Configuration](docs/04-configuration/) | ACI design, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |
+| [04 - Configuration](docs/04-configuration/) | ACI design, token efficiency, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |
 | [05 - Guardrails](docs/05-guardrails/) | MUST/SHOULD rules, mechanical enforcement, anti-patterns, task boundaries |
 | [06 - Adoption](docs/06-adoption/) | Onboarding guide, AI readiness checklist |
 | [07 - Leadership](docs/07-leadership/) | For leaders, junior engineers, experienced engineers, domain experts, AI-native Phase 1, AI-native leveling guides (IC, Manager, Domain Expert) |

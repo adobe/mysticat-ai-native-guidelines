@@ -285,6 +285,8 @@ Keep individual documents within reasonable token budgets so they do not crowd o
 
 If a document exceeds its budget, split it. A 1,500-line architecture doc should become a 200-line overview that links to domain-specific detail docs.
 
+For a comprehensive treatment of token cost optimization beyond document sizing - model selection, effort tuning, MCP overhead, and measurement - see [Token Efficiency](token-efficiency.md).
+
 ### Machine-Readable Sections
 
 For sections that agents will act on programmatically (not just read for context), use formats that are unambiguous:

@@ -57,6 +57,8 @@ The [skills ecosystem](../04-configuration/skills/overview.md) implements this p
 
 **Summarize, do not accumulate.** In long sessions, earlier observations become stale. Effective harness patterns summarize prior findings rather than preserving every raw result. When you notice an agent session getting long and unfocused, start a new session with a clear summary of what was accomplished and what remains.
 
+For the cost implications of context management decisions - what tokens cost, how conversation history accumulates, and practical actions to reduce spend - see [Token Efficiency](../04-configuration/token-efficiency.md).
+
 ### Anti-Patterns
 
 | Anti-Pattern | Why It Hurts | Fix |

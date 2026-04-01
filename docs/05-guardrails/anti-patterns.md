@@ -6,6 +6,8 @@ Anti-patterns are common mistakes that seem helpful but lead to problems. Recogn
 
 ## AI-Specific Anti-Patterns
 
+For token-specific anti-patterns (Opus everywhere, MCP hoarding, context landfill, review army, infinite sessions), see [Token Efficiency - Anti-Patterns](../04-configuration/token-efficiency.md#anti-patterns).
+
 ### Blind Acceptance
 
 **Pattern**: Accepting AI suggestions without review.

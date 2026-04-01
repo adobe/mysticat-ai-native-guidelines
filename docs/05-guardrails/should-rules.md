@@ -241,6 +241,19 @@ Unlike MUST rules, AI assistants can help you deviate from SHOULD rules when you
 
 *Exception: Exploratory conversations that don't produce decisions need not be captured*
 
+### Token Efficiency
+
+- **SHOULD** default to Sonnet for routine tasks, reserving Opus for complex reasoning
+- **SHOULD** set effort to medium for Sonnet-based agentic work, escalating to high only for complex tasks
+- **SHOULD** audit MCP servers quarterly and disable those not used weekly
+- **SHOULD** delegate data-heavy operations (bulk reads, searches, test runs) to subagents
+- **SHOULD** check `/cost` or `/stats` at natural breakpoints (after features, before agent spawns)
+- **SHOULD NOT** spawn multi-agent review panels for small PRs (scale review depth to PR size)
+
+*Exception: Opus on high effort is justified for architecture decisions, complex debugging, or when Sonnet output quality is noticeably insufficient*
+
+See [Token Efficiency](../04-configuration/token-efficiency.md) for the full guide.
+
 ## When to Deviate
 
 ### Document the Reason

@@ -61,6 +61,7 @@ AI tool configuration, plugins, and MCP integration:
 | Category | Documents |
 |----------|-----------|
 | **ACI Design** | [Agent-Computer Interface](docs/04-configuration/aci-design.md) - design principles, progressive disclosure, documentation patterns, audit checklist |
+| **Token Efficiency** | [Token Efficiency](docs/04-configuration/token-efficiency.md) - cost model, optimization playbook, anti-patterns, measurement |
 | **AI Tools** | [Claude Code](docs/04-configuration/ai-tools/claude-code.md), [Cursor](docs/04-configuration/ai-tools/cursor.md), [Copilot](docs/04-configuration/ai-tools/copilot.md) |
 | **Plugins** | [Overview](docs/04-configuration/plugins/README.md), [Superpowers](docs/04-configuration/plugins/superpowers.md), [Adobe Skills](docs/04-configuration/plugins/adobe-skills.md) |
 | **Skills** | [Skills Ecosystem](docs/04-configuration/skills/overview.md) - agentskills.io standard, SKILL.md format, package management |

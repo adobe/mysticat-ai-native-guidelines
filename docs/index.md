@@ -19,7 +19,7 @@ Comprehensive guidelines for teams adopting AI-first development practices with 
 | [Foundations](01-foundations/) | Philosophy, harness engineering, substrate model, workspace setup, tools |
 | [Development Lifecycle](02-lifecycle/) | 5-phase cycle, multi-session patterns, config evolution |
 | [Templates](03-templates/) | Spec proposals, contracts, migrations, ADRs, PR templates |
-| [Configuration](04-configuration/) | ACI design, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |
+| [Configuration](04-configuration/) | ACI design, token efficiency, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |
 | [Guardrails](05-guardrails/) | MUST/SHOULD rules, mechanical enforcement, anti-patterns, task boundaries |
 | [Adoption](06-adoption/) | Onboarding guide, AI readiness checklist |
 | [Leadership](07-leadership/) | For leaders, junior engineers, experienced engineers, domain experts |

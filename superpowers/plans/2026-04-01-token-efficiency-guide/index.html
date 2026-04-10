@@ -1,0 +1,4746 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Comprehensive guidelines for teams adopting AI-first development practices">
+      
+      
+      
+        <link rel="canonical" href="https://solaris007.github.io/ai-first-guidelines/superpowers/plans/2026-04-01-token-efficiency-guide/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Token Efficiency Guide - Implementation Plan - AI-First Development Guidelines</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#token-efficiency-guide-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="AI-First Development Guidelines" class="md-header__button md-logo" aria-label="AI-First Development Guidelines" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-First Development Guidelines
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Token Efficiency Guide - Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/solaris007/ai-first-guidelines" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    solaris007/ai-first-guidelines
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../LATEST/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  What's New
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../01-foundations/philosophy/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../02-lifecycle/overview/" class="md-tabs__link">
+          
+  
+  
+  Development Lifecycle
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../03-templates/spec-proposal/" class="md-tabs__link">
+          
+  
+  
+  Templates
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../04-configuration/" class="md-tabs__link">
+          
+  
+  
+  Configuration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../05-guardrails/must-rules/" class="md-tabs__link">
+          
+  
+  
+  Guardrails
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../examples/workspace-claude-md/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../06-adoption/onboarding-guide/" class="md-tabs__link">
+          
+  
+  
+  Adoption
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../07-leadership/ai-first-leadership/" class="md-tabs__link">
+          
+  
+  
+  Leadership
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../presentations/" class="md-tabs__link">
+          
+  
+  
+  Presentations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="AI-First Development Guidelines" class="md-nav__button md-logo" aria-label="AI-First Development Guidelines" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-First Development Guidelines
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/solaris007/ai-first-guidelines" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    solaris007/ai-first-guidelines
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../LATEST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/harness-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Harness Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/substrate-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Substrate Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/workspace-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/tools-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/agent-dx-vision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent DX Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/skill-distribution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/blackboard-mental-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blackboard Mental Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01-foundations/agentic-memory-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic Memory Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development Lifecycle
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/01-design-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Design & Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/02-planning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/03-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/04-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/05-closure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Closure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/multi-session-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Session Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/06-config-evolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Configuration Evolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Evaluation-Driven Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/eval-driven-development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/edd-implementation-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/evaluation-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/evaluation-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/prompt-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/tool-replay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/dual-tracing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/unified-optimization-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Optimization Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/optimization-process-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimization Process Diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/llm-powered-evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-Powered Evals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/llm-powered-evals-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-Powered Evals Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/self-improving-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-Improving Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/dataset-persistence-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Persistence Proposal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/evals-dashboard-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evals Dashboard Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/langsmith-evaluation-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangSmith Evaluation Fixes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02-lifecycle/shadow-mode-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shadow Mode Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Templates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-templates/spec-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spec Proposal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-templates/migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-templates/decision-record/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Record
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-templates/contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-templates/pull-request-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pull Request Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-templates/TODO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/ai-tools/claude-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/ai-tools/permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Permissions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/ai-tools/cursor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cursor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/ai-tools/copilot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copilot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/ai-tools/codex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/ai-tools/gemini-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemini CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/plugins/superpowers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Superpowers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/plugins/adobe-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adobe Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/mcp/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/mcp/servers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/mcp/workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/skills/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/skills/auto-improve-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto-Improve Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/aci-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ACI Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/token-efficiency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/cross-tool-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cross-Tool Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-configuration/env-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment & Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guardrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-guardrails/must-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MUST Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-guardrails/should-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SHOULD Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-guardrails/mechanical-enforcement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanical Enforcement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-guardrails/anti-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-guardrails/ai-task-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Task Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-guardrails/vibecoding-best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vibecoding Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-guardrails/repo-consolidation-decision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repo Consolidation Decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/workspace-claude-md/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace CLAUDE.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/project-claude-md/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project CLAUDE.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adoption
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Adoption
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../06-adoption/onboarding-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboarding Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../06-adoption/ai-readiness-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Readiness Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Leadership
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Leadership
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/ai-first-leadership/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-First Leadership
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/junior-engineers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    For Junior Engineers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/experienced-engineers-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    For Experienced Engineers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/ai-native-engineering-phase1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Phase 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/domain-experts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    For Domain Experts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/ai-native-leveling-ic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Leveling (IC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/ai-native-leveling-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Leveling (Manager)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../07-leadership/ai-native-leveling-domain-expert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Leveling (Domain Expert)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/blackboard-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blackboard Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/smc-components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SMC Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_6" id="__nav_11_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Evals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/evals/evaluation-presentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Presentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/evals/handout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../presentations/evals/speaker-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Speaker Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#task-1-create-the-token-efficiency-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Create the Token Efficiency Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anti-Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-opus-everywhere-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Opus Everywhere Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-mcp-hoarder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The MCP Hoarder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-context-landfill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Context Landfill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-review-army" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Review Army
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-infinite-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Infinite Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-vague-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Vague Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measurement-and-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measurement and Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measurement and Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Line
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-level-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Team-Level Tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warning-signs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warning Signs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-budget-habit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Budget Habit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="See Also">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-2-add-navigation-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Add Navigation Entries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-cross-link-from-harness-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Cross-Link from Harness Engineering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-cross-link-from-aci-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Cross-Link from ACI Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-add-should-rules-for-token-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Add SHOULD Rules for Token Efficiency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-6-cross-link-from-anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 6: Cross-Link from Anti-Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-7-final-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 7: Final Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="token-efficiency-guide-implementation-plan">Token Efficiency Guide - Implementation Plan<a class="headerlink" href="#token-efficiency-guide-implementation-plan" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Add a comprehensive token efficiency guide to the AI-native guidelines, covering cost model, design principles, practical playbook, anti-patterns, and measurement.</p>
+<p><strong>Architecture:</strong> Single new document at <code>docs/04-configuration/token-efficiency.md</code> with cross-link updates to 4 existing docs and navigation entries. Document follows the repo's established style: principles + patterns + anti-patterns + tables.</p>
+<p><strong>Tech Stack:</strong> Markdown (MkDocs Material theme), no code</p>
+<p><strong>Spec:</strong> <code>docs/superpowers/specs/2026-04-01-token-efficiency-guide-design.md</code></p>
+<hr />
+<h3 id="task-1-create-the-token-efficiency-guide">Task 1: Create the Token Efficiency Guide<a class="headerlink" href="#task-1-create-the-token-efficiency-guide" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Create: <code>docs/04-configuration/token-efficiency.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the complete guide</strong></li>
+</ul>
+<p>Create <code>docs/04-configuration/token-efficiency.md</code> with the following content. The document has 5 sections matching the spec.</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh"># Token Efficiency</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gu">## Overview</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Token efficiency is the practice of getting the most value from every token spent in AI-assisted development. It connects directly to [<span class="nt">harness engineering</span>](<span class="na">../01-foundations/harness-engineering.md</span>) - a well-designed harness is inherently token-efficient because it loads the right context at the right time.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>This guide covers three things: understanding what costs tokens (so you can reason about tradeoffs), design principles that make efficiency a natural byproduct of good practice, and a concrete playbook of actions ranked by impact.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gs">**Who this is for:**</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Teams already using Claude Code**</span> who want to reduce spend without reducing output
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Teams evaluating AI tools**</span> who need to understand cost structure before they start
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="gu">## Understanding the Cost Model</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Every message in a Claude Code conversation reprocesses the full context. This is the single most important thing to understand about token costs: you are not paying per-message, you are paying per-message times the size of the accumulated context.
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="gu">### What Gets Sent Per Message</span>
+</code></pre></div>
++----------------------------------------------------------+
+|  SYSTEM PROMPT (fixed per session)                       |
+|  Base instructions, permissions, hooks config             |
++----------------------------------------------------------+
+|  TOOL DEFINITIONS (fixed per session)                    |
+|  MCP server tools (deferred: names only until used)       |
+|  Built-in tools (Read, Edit, Bash, Grep, etc.)            |
+|  Fully loaded tool schemas (after first use of a tool)    |
++----------------------------------------------------------+
+|  CLAUDE.md CHAIN (fixed per session)                     |
+|  Workspace CLAUDE.md + @imports                           |
+|  Project CLAUDE.md                                        |
+|  User CLAUDE.md                                           |
+|  Auto-memory (MEMORY.md)                                  |
++----------------------------------------------------------+
+|  CONVERSATION HISTORY (grows per message)                |
+|  All prior messages, tool calls, and tool results         |
+|  (Compacted to summary when limit is approached)          |
++----------------------------------------------------------+
+|  YOUR MESSAGE                                            |
++----------------------------------------------------------+
+          |
+          v  INPUT TOKENS (billed per message)</p>
+<p>+----------------------------------------------------------+
+|  THINKING TOKENS (controlled by effort level)            |
+|  Extended reasoning - stripped from prior turns            |
++----------------------------------------------------------+
+|  RESPONSE + TOOL CALLS                                   |
+|  Assistant text + tool results feed back as input         |
++----------------------------------------------------------+
+          |
+          v  OUTPUT TOKENS (more expensive than input)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The fixed overhead (system prompt, tools, CLAUDE.md) is reprocessed on every message but benefits from [prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) - cache hits cost 90% less than fresh processing. Conversation history grows and eventually triggers compaction, which summarizes older content to make room.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Model Pricing
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Token costs vary significantly by model. All models support 1M context at standard pricing - there is no long-context surcharge ([context windows docs](https://docs.anthropic.com/en/docs/build-with-claude/context-windows)).
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Model | Input (per MTok) | Cache Hit (per MTok) | Output (per MTok) | Relative Cost |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|-------|-------------------|----------------------|--------------------|---------------|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Opus 4.6 | $5.00 | $0.50 | $25.00 | 1x (baseline) |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Sonnet 4.6 | $3.00 | $0.30 | $15.00 | ~0.6x |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Haiku 4.5 | $1.00 | $0.10 | $5.00 | ~0.2x |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Source: [Anthropic pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### Baseline Numbers
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Anthropic reports that average Claude Code usage costs **$6 per developer per day**, with the 90th percentile **below $12/day**. This translates to roughly $100-200/month for a typical developer using Sonnet. Opus-heavy usage, many MCP servers, or frequent agent spawning can push this significantly higher.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Source: [Claude Code cost management](https://docs.anthropic.com/en/docs/claude-code/costs)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>A minimal &quot;hello&quot; message in Claude Code consumes approximately 53k tokens before any conversation begins, due to system prompt, tool definitions, and configuration loading ([GitHub #19105](https://github.com/anthropics/claude-code/issues/19105)). This baseline cost is largely cached after the first message, but it illustrates how much overhead exists before you even start working.
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>### What Makes Things Expensive
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>The cost formula is roughly: `(fixed overhead + conversation history + your message) x number of messages`. The levers you can pull:
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>1. **Reduce fixed overhead** - fewer MCP servers, leaner CLAUDE.md
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>2. **Reduce conversation history growth** - delegate data-heavy work to subagents, use `/compact`
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>3. **Reduce per-token cost** - use cheaper models for routine work
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>4. **Reduce thinking tokens** - lower effort level for simple tasks
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>5. **Reduce messages** - be specific so the agent needs fewer exploratory steps
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>Token-efficient tool use is built into all Claude 4+ models, reducing output token consumption by up to 70% for tool calls compared to earlier models ([token-saving updates](https://www.anthropic.com/news/token-saving-updates)).
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>## Design Principles
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>These principles connect token efficiency to the broader [harness engineering](../01-foundations/harness-engineering.md) philosophy. A well-designed harness naturally saves tokens.
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>### 1. Main Context as Command Center
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>The main conversation context should be thin on raw data and rich in decisions. Heavy lifting - file reads, codebase searches, test runs, log analysis - belongs in subagents that return concise summaries to the main context.
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>Anthropic&#39;s [context engineering guide](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) calls this the &quot;smallest set of high-signal tokens&quot; principle. Every token in context should earn its place by informing the agent&#39;s next action. Raw grep output from an earlier step that you no longer need is dead weight that gets reprocessed on every subsequent message.
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>This connects to the existing [harness engineering](../01-foundations/harness-engineering.md#context-management) guidance: &quot;Summarize, do not accumulate.&quot;
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>### 2. Right Model for the Right Job
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>Not every task needs the most capable model. Model selection is a per-task decision, not a session-wide commitment.
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>| Task Type | Recommended Model | Why |
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>|-----------|-------------------|-----|
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>| Architecture, complex debugging, multi-step reasoning | Opus | Reasoning quality justifies cost |
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>| Routine coding, file edits, test writing, PR descriptions | Sonnet | Handles 80%+ of coding tasks well |
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>| Simple subagent tasks: searches, classification, formatting | Haiku | 5x cheaper than Opus, sufficient for mechanical work |
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>Switch models mid-session with `/model sonnet` or `/model opus`. The harness engineering insight applies here: the model matters less than the harness. But the cost difference is real - Opus is roughly 5x the cost of Haiku - so defaulting to the most expensive model for everything is wasteful.
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>### 3. Effort-Appropriate Reasoning
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>The [effort parameter](https://docs.anthropic.com/en/docs/build-with-claude/effort) controls how many tokens Claude spends on thinking before responding. It affects text responses, tool call decisions, and extended thinking depth.
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>| Level | Use Case | Token Impact |
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>|-------|----------|--------------|
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>| `max` | Deepest reasoning, Opus only | Maximum thinking spend |
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>| `high` | Complex agentic tasks | Full thinking (default in most setups) |
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>| `medium` | Balanced - recommended for Sonnet agentic work | Meaningful reduction in thinking tokens |
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>| `low` | Simple lookups, classification, subagent tasks | Minimal thinking |
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>For most Claude Code work with Sonnet, `medium` effort is the recommended default per [Anthropic&#39;s best practices](https://docs.anthropic.com/en/docs/claude-code/best-practices). At lower effort, Claude makes fewer tool calls, uses terse confirmations, and may skip extended thinking for straightforward problems.
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>Switch mid-session with `/effort medium` or `/effort high`.
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>### 4. Progressive Disclosure is Token Efficiency
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>The [ACI design](aci-design.md#progressive-disclosure-as-a-general-pattern) principle of progressive disclosure - loading information in tiers from summary to detail - is a direct cost optimization, not just a usability pattern.
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>Every line in CLAUDE.md is reprocessed on every message. Skills that load on-demand cost tokens only when invoked. The difference:
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>
+<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>| Loading Pattern | Token Cost | When |
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>|----------------|------------|------|
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>| CLAUDE.md content | Every message | Always |
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>| @import&#39;d files | Every message (loaded at session start) | Always |
+<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>| Skills | Only when invoked | On demand |
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>| docs/ files | Only when agent reads them | On demand |
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>Moving specialized workflows from CLAUDE.md into [skills](skills/overview.md) is the most direct way to reduce per-message overhead. The CLAUDE.md keeps a one-line description (the map), and the skill loads the full instructions only when needed (the territory).
+<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>
+<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>**SHOULD** keep CLAUDE.md under 200 lines. If it exceeds this, audit for content that belongs in skills or @import&#39;d docs.
+<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>
+<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>### 5. Minimize Idle Tool Overhead
+<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>
+<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>MCP servers add tool definitions to the system prompt. Claude Code uses [deferred loading](https://docs.anthropic.com/en/docs/claude-code/costs) - only tool names are sent initially, with full schemas loaded on first use. This is much better than loading everything upfront, but the name list still adds overhead that scales with server count.
+<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>
+<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>Enterprise-injected servers you never use are pure waste. CLI tools like `gh`, `aws`, and `terraform` add zero per-message overhead because they are invoked through the Bash tool, which is already in context.
+<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>
+<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>Known issues with MCP overhead:
+<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>
+<a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a>- [GitHub #24677](https://github.com/anthropics/claude-code/issues/24677): Compaction death spiral - 6 MCP servers consumed 86.5% of context, causing 6 compactions in 3.5 minutes
+<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>- [GitHub #28984](https://github.com/anthropics/claude-code/issues/28984): With ~150 tools, 22% of context was consumed by tool definitions
+<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>- [GitHub #3406](https://github.com/anthropics/claude-code/issues/3406): Before deferred loading, MCP descriptions caused 10-20k token overhead on the first message
+<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>
+<a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a>**SHOULD** audit MCP servers quarterly. Disable servers not used weekly. Prefer CLI equivalents when they exist.
+<a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a>
+<a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a>## Practical Playbook
+<a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a>
+<a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a>Concrete actions ranked by impact. Each links to the principle it implements and a corroborating source.
+<a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a>
+<a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a>### Tier 1: High Impact
+<a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a>
+<a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a>These changes have the largest effect on token spend. Implement them first.
+<a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>
+<a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a>**Default to Sonnet for routine work.** Use `/model sonnet` for everyday coding - file edits, test writing, PR descriptions, debugging. Reserve Opus for architecture decisions, complex multi-step reasoning, and deep debugging where Sonnet&#39;s output quality is noticeably lower. This single change can reduce token costs by 40-60% on routine tasks. See [Anthropic pricing](https://docs.anthropic.com/en/docs/about-claude/pricing).
+<a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a>
+<a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a>**Set effort to medium.** For Sonnet-based agentic work, `/effort medium` is the recommended default. It provides meaningful thinking token reduction while maintaining quality for most coding tasks. Escalate to `high` for complex reasoning, drop to `low` for simple subagent tasks. See [effort parameter docs](https://docs.anthropic.com/en/docs/build-with-claude/effort).
+<a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a>
+<a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a>**Disable unused MCP servers.** Audit your `.mcp.json` and remove servers you don&#39;t use weekly. For enterprise-injected servers from Claude.ai that you don&#39;t need, set `ENABLE_CLAUDEAI_MCP_SERVERS=false` in your Claude Code settings. Run `/context` to see what&#39;s consuming your context budget. See [Claude Code cost management](https://docs.anthropic.com/en/docs/claude-code/costs).
+<a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a>
+<a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a>**Delegate data-heavy work to subagents.** File searches across repos, bulk file reads, test runs, log analysis - these produce large outputs that sit in your main context and get reprocessed on every subsequent message. Delegate them to subagents that return concise summaries. The main context stays clean and focused on decisions. See [context engineering blog](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents).
+<a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a>
+<a id="__codelineno-1-121" name="__codelineno-1-121" href="#__codelineno-1-121"></a>### Tier 2: Medium Impact
+<a id="__codelineno-1-122" name="__codelineno-1-122" href="#__codelineno-1-122"></a>
+<a id="__codelineno-1-123" name="__codelineno-1-123" href="#__codelineno-1-123"></a>Refine your workflow with these practices.
+<a id="__codelineno-1-124" name="__codelineno-1-124" href="#__codelineno-1-124"></a>
+<a id="__codelineno-1-125" name="__codelineno-1-125" href="#__codelineno-1-125"></a>**Use `/compact` with focus instructions.** When your context is growing large, proactively compact with a focus directive: `/compact Focus on architecture decisions, API contracts, and test results`. This tells the compaction what to preserve and what to drop, producing a better summary than automatic compaction. See [Claude Code best practices](https://docs.anthropic.com/en/docs/claude-code/best-practices).
+<a id="__codelineno-1-126" name="__codelineno-1-126" href="#__codelineno-1-126"></a>
+<a id="__codelineno-1-127" name="__codelineno-1-127" href="#__codelineno-1-127"></a>**Use `/btw` for side questions.** The `/btw` command answers your question in a dismissible overlay that never enters conversation history. Use it for tangential lookups (&quot;btw what&#39;s the syntax for X?&quot;) that would otherwise add tokens to every future message. Zero context growth.
+<a id="__codelineno-1-128" name="__codelineno-1-128" href="#__codelineno-1-128"></a>
+<a id="__codelineno-1-129" name="__codelineno-1-129" href="#__codelineno-1-129"></a>**Keep CLAUDE.md under 200 lines.** Move specialized workflows (PR review checklists, database migration procedures, deployment runbooks) into [skills](skills/overview.md) that load on demand. The CLAUDE.md should be a map of pointers, not a dump of procedures. See [ACI design - progressive disclosure](aci-design.md#progressive-disclosure-as-a-general-pattern).
+<a id="__codelineno-1-130" name="__codelineno-1-130" href="#__codelineno-1-130"></a>
+<a id="__codelineno-1-131" name="__codelineno-1-131" href="#__codelineno-1-131"></a>**Write specific prompts.** &quot;Add input validation to the login handler in `src/routes/auth.ts`&quot; is cheaper than &quot;make the auth system more secure.&quot; Specific prompts require fewer exploratory tool calls (file reads, searches) and produce less context accumulation. Name files, state outcomes, define scope. See [Claude Code best practices](https://docs.anthropic.com/en/docs/claude-code/best-practices).
+<a id="__codelineno-1-132" name="__codelineno-1-132" href="#__codelineno-1-132"></a>
+<a id="__codelineno-1-133" name="__codelineno-1-133" href="#__codelineno-1-133"></a>**Specify cheaper models for subagents.** When spawning subagents for mechanical tasks (searches, formatting, simple edits), specify `model: &quot;haiku&quot;` or `model: &quot;sonnet&quot;` in the agent configuration. Each subagent creates a fresh context - the model choice directly affects the cost of that context.
+<a id="__codelineno-1-134" name="__codelineno-1-134" href="#__codelineno-1-134"></a>
+<a id="__codelineno-1-135" name="__codelineno-1-135" href="#__codelineno-1-135"></a>### Tier 3: Refinements
+<a id="__codelineno-1-136" name="__codelineno-1-136" href="#__codelineno-1-136"></a>
+<a id="__codelineno-1-137" name="__codelineno-1-137" href="#__codelineno-1-137"></a>Further optimizations for teams that have addressed Tiers 1 and 2.
+<a id="__codelineno-1-138" name="__codelineno-1-138" href="#__codelineno-1-138"></a>
+<a id="__codelineno-1-139" name="__codelineno-1-139" href="#__codelineno-1-139"></a>**Use preprocessing hooks to filter tool output.** Claude Code [hooks](ai-tools/claude-code.md) can preprocess data before it enters context. Instead of Claude reading a 10,000-line test output, a `PostToolUse` hook greps for failures first:
+<a id="__codelineno-1-140" name="__codelineno-1-140" href="#__codelineno-1-140"></a>
+<a id="__codelineno-1-141" name="__codelineno-1-141" href="#__codelineno-1-141"></a>```json
+<a id="__codelineno-1-142" name="__codelineno-1-142" href="#__codelineno-1-142"></a>{
+<a id="__codelineno-1-143" name="__codelineno-1-143" href="#__codelineno-1-143"></a>  &quot;hooks&quot;: {
+<a id="__codelineno-1-144" name="__codelineno-1-144" href="#__codelineno-1-144"></a>    &quot;PostToolUse&quot;: [{
+<a id="__codelineno-1-145" name="__codelineno-1-145" href="#__codelineno-1-145"></a>      &quot;matcher&quot;: &quot;Bash&quot;,
+<a id="__codelineno-1-146" name="__codelineno-1-146" href="#__codelineno-1-146"></a>      &quot;command&quot;: &quot;python3 scripts/filter-test-output.py&quot;
+<a id="__codelineno-1-147" name="__codelineno-1-147" href="#__codelineno-1-147"></a>    }]
+<a id="__codelineno-1-148" name="__codelineno-1-148" href="#__codelineno-1-148"></a>  }
+<a id="__codelineno-1-149" name="__codelineno-1-149" href="#__codelineno-1-149"></a>}
+</code></pre></div></p>
+<p>This reduces context from thousands of tokens to the handful that matter. See <a href="aci-design.md#3-integrate-feedback-at-the-point-of-action">ACI design - feedback loops</a>.</p>
+<p><strong>Cap search results.</strong> Configure tools to return bounded results and force query refinement rather than dumping hundreds of matches into context. See <a href="aci-design.md#1-constrain-search-to-force-precision">ACI design - constrain search</a>.</p>
+<p><strong>Use <code>/clear</code> between unrelated tasks.</strong> When switching topics within a session, <code>/clear</code> resets the context. Rename the session with <code>/rename</code> first so you can resume later. This eliminates stale context from the previous task being reprocessed on every message of the new task.</p>
+<p><strong>Monitor with <code>/cost</code> or <code>/stats</code>.</strong> Check token spend at natural breakpoints - after completing a feature, before spawning multiple agents, before starting a new task. Awareness drives behavior change. See <a href="#measurement-and-monitoring">Measurement and Monitoring</a> below.</p>
+<p><strong>Use agent teams deliberately.</strong> Agent teams consume roughly 7x more tokens than single-agent sessions because each teammate maintains its own context window. Use teams when genuine parallelism justifies the cost - not for tasks a single agent can handle sequentially. See <a href="https://docs.anthropic.com/en/docs/claude-code/costs">Claude Code cost management</a>.</p>
+<h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
+<p>Token-specific anti-patterns. For general AI anti-patterns, see <a href="../05-guardrails/anti-patterns.md">Anti-Patterns</a>.</p>
+<h3 id="the-opus-everywhere-pattern">The Opus Everywhere Pattern<a class="headerlink" href="#the-opus-everywhere-pattern" title="Permanent link">&para;</a></h3>
+<p><strong>Pattern</strong>: Running Opus on high effort for every task - simple file renames, git operations, single-line fixes.</p>
+<p><strong>Why it's bad</strong>: Opus costs ~5x more than Haiku per input token and ~1.7x more than Sonnet. Most routine coding tasks show no quality difference between Opus and Sonnet.</p>
+<p><strong>Better approach</strong>: Default to Sonnet with medium effort. Switch to Opus with <code>/model opus</code> when you need deep reasoning - architecture decisions, complex debugging, multi-step planning. Switch back when you're done.</p>
+<h3 id="the-mcp-hoarder">The MCP Hoarder<a class="headerlink" href="#the-mcp-hoarder" title="Permanent link">&para;</a></h3>
+<p><strong>Pattern</strong>: Loading 20+ MCP servers "just in case," including enterprise-injected servers you've never used.</p>
+<p><strong>Why it's bad</strong>: Each server adds tool definitions to the system prompt. <a href="https://github.com/anthropics/claude-code/issues/24677">GitHub #24677</a> documents a compaction death spiral where 6 MCP servers consumed 86.5% of context, causing 6 compactions in 3.5 minutes. With ~150 tools loaded, <a href="https://github.com/anthropics/claude-code/issues/28984">22% of context</a> can be consumed by tool definitions alone.</p>
+<p><strong>Better approach</strong>: Audit quarterly. Disable servers not used weekly. Set <code>ENABLE_CLAUDEAI_MCP_SERVERS=false</code> for enterprise-injected servers you don't need. Prefer CLI tools (<code>gh</code>, <code>aws</code>, <code>terraform</code>) that add zero per-message overhead.</p>
+<h3 id="the-context-landfill">The Context Landfill<a class="headerlink" href="#the-context-landfill" title="Permanent link">&para;</a></h3>
+<p><strong>Pattern</strong>: Reading entire large files into context when you need 5 lines. Running unbounded searches that return hundreds of results. Each raw result sits in context and gets reprocessed on every subsequent message.</p>
+<p><strong>Why it's bad</strong>: A 500-line file read that you needed once costs you tokens on every message after. Context grows with data you've already processed, and the reprocessing tax compounds.</p>
+<p><strong>Better approach</strong>: Use offset/limit on file reads. Delegate broad searches to subagents that return summaries. Cap grep results. If you need to read many files, do it in a subagent and bring back only the relevant findings.</p>
+<h3 id="the-review-army">The Review Army<a class="headerlink" href="#the-review-army" title="Permanent link">&para;</a></h3>
+<p><strong>Pattern</strong>: Spawning 5+ parallel review agents for a 3-line PR. Each agent creates a full fresh context (system prompt + tools + CLAUDE.md + the diff). Token cost scales linearly with agent count.</p>
+<p><strong>Why it's bad</strong>: A 5-agent parallel review costs roughly 5x a single-agent review. For a small PR, the overhead vastly exceeds the value.</p>
+<p><strong>Better approach</strong>: Scale review depth to PR size. A small fix needs one reviewer, not a panel. Reserve multi-agent reviews for large, complex PRs where multiple perspectives genuinely add value.</p>
+<h3 id="the-infinite-session">The Infinite Session<a class="headerlink" href="#the-infinite-session" title="Permanent link">&para;</a></h3>
+<p><strong>Pattern</strong>: Never using <code>/clear</code> or starting fresh. Context grows until compaction triggers repeatedly, each compaction losing nuance and detail.</p>
+<p><strong>Why it's bad</strong>: <a href="https://github.com/anthropics/claude-code/issues/9579">GitHub #9579</a> documents a bug where a compaction loop consumed 108.8M tokens ($64+) in a single day. Even without bugs, late-session messages in a bloated context are expensive and the model's reasoning quality degrades as it sifts through more noise (<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">context rot</a>).</p>
+<p><strong>Better approach</strong>: Use <code>/clear</code> between unrelated tasks. Use <code>/compact</code> with focus instructions proactively before hitting limits. For long-running work on a single topic, keep the session - the accumulated context is valuable. But don't let unrelated work pile up.</p>
+<h3 id="the-vague-prompt">The Vague Prompt<a class="headerlink" href="#the-vague-prompt" title="Permanent link">&para;</a></h3>
+<p><strong>Pattern</strong>: "Improve the codebase" or "look into the auth system" triggers broad exploratory scanning - reading dozens of files, running many searches. Each exploration step adds to context.</p>
+<p><strong>Why it's bad</strong>: Vague prompts cause 5-10x more tool calls than specific ones, and every tool result enters context permanently.</p>
+<p><strong>Better approach</strong>: Be specific. Name files, state outcomes, define scope. "Add rate limiting to <code>POST /api/login</code> in <code>src/routes/auth.ts</code> using express-rate-limit" is cheaper than "make auth more secure." See <a href="https://docs.anthropic.com/en/docs/claude-code/best-practices">Claude Code best practices</a>.</p>
+<h2 id="measurement-and-monitoring">Measurement and Monitoring<a class="headerlink" href="#measurement-and-monitoring" title="Permanent link">&para;</a></h2>
+<p>You can't optimize what you don't measure.</p>
+<h3 id="built-in-commands">Built-in Commands<a class="headerlink" href="#built-in-commands" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it shows</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/cost</code></td>
+<td>Current session token usage and cost</td>
+<td>API key users - check during long sessions</td>
+</tr>
+<tr>
+<td><code>/stats</code></td>
+<td>Session usage statistics</td>
+<td>Pro/Max subscribers</td>
+</tr>
+<tr>
+<td><code>/context</code></td>
+<td>What's consuming context space</td>
+<td>When context feels bloated or compaction triggers early</td>
+</tr>
+</tbody>
+</table>
+<h3 id="status-line">Status Line<a class="headerlink" href="#status-line" title="Permanent link">&para;</a></h3>
+<p>Configure the <a href="https://docs.anthropic.com/en/docs/claude-code/best-practices">status line</a> to show context usage continuously. This is the equivalent of a fuel gauge - you notice runaway consumption before it becomes expensive.</p>
+<h3 id="team-level-tracking">Team-Level Tracking<a class="headerlink" href="#team-level-tracking" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Billing Model</th>
+<th>Tracking Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API key (Anthropic Console)</td>
+<td>Workspace spend limits, usage dashboards</td>
+</tr>
+<tr>
+<td>AWS Bedrock / Google Vertex</td>
+<td>Native cloud billing dashboards</td>
+</tr>
+<tr>
+<td>Per-developer granularity</td>
+<td><a href="https://docs.litellm.ai/docs/proxy/virtual_keys#tracking-spend">LiteLLM proxy</a> with spend-by-key</td>
+</tr>
+<tr>
+<td>Enterprise (Pro/Max)</td>
+<td>Admin console usage reports</td>
+</tr>
+</tbody>
+</table>
+<h3 id="warning-signs">Warning Signs<a class="headerlink" href="#warning-signs" title="Permanent link">&para;</a></h3>
+<p>Patterns that indicate a session is burning tokens unnecessarily:</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>What's happening</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compaction triggering repeatedly</td>
+<td>Context filled with stale data or MCP overhead</td>
+<td><code>/compact</code> with focus, or <code>/clear</code> and start fresh</td>
+</tr>
+<tr>
+<td>Many subagents spawned in sequence</td>
+<td>Each rebuilds full context independently</td>
+<td>Batch related work into fewer, focused agents</td>
+</tr>
+<tr>
+<td>Session cost exceeding $10</td>
+<td>Long session with accumulated context</td>
+<td>Consider starting a new session</td>
+</tr>
+<tr>
+<td>Same file read multiple times</td>
+<td>Agent lost track of earlier reads (context rot)</td>
+<td><code>/compact</code> to refresh, or delegate to subagent</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-budget-habit">The Budget Habit<a class="headerlink" href="#the-budget-habit" title="Permanent link">&para;</a></h3>
+<p><strong>SHOULD</strong> check <code>/cost</code> or <code>/stats</code> at natural breakpoints: after completing a feature, before spawning multiple agents, before starting a new task. Think of it like checking the rearview mirror - not constant, but regular.</p>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../01-foundations/harness-engineering.md">Harness Engineering</a> - Why the harness matters more than the model, context management principles</li>
+<li><a href="aci-design.md">ACI Design</a> - Agent-computer interface design, progressive disclosure, search constraints, token budgets</li>
+<li><a href="../05-guardrails/anti-patterns.md">Anti-Patterns</a> - General AI anti-patterns including prompt stuffing</li>
+<li><a href="../02-lifecycle/multi-session-patterns.md">Multi-Session Patterns</a> - State persistence and agent isolation</li>
+<li><a href="ai-tools/claude-code.md">Claude Code Configuration</a> - Hooks, permissions, CLAUDE.md patterns</li>
+<li><a href="skills/overview.md">Skills Ecosystem</a> - On-demand loading via skills</li>
+<li><a href="mcp/overview.md">MCP Configuration</a> - MCP server setup and management
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>- [ ] **Step 2: Verify the file renders correctly**
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Run: `cd /Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines &amp;&amp; head -5 docs/04-configuration/token-efficiency.md`
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Expected: The first 5 lines of the file showing the H1 title and overview start.
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>- [ ] **Step 3: Commit**
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>```bash
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cd /Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>git add docs/04-configuration/token-efficiency.md
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>git commit -m &quot;docs: add token efficiency guide
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Covers cost model, design principles, practical playbook (3 tiers),
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>anti-patterns, and measurement. Heavy on external links to Anthropic
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>docs, blogs, and GitHub issues for corroboration.&quot;
+</code></pre></div></li>
+</ul>
+<hr />
+<h3 id="task-2-add-navigation-entries">Task 2: Add Navigation Entries<a class="headerlink" href="#task-2-add-navigation-entries" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Modify: <code>mkdocs.yml:114</code> (after ACI Design entry)
+- Modify: <code>AGENTS.md:24</code> (Configuration section in content map)</p>
+<ul>
+<li>[ ] <strong>Step 1: Add mkdocs.yml nav entry</strong></li>
+</ul>
+<p>In <code>mkdocs.yml</code>, after the <code>ACI Design: 04-configuration/aci-design.md</code> line (line 114), add:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Token Efficiency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">04-configuration/token-efficiency.md</span>
+</code></pre></div>
+<p>This places it after ACI Design (which it extends) and before Cross-Tool Setup.</p>
+<ul>
+<li>[ ] <strong>Step 2: Update AGENTS.md content map</strong></li>
+</ul>
+<p>In <code>AGENTS.md</code>, update the Configuration row in the content map table to include token efficiency:</p>
+<p>Change:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>| [<span class="nt">04 - Configuration</span>](<span class="na">docs/04-configuration/</span>) | ACI design, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>| [<span class="nt">04 - Configuration</span>](<span class="na">docs/04-configuration/</span>) | ACI design, token efficiency, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 3: Verify nav entry works</strong></li>
+</ul>
+<p>Run: <code>cd /Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines &amp;&amp; grep -A1 "ACI Design" mkdocs.yml</code>
+Expected: Shows ACI Design line followed by Token Efficiency line.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span><span class="w"> </span>/Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>add<span class="w"> </span>mkdocs.yml<span class="w"> </span>AGENTS.md
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: add token efficiency to navigation&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-3-cross-link-from-harness-engineering">Task 3: Cross-Link from Harness Engineering<a class="headerlink" href="#task-3-cross-link-from-harness-engineering" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/01-foundations/harness-engineering.md:58</code> (after "Summarize, do not accumulate" paragraph)</p>
+<ul>
+<li>[ ] <strong>Step 1: Add cross-link</strong></li>
+</ul>
+<p>In <code>docs/01-foundations/harness-engineering.md</code>, after the "Summarize, do not accumulate" paragraph (line 58), add a new paragraph:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>For the cost implications of context management decisions - what tokens cost, how conversation history accumulates, and practical actions to reduce spend - see [<span class="nt">Token Efficiency</span>](<span class="na">../04-configuration/token-efficiency.md</span>).
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Verify link path</strong></li>
+</ul>
+<p>Run: <code>cd /Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines &amp;&amp; ls docs/04-configuration/token-efficiency.md</code>
+Expected: File exists (created in Task 1).</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span>/Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>add<span class="w"> </span>docs/01-foundations/harness-engineering.md
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: cross-link harness engineering to token efficiency&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-4-cross-link-from-aci-design">Task 4: Cross-Link from ACI Design<a class="headerlink" href="#task-4-cross-link-from-aci-design" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/04-configuration/aci-design.md:275-286</code> (Token Budgets section)</p>
+<ul>
+<li>[ ] <strong>Step 1: Add cross-link after Token Budgets table</strong></li>
+</ul>
+<p>In <code>docs/04-configuration/aci-design.md</code>, after the Token Budgets section's rationale table (after line 286, which is the "If a document exceeds its budget, split it" paragraph), add:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>For a comprehensive treatment of token cost optimization beyond document sizing - model selection, effort tuning, MCP overhead, and measurement - see [<span class="nt">Token Efficiency</span>](<span class="na">token-efficiency.md</span>).
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>/Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>add<span class="w"> </span>docs/04-configuration/aci-design.md
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: cross-link ACI design to token efficiency&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-5-add-should-rules-for-token-efficiency">Task 5: Add SHOULD Rules for Token Efficiency<a class="headerlink" href="#task-5-add-should-rules-for-token-efficiency" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/05-guardrails/should-rules.md:214</code> (AI Collaboration section)</p>
+<ul>
+<li>[ ] <strong>Step 1: Add token efficiency SHOULD rules</strong></li>
+</ul>
+<p>In <code>docs/05-guardrails/should-rules.md</code>, at the end of the "AI Collaboration" section (after the "AI-Generated Artifacts" subsection, before "## When to Deviate"), add a new subsection:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="gu">### Token Efficiency</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">-</span><span class="w"> </span><span class="gs">**SHOULD**</span> default to Sonnet for routine tasks, reserving Opus for complex reasoning
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">-</span><span class="w"> </span><span class="gs">**SHOULD**</span> set effort to medium for Sonnet-based agentic work, escalating to high only for complex tasks
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">-</span><span class="w"> </span><span class="gs">**SHOULD**</span> audit MCP servers quarterly and disable those not used weekly
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">-</span><span class="w"> </span><span class="gs">**SHOULD**</span> delegate data-heavy operations (bulk reads, searches, test runs) to subagents
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">-</span><span class="w"> </span><span class="gs">**SHOULD**</span> check <span class="sb">`/cost`</span> or <span class="sb">`/stats`</span> at natural breakpoints (after features, before agent spawns)
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">-</span><span class="w"> </span><span class="gs">**SHOULD NOT**</span> spawn multi-agent review panels for small PRs (scale review depth to PR size)
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="ge">*Exception: Opus on high effort is justified for architecture decisions, complex debugging, or when Sonnet output quality is noticeably insufficient*</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>See [<span class="nt">Token Efficiency</span>](<span class="na">../04-configuration/token-efficiency.md</span>) for the full guide.
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">cd</span><span class="w"> </span>/Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>git<span class="w"> </span>add<span class="w"> </span>docs/05-guardrails/should-rules.md
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: add token efficiency SHOULD rules&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-6-cross-link-from-anti-patterns">Task 6: Cross-Link from Anti-Patterns<a class="headerlink" href="#task-6-cross-link-from-anti-patterns" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/05-guardrails/anti-patterns.md:7</code> (AI-Specific Anti-Patterns section)</p>
+<ul>
+<li>[ ] <strong>Step 1: Add cross-link</strong></li>
+</ul>
+<p>In <code>docs/05-guardrails/anti-patterns.md</code>, after the "## AI-Specific Anti-Patterns" heading (line 7), add:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>For token-specific anti-patterns (Opus everywhere, MCP hoarding, context landfill, review army, infinite sessions), see [<span class="nt">Token Efficiency - Anti-Patterns</span>](<span class="na">../04-configuration/token-efficiency.md#anti-patterns</span>).
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>/Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>git<span class="w"> </span>add<span class="w"> </span>docs/05-guardrails/anti-patterns.md
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: cross-link anti-patterns to token efficiency&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-7-final-verification">Task 7: Final Verification<a class="headerlink" href="#task-7-final-verification" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong> None (verification only)</p>
+<ul>
+<li>[ ] <strong>Step 1: Verify all new and modified files</strong></li>
+</ul>
+<p>Run:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">cd</span><span class="w"> </span>/Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== New file ===&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>docs/04-configuration/token-efficiency.md
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Nav entry ===&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Token Efficiency&quot;</span><span class="w"> </span>mkdocs.yml
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== AGENTS.md ===&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;token efficiency&quot;</span><span class="w"> </span>AGENTS.md
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Harness cross-link ===&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Token Efficiency&quot;</span><span class="w"> </span>docs/01-foundations/harness-engineering.md
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== ACI cross-link ===&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Token Efficiency&quot;</span><span class="w"> </span>docs/04-configuration/aci-design.md
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== SHOULD rules ===&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Token Efficiency&quot;</span><span class="w"> </span>docs/05-guardrails/should-rules.md
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Anti-patterns cross-link ===&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Token Efficiency&quot;</span><span class="w"> </span>docs/05-guardrails/anti-patterns.md
+</code></pre></div></p>
+<p>Expected: All 7 lines produce output confirming the file exists and cross-links are in place.</p>
+<ul>
+<li>[ ] <strong>Step 2: Verify relative links resolve</strong></li>
+</ul>
+<p>Run:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span>/Users/dj/adobe/github/adobe/mysticat-ai-native-guidelines
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Check that all files referenced in See Also exist</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>docs/01-foundations/harness-engineering.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>docs/04-configuration/aci-design.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>docs/05-guardrails/anti-patterns.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>docs/02-lifecycle/multi-session-patterns.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span>docs/04-configuration/ai-tools/claude-code.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span>docs/04-configuration/skills/overview.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span>docs/04-configuration/mcp/overview.md<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">  </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: </span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;MISSING: </span><span class="nv">$f</span><span class="s2">&quot;</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="k">done</span>
+</code></pre></div></p>
+<p>Expected: All files show OK.</p>
+<ul>
+<li>[ ] <strong>Step 3: Count document length</strong></li>
+</ul>
+<p>Run: <code>wc -l docs/04-configuration/token-efficiency.md</code>
+Expected: Approximately 250-300 lines - substantial but within the repo's reference doc budget (under 1,000 lines per ACI design guidelines).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

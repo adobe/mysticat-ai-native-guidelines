@@ -1,0 +1,61 @@
+{
+  "$comment": "Example .mcp.json for a workspace with multiple MCP servers configured",
+  "mcpServers": {
+    "mcp-atlassian": {
+      "$comment": "Jira and Confluence integration via uvx",
+      "command": "uvx",
+      "args": ["--python=3.12", "mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "https://jira.example.com",
+        "CONFLUENCE_URL": "https://wiki.example.com",
+        "JIRA_PERSONAL_TOKEN": "${JIRA_PERSONAL_TOKEN}",
+        "CONFLUENCE_PERSONAL_TOKEN": "${CONFLUENCE_PERSONAL_TOKEN}"
+      }
+    },
+    "slack": {
+      "$comment": "Slack workspace integration",
+      "command": "npx",
+      "args": ["-y", "slack-mcp-server@latest", "--transport", "stdio"],
+      "env": {
+        "SLACK_MCP_XOXP_TOKEN": "${SLACK_MCP_XOXP_TOKEN}",
+        "SLACK_MCP_ADD_MESSAGE_TOOL": "true"
+      }
+    },
+    "postgres-dev": {
+      "$comment": "PostgreSQL database access - connection string as argument",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://user:password@localhost:5432/mydb"
+      ]
+    },
+    "coralogix": {
+      "$comment": "Coralogix observability",
+      "command": "npx",
+      "args": ["-y", "@nickholden/coralogix-mcp-server"],
+      "env": {
+        "CORALOGIX_API_KEY": "${CORALOGIX_API_KEY}",
+        "CORALOGIX_REGION": "auto",
+        "CORALOGIX_ENV": "production"
+      }
+    },
+    "github": {
+      "$comment": "GitHub.com via HTTP MCP",
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      }
+    },
+    "github-enterprise": {
+      "$comment": "GitHub Enterprise via Docker",
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "-e", "GITHUB_HOST", "ghcr.io/github/github-mcp-server"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GH_ENTERPRISE_TOKEN}",
+        "GITHUB_HOST": "https://git.corp.example.com"
+      }
+    }
+  }
+}

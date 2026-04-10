@@ -43,6 +43,35 @@ npm run typecheck
 
 See [ACI Design](../04-configuration/aci-design.md#3-integrate-feedback-at-the-point-of-action) for a complete lint-changed.sh script example that extracts the file path from `$CLAUDE_TOOL_INPUT`.
 
+For structural boundary enforcement, tools like **dependency-cruiser** (Node.js) and **import-linter** (Python) let you declare architectural rules as config — each layer specifying what it may import. The **allowlist pattern** means new modules are blocked by default without requiring config updates:
+
+```javascript
+// .dependency-cruiser.cjs
+module.exports = {
+  forbidden: [
+    {
+      name: 'no-domain-imports-in-framework',
+      from: { path: '^src/framework/' },
+      to: {
+        path: '^src/',
+        pathNot: ['^src/framework/', '^src/event/', '^src/types\\.ts$'],
+      },
+    },
+  ],
+};
+```
+
+Chain them into the existing lint command so they run at every enforcement point:
+
+```json
+"scripts": {
+  "lint:boundaries": "depcruise src",
+  "lint": "eslint . && npm run lint:boundaries"
+}
+```
+
+Both tools emit structured violations — file, rule, dependency path — satisfying the agent-friendly error message requirements without custom formatting.
+
 **Why edit-time matters for agents**: An agent that gets a lint error immediately after writing a file can fix it in the same turn. An agent that discovers the error 10 commits later has to unwind significant work - or worse, builds more code on top of the broken foundation.
 
 ### 2. Commit-Time: Structural Tests

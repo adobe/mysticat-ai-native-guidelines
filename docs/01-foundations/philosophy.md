@@ -11,6 +11,8 @@ This is fundamentally different from using AI as "fancy autocomplete." AI-first 
 - **Documentation maintainer**: AI keeps docs current as code evolves
 - **Quality guardian**: AI enforces standards and catches issues early
 
+This collaboration exists on a spectrum. As your [harness](harness-engineering.md) matures and your [substrate boundaries](substrate-model.md) clarify, the human role shifts from hands-on collaborator toward architectural director - defining intent, delegating execution, and reviewing results rather than every line of code. Both modes are valid, and most work falls somewhere between. See [Operating Modes](operating-modes.md) for how this spectrum works in practice.
+
 ## Core Principles
 
 ### 1. Spec-Driven Development

@@ -50,6 +50,7 @@ nav:
   - What's New: LATEST.md
   - Foundations:
     - Philosophy: 01-foundations/philosophy.md
+    - Operating Modes: 01-foundations/operating-modes.md
     - Harness Engineering: 01-foundations/harness-engineering.md
     - Substrate Model: 01-foundations/substrate-model.md
     - Workspace Setup: 01-foundations/workspace-setup.md

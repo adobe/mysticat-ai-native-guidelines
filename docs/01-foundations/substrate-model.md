@@ -22,6 +22,12 @@ This model is an architectural response to the [risks of AI-first development](p
 - Failures are contained, not catastrophic
 - Primary goal: **produce business value for customers quickly**
 
+### Operating Modes by Layer
+
+The substrate layer is one axis that determines how you work with AI. The [operating modes spectrum](operating-modes.md) maps the full picture - layer combined with [AI-native maturity](../07-leadership/ai-native-engineering-phase1.md) determines whether collaborator or director mode is appropriate.
+
+In short: fluid-layer work with a strong harness can support director-mode operation - human defines intent via specs and tests, AI executes, human verifies results. Durable-layer work requires closer human collaboration regardless of maturity, because failures cascade across the system. Work that crosses the boundary (a fluid feature requiring a durable schema change) requires collaborator-mode rigor at the boundary.
+
 ## Domain Experts as Producers
 
 The fluid layer enables a new producer role: **Domain Experts**. These are ICs with deep knowledge in non-engineering domains - SEO specialists, GEO analysts, paid traffic experts, content strategists.

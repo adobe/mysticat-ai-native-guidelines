@@ -434,3 +434,4 @@ const posts = await getPostsForUsers(userIds); // Single query
 - [SHOULD Rules](should-rules.md) - Strong recommendations
 - [Mechanical Enforcement](mechanical-enforcement.md) - Prevent anti-patterns with automated gates
 - [Multi-Session Patterns](../02-lifecycle/multi-session-patterns.md) - Avoid amnesia loops and shared worktree problems
+- [Baseline Alignment](../02-lifecycle/baseline-alignment.md) - Detect and prevent the "telephone game" drift across review cycles

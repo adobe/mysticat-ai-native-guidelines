@@ -70,6 +70,29 @@ The fix is simple: **periodically check the current artifact against its baselin
 | Implementation (diagonal check) | Approved spec directly — see [The Diagonal Check](#the-diagonal-check-implementation-against-the-spec) |
 | Post-merge validation | Approved spec (full circle) |
 
+### Always Compare Bidirectionally
+
+Every alignment check must analyze from **both directions**. A one-directional check — "does the implementation cover everything in the plan?" — catches directional drift but is blind to volume drift. The reverse question — "does the implementation contain anything not in the plan?" — catches scope creep but misses dropped requirements. You need both.
+
+This applies to every comparison pair:
+
+**Spec vs. Plan:**
+1. Does the plan describe the implementation of everything defined in the spec? Anything missing or only partially covered?
+2. Does the plan describe things that were never part of the spec? What's the reason — is it a justified technical necessity (e.g., a migration step the spec didn't mention because it's an implementation detail), or is it evidence of scope drift? If justified, should it be added back to the spec to complete the picture?
+
+**Plan vs. Implementation:**
+1. Does the implementation address every task in the plan? Anything dropped, deferred, or only partially done?
+2. Does the implementation contain functionality that the plan never called for? Was it added during review cycles, and is it justified? Should the plan be updated, or should the addition be deferred?
+
+**Spec vs. Implementation (diagonal check):**
+1. Does the implementation fulfill every goal and requirement stated in the spec? Not at the task level (that's plan→impl), but at the intent level — does it solve the problem the spec set out to solve?
+2. Does the implementation solve problems the spec never raised? This is the strongest signal of volume drift, because the spec represents the agreed scope. Anything the implementation does beyond the spec was never explicitly agreed to.
+
+For each difference found in direction 2 (artifact contains something the baseline doesn't), the resolution is one of:
+- **Backfill the baseline** — the addition is justified; update the upstream artifact to reflect reality and maintain the full picture
+- **Defer the addition** — the addition is nice-to-have; remove it from the current work and create a follow-up ticket
+- **Flag as drift** — the addition is unjustified and should be removed
+
 ### When to Check
 
 - **After every 3rd review cycle** on the same artifact — if a PR has gone through 3+ rounds of review/fix, it's time to check the plan
@@ -126,17 +149,21 @@ This works well because the AI can read both artifacts and do a systematic cross
 
 #### Spec Compliance Review
 
-For the final check (implementation vs. spec), use a structured review:
+For the final check (implementation vs. spec), use a structured bidirectional review:
 
 ```
 Compare the implementation in this PR against the spec at
-docs/specs/feature-x.md. Create a table with three columns:
-1. Spec requirement
-2. Implementation status (met / partially met / not met / changed)
-3. Evidence (file:line or test name)
+docs/specs/feature-x.md. Analyze from both directions:
 
-Flag any requirement that is "changed" or "not met" so we can
-decide whether the deviation is intentional.
+Direction 1 — Spec coverage:
+Create a table with columns: Spec requirement | Implementation status
+(met / partially met / not met / changed) | Evidence (file:line or test).
+Flag any requirement that is "changed" or "not met."
+
+Direction 2 — Scope check:
+List any significant functionality in the implementation that the spec
+never mentions. For each, note: is it a justified technical necessity,
+or potential scope drift?
 ```
 
 ## The Diagonal Check: Implementation Against the Spec

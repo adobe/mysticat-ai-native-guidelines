@@ -247,4 +247,5 @@ Before moving to Closure:
 ## See Also
 
 - [Closure Phase](05-closure.md)
+- [Baseline Alignment](baseline-alignment.md) - Detecting drift between spec, plan, and implementation across review cycles
 - [MUST Rules](../05-guardrails/must-rules.md) - Critical validation requirements

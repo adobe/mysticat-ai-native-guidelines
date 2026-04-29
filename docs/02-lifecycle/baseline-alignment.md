@@ -67,6 +67,7 @@ The fix is simple: **periodically check the current artifact against its baselin
 | Spec revision | Original problem statement / requirements |
 | Plan revision | Approved spec |
 | Implementation (PR review cycles) | Approved implementation plan |
+| Implementation (diagonal check) | Approved spec directly — see [The Diagonal Check](#the-diagonal-check-implementation-against-the-spec) |
 | Post-merge validation | Approved spec (full circle) |
 
 ### When to Check
@@ -136,6 +137,57 @@ docs/specs/feature-x.md. Create a table with three columns:
 
 Flag any requirement that is "changed" or "not met" so we can
 decide whether the deviation is intentional.
+```
+
+## The Diagonal Check: Implementation Against the Spec
+
+The baseline alignment table above suggests a chain: implementation is checked against the plan, the plan against the spec. But it also pays to **skip the intermediary** and compare the implementation directly against the original spec — even though they operate at very different levels of abstraction.
+
+This is not redundant. The transitive chain (impl→plan→spec) can show "aligned" at every link while the end-to-end result has drifted. The direct diagonal check catches what the chain misses.
+
+### Why the plan is a lossy intermediary
+
+The plan translates spec requirements into technical tasks. That translation is necessarily lossy — it decomposes user-facing intent ("users should see their recent activity") into implementation details ("REST endpoint, React component, Redis cache"). When you check the implementation against the plan, you're verifying that the technical decomposition was executed faithfully. But you're not verifying that the decomposition itself was faithful to the spec.
+
+If a spec requirement was misunderstood, oversimplified, or partially lost during planning, the plan itself becomes a flawed baseline. Checking implementation against a flawed plan produces a false "aligned" signal.
+
+### How compound drift hides in transitive checks
+
+Consider this chain:
+
+1. The spec says: "Display the 10 most recent user actions with timestamps"
+2. The plan translates this to: "GET /api/activity endpoint returning recent actions"
+3. During plan review, "10 most recent" is quietly generalized to "recent" (a reviewer says "let's not hardcode the limit")
+4. The implementation returns the 50 most recent actions (the developer picks a default)
+5. During PR review, a suggestion adds pagination support
+
+Checking impl→plan: aligned (the endpoint returns recent actions, as planned). Checking plan→spec: roughly aligned (the plan covers activity retrieval). But the direct impl→spec check reveals: the spec asked for a simple list of 10 items, and the implementation delivers a paginated API returning 50 items with configurable limits. The *direction* is roughly right, but the *volume* ballooned through intermediary drift.
+
+### When to do the diagonal check
+
+The direct impl→spec comparison is most valuable:
+
+- **Before final review approval** — as a last gate, verify the implementation serves the spec's intent, not just the plan's tasks
+- **When the plan itself went through heavy revision** — if the plan had 3+ review cycles, it may have drifted from the spec, making it an unreliable intermediary
+- **For MVP-scoped work** — MVPs are deliberately minimal; the spec captures that intent, but the plan and implementation tend to absorb complexity. The diagonal check asks: "is this still an MVP?"
+
+### The abstraction gap is a feature
+
+The spec and the implementation operate at very different levels of abstraction. This makes comparison harder — but it's precisely what makes it valuable. Comparing code against technical tasks (impl→plan) stays in the "how" domain. Comparing code against the spec forces you back into the "what" and "why" domain: does this actually solve the user's problem? Is it solving more than was asked for? Is it solving the right problem at all?
+
+An AI-assisted diagonal check works well here because the AI can bridge the abstraction levels:
+
+```
+Compare the implementation on this branch against the original spec at
+docs/specs/feature-x.md. Ignore the implementation plan — I want to
+know whether the code, as built, serves the spec's stated goals.
+
+For each goal in the spec:
+1. Is it met by the implementation?
+2. Is it met in the way the spec intended, or has the approach diverged?
+
+Also flag any significant functionality in the implementation that
+the spec never asked for.
 ```
 
 ## Intentional vs. Accidental Drift

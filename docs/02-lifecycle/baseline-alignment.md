@@ -11,20 +11,23 @@ Drift has two dimensions:
 - **Directional drift** — the solution moves *away* from what was intended. Requirements get dropped, simplified, or subtly altered until the implementation no longer serves the original need.
 - **Volume drift** — the solution grows *beyond* what was intended. Each review cycle adds "just one more thing" until a simple MVP becomes a fully-featured system that nobody scoped, budgeted, or asked for.
 
-```
-Original Intent
-     │
-     ▼
-  Spec v1 ──review──▶ Spec v2 ──review──▶ Spec v3 ──review──▶ Spec v4
-                                                                  │
-                                                                  ▼
-                                            Plan v1 ──review──▶ Plan v2 ──review──▶ Plan v3
-                                                                                      │
-                                                                                      ▼
-                                                                   Impl v1 ──review──▶ Impl v2 ──review──▶ Impl v3
-                                                                                                              │
-                                                                                                         ❓ Still aligned
-                                                                                                            with Spec v4?
+```mermaid
+graph LR
+    OI[Original Intent] --> S1[Spec v1]
+    S1 -- review --> S2[Spec v2]
+    S2 -- review --> S3[Spec v3]
+    S3 -- review --> S4[Spec v4]
+    S4 --> P1[Plan v1]
+    P1 -- review --> P2[Plan v2]
+    P2 -- review --> P3[Plan v3]
+    P3 --> I1[Impl v1]
+    I1 -- review --> I2[Impl v2]
+    I2 -- review --> I3[Impl v3]
+    I3 -. "❓ Still aligned<br/>with Spec v4?" .-> S4
+
+    style OI fill:#4a90d9,color:#fff
+    style S4 fill:#f5a623,color:#fff
+    style I3 fill:#d0021b,color:#fff
 ```
 
 Each arrow is a well-intentioned revision. The danger is that no one checks the diagonal — whether the final implementation still serves the original spec.

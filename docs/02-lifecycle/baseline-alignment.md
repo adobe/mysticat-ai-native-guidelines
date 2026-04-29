@@ -6,6 +6,11 @@ Larger features go through multiple rounds of review and revision at every phase
 
 But without periodically checking back against the **baseline** — the artifact from the previous phase — these incremental changes compound into **drift**. The implementation no longer matches the plan. The plan no longer matches the spec. The spec may have evolved away from the original problem statement.
 
+Drift has two dimensions:
+
+- **Directional drift** — the solution moves *away* from what was intended. Requirements get dropped, simplified, or subtly altered until the implementation no longer serves the original need.
+- **Volume drift** — the solution grows *beyond* what was intended. Each review cycle adds "just one more thing" until a simple MVP becomes a fully-featured system that nobody scoped, budgeted, or asked for.
+
 ```
 Original Intent
      │
@@ -40,6 +45,14 @@ No single review comment causes drift. But a series of reasonable changes can:
 4. A PR reviewer asks for a refactor that subtly changes the behavior of Z, which depended on Y
 
 Each step is locally correct. The result is an implementation that has silently dropped a requirement.
+
+### Scope Accumulation Through "Helpful" Suggestions
+
+Volume drift is especially insidious because it feels like improvement. A spec reviewer suggests handling an extra edge case. A plan reviewer recommends adding a caching layer "while we're at it." A PR reviewer asks for a retry mechanism, better error messages, and a metrics dashboard. Each suggestion is reasonable on its own. Nobody is tracking the cumulative cost.
+
+The result: what started as a simple MVP — deliberately scoped to validate an idea quickly — has become a production-grade system with retry logic, caching, observability, and edge-case handling that nobody planned for, tested holistically, or agreed to maintain. The developer may not even realize the scope has doubled because each addition felt small. But every added feature carries ongoing cost: more code to maintain, more tests to keep passing, more surface area for bugs, and more complexity for the next person (or AI) to understand.
+
+This is particularly dangerous in AI-assisted development. AI reviewers are thorough by nature — they will suggest improvements, hardening, and additional coverage. Human reviewers, wanting to add value, pile on suggestions. Without a scope anchor, the artifact absorbs it all.
 
 ### Context Loss Across Sessions
 
@@ -82,7 +95,13 @@ Re-read the baseline document and compare it against the current state of the ar
 - [ ] Error handling with retry — **missing**, dropped during refactor in review round 3
 - [ ] Integration test for cache invalidation — **missing**, not written after cache TTL change
 
-### Verdict: 2 items drifted. Error handling needs to be restored. Integration test needs updating for new TTL.
+### Scope check (items NOT in plan):
+- [ ] Retry with exponential backoff — **added** in review round 2 (reviewer suggestion)
+- [ ] Prometheus metrics endpoint — **added** in review round 3 (reviewer suggestion)
+
+### Verdict:
+- **Directional**: 2 items drifted. Error handling needs to be restored. Integration test needs updating for new TTL.
+- **Volume**: 2 items added that weren't in the plan. Decide: defer to a follow-up, or accept and update the plan.
 ```
 
 #### AI-Assisted Check
@@ -91,10 +110,15 @@ Ask the AI to perform the comparison explicitly:
 
 ```
 Compare the current implementation on this branch against the plan
-at docs/plans/feature-x.md. For each item in the plan, verify whether
-the implementation still addresses it. Flag any items that were dropped,
-changed, or only partially implemented. For changes, note whether they
-were intentional (documented in review comments) or accidental.
+at docs/plans/feature-x.md.
+
+1. For each item in the plan, verify whether the implementation still
+   addresses it. Flag any items that were dropped, changed, or only
+   partially implemented.
+2. For each piece of functionality in the implementation, verify whether
+   it appears in the plan. Flag anything that was added but not planned.
+3. For changes and additions, note whether they were intentional
+   (documented in review comments) or accidental.
 ```
 
 This works well because the AI can read both artifacts and do a systematic cross-reference — exactly the kind of tedious-but-important work that humans skip under time pressure.
@@ -118,12 +142,18 @@ decide whether the deviation is intentional.
 
 Not all drift is bad. Sometimes a review cycle reveals that the spec was wrong, or the plan was over-engineered, or a simpler approach emerged during implementation. The point of baseline alignment is not to rigidly enforce the original plan — it's to make drift **visible and intentional**.
 
-When you detect drift:
+When you detect **directional drift** (something changed or dropped):
 
 1. **If intentional**: Document the deviation and update the baseline. If the implementation intentionally diverges from the plan, update the plan (or add a note explaining the divergence). If the plan diverges from the spec, update the spec.
 2. **If accidental**: Restore the original intent. Re-implement the dropped requirement, restore the removed test, or fix the behavioral change.
 
-The worst outcome is **undocumented intentional drift** — where everyone informally agrees the spec is outdated but nobody updates it. This creates a documentation debt that compounds over time and misleads future AI sessions and new team members.
+When you detect **volume drift** (something added beyond scope):
+
+1. **Ask whether it belongs in this iteration.** The addition may be valuable, but was it part of the agreed scope? If the original intent was an MVP, every addition delays validation of the core hypothesis.
+2. **Make the cost visible.** Each added feature carries ongoing cost: code to maintain, tests to keep passing, documentation to write, surface area for bugs, and complexity for the next person to understand. A reviewer suggesting "add retry logic" may not realize the implementation also needs backoff configuration, tests for each retry scenario, logging, and metrics — turning a one-line suggestion into a multi-day addition.
+3. **Defer or accept explicitly.** If the addition is worth keeping, update the plan and spec to reflect the expanded scope. If it's nice-to-have, create a follow-up ticket and remove it from the current PR. Never let scope grow silently.
+
+The worst outcome is **undocumented drift** — whether directional or volumetric. Undocumented directional drift means everyone informally agrees the spec is outdated but nobody updates it. Undocumented volume drift means the solution carries cost that was never budgeted or agreed to. Both create debt that compounds over time and misleads future AI sessions and new team members.
 
 ## Integrating Into Your Workflow
 
@@ -170,12 +200,22 @@ If your team uses AI-assisted PR reviews, configure the review to include a base
 
 ## Signs You Need a Baseline Check
 
-- A PR has been open for more than a week with active review cycles
-- You can't remember why a particular approach was chosen
+**Directional drift signals:**
 - A reviewer asks "was this in the spec?" and you're not sure
-- The PR description no longer accurately describes the changes
+- You can't remember why a particular approach was chosen
 - Test coverage has decreased during review-driven refactors
 - The implementation "works" but you've lost track of whether it covers all original requirements
+
+**Volume drift signals:**
+- The PR diff is significantly larger than you expected from the plan
+- You're implementing features that weren't in the plan "because a reviewer suggested it"
+- The delivery estimate has grown but nobody adjusted the scope
+- You find yourself writing tests for functionality you don't remember planning
+
+**General signals:**
+- A PR has been open for more than a week with active review cycles
+- The PR description no longer accurately describes the changes
+- When resuming after a break, the branch feels unfamiliar
 
 ## Anti-Pattern: The Telephone Game
 
@@ -184,6 +224,14 @@ If your team uses AI-assisted PR reviews, configure the review to include a base
 **Why it's bad**: Like the children's game of telephone, the message degrades with each retransmission. Requirements get dropped, simplified, or subtly altered at each phase transition and within each review cycle. By the end, the feature may technically "work" but miss the original business need.
 
 **Better approach**: Treat baseline alignment as a hygiene practice — quick, routine, and non-negotiable for larger features. The cost of a 10-minute alignment check is trivial compared to discovering post-merge that a key requirement was silently dropped three review cycles ago.
+
+## Anti-Pattern: The Helpful Reviewer Snowball
+
+**Pattern**: An MVP spec goes through review. A reviewer suggests adding error handling for an edge case. Another suggests a caching layer. During plan review, someone adds observability. During PR review, the AI suggests retry logic, a reviewer asks for rate limiting, and another requests configurable timeouts. Each suggestion is accepted because it's individually reasonable. Nobody tracks the cumulative scope change.
+
+**Why it's bad**: The MVP was scoped to validate a hypothesis quickly. Instead, it ships as a production-hardened system that took 3x longer to build. The extra functionality was never budgeted, tested as a whole, or evaluated against the original goal. Worse, the developer may not even notice the scope doubled — each addition felt like "just a small thing." The hidden cost is not just the build time but the ongoing maintenance burden: every added feature needs tests, documentation, monitoring, and future compatibility consideration.
+
+**Better approach**: During every baseline alignment check, compare in both directions — not just "did we miss anything from the plan?" but also "did we add anything that wasn't in the plan?" For additions, explicitly decide: defer to a follow-up ticket, or accept and update the plan with the expanded scope and timeline. Treat "we should also..." suggestions as scope change proposals, not free improvements.
 
 ## See Also
 

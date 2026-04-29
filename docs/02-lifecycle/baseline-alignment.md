@@ -98,10 +98,23 @@ For each difference found in direction 2 (artifact contains something the baseli
 
 ### When to Check
 
-- **After every 3rd review cycle** on the same artifact — if a PR has gone through 3+ rounds of review/fix, it's time to check the plan
-- **Before phase transitions** — before moving from planning to implementation, verify the plan still covers the spec
-- **When a reviewer requests a significant change** — if a review comment leads to more than a localized fix (architectural change, dropped feature, new dependency), check the baseline
-- **When resuming after a break** — if days have passed since the last session, re-read the baseline before continuing
+There's no magic number of review cycles that guarantees drift. A single review round with 20 comments and a major refactor can cause more drift than five rounds of minor nitpicks. Instead of counting rounds, watch for the conditions that make drift likely:
+
+**Cumulative change volume.** If the total changes made during review cycles are comparable in size to the original submission, the artifact has effectively been rewritten under review pressure — but without the deliberate design that the original submission had. A good rule of thumb: if the review-driven changes would have warranted their own plan or spec section had they been anticipated upfront, it's time to check alignment.
+
+**Structural changes.** Any review comment that leads to more than a localized fix — an architectural change, a dropped feature, a new dependency, a changed API contract, or a reorganization of modules — can shift the artifact away from its baseline in ways that ripple beyond the immediate change. One structural change is worth more attention than a dozen cosmetic fixes.
+
+**Loss of recall.** If you can no longer confidently explain how the current state maps to the baseline without re-reading both documents, drift has likely accumulated past the point where your working memory can track it. This happens faster than most people expect — after a few rounds of feedback, the artifact in your head is a mix of the original and the revisions, and you lose the ability to distinguish between them.
+
+**Time gaps.** If days have passed since the last session, or the work has crossed a weekend, re-read the baseline before continuing. Context decays with time, and the risk of making changes that conflict with upstream decisions increases with every day the baseline goes unread.
+
+**Phase transitions.** Before moving from one phase to the next (spec→plan, plan→implementation), always verify the downstream artifact still covers the upstream one. Phase transitions are natural checkpoints because they represent the moment where one artifact becomes the baseline for the next.
+
+**Rules of thumb:**
+- If you've addressed more than ~10 review comments across all rounds, consider a check
+- If any single review comment took more than an hour to address, check after that round
+- If multiple reviewers are giving feedback and you're reconciling conflicting suggestions, check — reconciliation is where requirements silently get dropped
+- When in doubt, check. A 10-minute alignment review is always cheaper than discovering post-merge that something was lost
 
 ### How to Check
 
@@ -114,7 +127,7 @@ Re-read the baseline document and compare it against the current state of the ar
 
 **Artifact**: PR #42 (implementation)
 **Baseline**: Implementation plan at docs/plans/feature-x.md
-**Trigger**: 4th round of PR review
+**Trigger**: Major refactor requested in latest review; can no longer recall full plan from memory
 
 ### Requirements from plan:
 - [ ] REST endpoint with pagination — still present, matches plan
@@ -198,7 +211,7 @@ Checking impl→plan: aligned (the endpoint returns recent actions, as planned).
 The direct impl→spec comparison is most valuable:
 
 - **Before final review approval** — as a last gate, verify the implementation serves the spec's intent, not just the plan's tasks
-- **When the plan itself went through heavy revision** — if the plan had 3+ review cycles, it may have drifted from the spec, making it an unreliable intermediary
+- **When the plan itself went through heavy revision** — if the plan accumulated significant changes during review (structural rewrites, reconciled reviewer conflicts, dropped or added sections), it may have drifted from the spec, making it an unreliable intermediary
 - **For MVP-scoped work** — MVPs are deliberately minimal; the spec captures that intent, but the plan and implementation tend to absorb complexity. The diagonal check asks: "is this still an MVP?"
 
 ### The abstraction gap is a feature
@@ -246,7 +259,7 @@ Add a baseline alignment reminder to your project's CLAUDE.md:
 ```markdown
 ## Review Cycle Discipline
 
-- SHOULD perform a baseline alignment check after 3+ review rounds on the same PR
+- SHOULD perform a baseline alignment check when review-driven changes are substantial (see [When to Check](baseline-alignment.md#when-to-check))
 - SHOULD compare implementation against the plan before requesting final review approval
 - MUST update the plan/spec when intentional deviations are identified during alignment checks
 ```

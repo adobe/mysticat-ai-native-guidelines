@@ -249,6 +249,7 @@ See [Configuration Evolution](06-config-evolution.md) for detailed guidance on m
 - [Validation Phase](04-validation.md)
 - [Closure Phase](05-closure.md)
 - [Multi-Session Patterns](multi-session-patterns.md)
+- [Baseline Alignment](baseline-alignment.md)
 - [Configuration Evolution](06-config-evolution.md)
 - [Spec Template](../03-templates/spec-proposal.md)
 - [TODO Template](../03-templates/TODO.md)

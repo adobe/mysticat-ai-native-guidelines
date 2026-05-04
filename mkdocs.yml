@@ -66,6 +66,7 @@ nav:
     - 4. Validation: 02-lifecycle/04-validation.md
     - 5. Closure: 02-lifecycle/05-closure.md
     - Multi-Session Patterns: 02-lifecycle/multi-session-patterns.md
+    - Baseline Alignment: 02-lifecycle/baseline-alignment.md
     - 6. Configuration Evolution: 02-lifecycle/06-config-evolution.md
     - Evaluation-Driven Development:
       - Overview: 02-lifecycle/eval-driven-development.md

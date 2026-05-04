@@ -281,7 +281,7 @@ Add a section to your PR template for larger features:
 
 ### Multi-Session Features
 
-For features spanning multiple sessions, baseline alignment is especially important. Add it to the [start-of-session protocol](multi-session-patterns.md):
+For features spanning multiple sessions, baseline alignment is especially important. Add it to the [start-of-session protocol](multi-session-patterns.md#start-of-session-protocol):
 
 1. Read the progress file
 2. Read the feature list

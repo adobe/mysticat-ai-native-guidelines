@@ -199,11 +199,15 @@ Help me understand why it's failing.
 
 ### Verifying Against Spec
 
+For a quick single-direction check:
+
 ```
 Compare the implementation in this PR against the spec at
 docs/specs/dashboard.md. Create a checklist showing which
 requirements are met and which might be missing.
 ```
+
+For a thorough bidirectional check — especially after multiple review cycles — see the [Baseline Alignment diagonal check](baseline-alignment.md#the-diagonal-check-implementation-against-the-spec), which also flags functionality added beyond the spec's scope.
 
 ## Validation Patterns
 

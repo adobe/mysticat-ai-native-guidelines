@@ -294,6 +294,37 @@ try {
 
 ---
 
+### The Telephone Game
+
+**Pattern**: Spec is reviewed and changed. Plan is written from the changed spec, then reviewed and changed. Implementation is written from the changed plan, then reviewed and changed. At no point does anyone check whether the final implementation still satisfies the original spec.
+
+**Why It's Bad**:
+- Requirements degrade with each retransmission
+- The final implementation may miss the original business need
+- Nobody notices because each link in the chain looks "aligned"
+
+**Better Approach**:
+- Perform [baseline alignment checks](../02-lifecycle/baseline-alignment.md) periodically during review cycles
+- Use the [diagonal check](../02-lifecycle/baseline-alignment.md#the-diagonal-check-implementation-against-the-spec) to compare implementation directly against the spec
+
+---
+
+### The Helpful Reviewer Snowball
+
+**Pattern**: Each review cycle adds "just one more thing" — an edge case, a caching layer, retry logic, observability. Each suggestion is individually reasonable. Nobody tracks the cumulative scope change, and an MVP ships as a production-hardened system that was never scoped, budgeted, or agreed to.
+
+**Why It's Bad**:
+- Scope doubles without anyone noticing
+- Every addition carries ongoing maintenance cost the developer may not be aware of
+- The original goal (e.g., validating an MVP hypothesis quickly) is defeated
+
+**Better Approach**:
+- [Compare bidirectionally](../02-lifecycle/baseline-alignment.md#always-compare-bidirectionally): check what's missing AND what was added beyond scope
+- Treat reviewer suggestions as scope change proposals, not free improvements
+- Defer nice-to-haves to follow-up tickets
+
+---
+
 ## Git Anti-Patterns
 
 ### The Mega-Commit
@@ -434,4 +465,4 @@ const posts = await getPostsForUsers(userIds); // Single query
 - [SHOULD Rules](should-rules.md) - Strong recommendations
 - [Mechanical Enforcement](mechanical-enforcement.md) - Prevent anti-patterns with automated gates
 - [Multi-Session Patterns](../02-lifecycle/multi-session-patterns.md) - Avoid amnesia loops and shared worktree problems
-- [Baseline Alignment](../02-lifecycle/baseline-alignment.md) - Detect and prevent the "telephone game" drift across review cycles
+- [Baseline Alignment](../02-lifecycle/baseline-alignment.md) - Full guide on detecting and preventing review-cycle drift

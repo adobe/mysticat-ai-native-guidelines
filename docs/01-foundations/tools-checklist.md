@@ -223,7 +223,7 @@ Create `.mcp.json` in your workspace root:
 | github | GitHub (github.com) | HTTP MCP via `api.githubcopilot.com/mcp` |
 | github-enterprise | GitHub Enterprise | Docker: `ghcr.io/github/github-mcp-server` |
 | postgres | PostgreSQL queries | `npx -y @modelcontextprotocol/server-postgres` |
-| coralogix | Observability | `npx -y @nickholden/coralogix-mcp-server` |
+| coralogix | Observability | `npx -y coralogix-mcp@latest` |
 
 See [MCP Servers Catalog](../04-configuration/mcp/servers.md) for full configuration details.
 

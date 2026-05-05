@@ -33,11 +33,10 @@
     "coralogix": {
       "$comment": "Coralogix observability",
       "command": "npx",
-      "args": ["-y", "@nickholden/coralogix-mcp-server"],
+      "args": ["-y", "coralogix-mcp@latest"],
       "env": {
         "CORALOGIX_API_KEY": "${CORALOGIX_API_KEY}",
-        "CORALOGIX_REGION": "auto",
-        "CORALOGIX_ENV": "production"
+        "CORALOGIX_DOMAIN": "coralogix.com"
       }
     },
     "github": {

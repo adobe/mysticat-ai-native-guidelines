@@ -317,7 +317,7 @@ search_splunk(
 
 ### Coralogix MCP
 
-**Purpose**: Query Coralogix logs and metrics
+**Purpose**: Query Coralogix logs, metrics, alerts, dashboards, and parsing rules
 
 **Supports**: Claude Code
 
@@ -327,25 +327,27 @@ search_splunk(
   "mcpServers": {
     "coralogix": {
       "command": "npx",
-      "args": ["-y", "@nickholden/coralogix-mcp-server@latest"],
+      "args": ["-y", "coralogix-mcp@latest"],
       "env": {
         "CORALOGIX_API_KEY": "${CORALOGIX_API_KEY}",
-        "CORALOGIX_REGION": "auto",
-        "CORALOGIX_ENV": "production"
+        "CORALOGIX_DOMAIN": "coralogix.com"
       }
     }
   }
 }
 ```
 
-**Note**: Uses the `@nickholden/coralogix-mcp-server` community package.
+**Note**: Uses the official `coralogix-mcp` package. The `CORALOGIX_DOMAIN` must match your Coralogix instance - common values: `coralogix.com`, `eu2.coralogix.com`, `coralogix.us`. For custom domains (e.g. `myteam.coralogix.com`), use the underlying standard domain instead.
 
 **Key Tools**:
 | Tool | Purpose |
 |------|---------|
-| `coralogix_query` | Query logs with Lucene or DataPrime |
-| `list_alerts` | List configured alerts |
-| `get_alert` | Get alert details |
+| `query_dataprime` | Query logs with DataPrime syntax |
+| `query_lucene` | Query logs with Lucene syntax |
+| `list_alert_definitions` | List configured alerts |
+| `get_alert_definition` | Get alert details |
+| `get_dashboard_catalog` | List dashboards |
+| `list_parsing_rule_groups` | List parsing rules |
 
 ---
 

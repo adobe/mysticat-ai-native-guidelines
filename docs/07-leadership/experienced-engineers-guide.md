@@ -79,6 +79,16 @@ Here is what effective resistance looks like:
 
 Refusal without alternatives is not engineering judgment - it is obstruction. Your job is to make the path forward safer, not to block the path entirely.
 
+## How Review Evolves
+
+The starting point is reviewing every diff with the same rigor you would apply to a peer's code. That does not change - it is the right default, and the [guardrails](../05-guardrails/must-rules.md) encode it as a requirement.
+
+What evolves is what becomes possible as your team's harness matures. When test coverage deepens, mechanical enforcement tightens, and staging gates hold, the nature of review can shift from line-by-line code inspection toward results verification - tests pass, staging behaves correctly, observability confirms expected patterns.
+
+This is not permission to stop reading code. It is a trajectory you earn by building the harness that makes it safe. If your test suite does not catch the bugs you would catch in review, you are not ready. If your staging environment does not represent production, you are not ready. The [operating modes](../01-foundations/operating-modes.md) document defines the prerequisites in detail.
+
+The engineers who build that harness - who invest in mechanical enforcement, observability, and test infrastructure - are the ones who earn the right to operate at a higher level. That is not a reduction in engineering. It is an investment in leverage.
+
 ## What the Organization Owes You
 
 This document asks you to shift your identity, encode your knowledge, and mentor generously. That is not a one-sided deal. If you hold up your end, the organization holds up theirs:

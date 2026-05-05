@@ -119,6 +119,28 @@ Use this to assess how agent-friendly your application is:
 
 Low scores on this checklist indicate that harness engineering will hit diminishing returns until the underlying application is made more legible. Start there.
 
+## AI-Effective Technology Selection
+
+When evaluating technologies, AI agent effectiveness is now a weighted input alongside traditional criteria - team expertise, performance characteristics, ecosystem maturity, hiring availability. It is not the deciding factor, but it is a factor.
+
+**What makes a technology AI-effective:**
+
+- **Large training corpus.** AI has seen millions of examples in popular languages and frameworks. It produces better code in Node.js or Python than in niche languages with smaller open-source footprints.
+- **Strong type systems or conventions.** Languages and frameworks with explicit types, interfaces, or enforced conventions give AI more signal to work with. Fewer ambiguous decisions means fewer mistakes.
+- **Standard project structures.** Frameworks with opinionated directory layouts (Next.js, Rails, FastAPI) are more legible to agents than bespoke structures requiring extensive documentation.
+- **Rich, well-documented ecosystems.** Libraries with good docs, type definitions, and widespread usage appear in training data. Internal or poorly-documented libraries require more harness compensation (CLAUDE.md rules, reference docs, custom skills).
+- **Good error messages.** Languages and tools that produce clear, structured error output enable AI to self-correct. Cryptic errors break feedback loops.
+
+**Practical considerations:**
+
+- When choosing between Node.js and Python for a new service, both are AI-effective - but consider which your team's harness (CLAUDE.md, skills, MCP servers) is already tuned for. Switching languages means rebuilding harness context.
+- Well-known frameworks (Express, FastAPI, Spring Boot) over bespoke abstractions. AI has training signal for the former. Custom frameworks require extensive documentation to compensate.
+- Standard idioms over clever idioms. A technique that is technically superior but rarely seen in open-source code will produce more AI errors than the conventional approach. One practitioner chose C++ over C specifically because AI could not handle C's manual memory management idioms (arena allocation, counted strings) despite understanding them theoretically.
+
+**Caveat:** This criterion ages. What AI struggles with today it may handle next quarter as models improve. Weight it as one input among many, and revisit when you upgrade models or switch tools. Never choose a worse technology solely because AI is currently better at it - the harness can compensate through better CLAUDE.md rules, custom skills, and reference documentation.
+
+This topic has been discussed at the AEM Architecture Council (e.g., Node.js vs Python for new services) and is an active consideration for technology decisions across the organization.
+
 ## Relationship to Existing Guidelines
 
 This document introduces the conceptual framework - the "why" of harness engineering. The rest of these guidelines provide the "how":

@@ -302,6 +302,8 @@ Example - every new service:
 
 Scorecard used by default. Architectural decisions evaluated partly on "AI-debuggability." At this level: AI effectiveness increases as systems grow.
 
+At Level 3 and Level 4, the harness is mature enough to support [director-mode operation](../01-foundations/operating-modes.md) for fluid-layer work. This does not mean humans stop reviewing - it means the nature of review shifts from line-by-line code inspection toward results verification and architectural judgment. The prerequisites (comprehensive tests, mechanical enforcement, staging gates, observability, rollback capability) are natural outputs of L3/L4 maturity investments.
+
 ### Scorecard Dimensions - Detailed
 
 #### 1) Validation Speed

@@ -36,6 +36,8 @@ This guide supports three use cases:
 
 **AI-native skills compound.** Each level builds on the prior. The matrix cells describe what is new at each level, not the full set of expectations. A P40 is expected to demonstrate P10-P30 behaviors as well.
 
+**Specialization is expected.** Harness Engineering and AI-Directed Development represent two complementary specializations - comparable to how backend and frontend engineering are distinct but related disciplines. Some engineers will excel at building the environment where AI is effective (harness engineering); others will excel at directing AI to produce high-quality work (AI orchestration). Both are valued. "Fullstack" engineers who excel at both are welcome, but specialization is not a gap - it is a strength. Managers should assess engineers' growth trajectory within their chosen specialization, not require equal mastery across both. See the [Phase 1 white paper's frontier engineer roles](ai-native-engineering-phase1.md#two-specializations) for more on these specializations.
+
 ## Level Vignettes
 
 ### P10

@@ -63,6 +63,20 @@ Repos are organized with tags via [mani](https://manicli.com/) in `mani.yaml`. U
 - Prefer MCP servers over `gh` CLI for all GitHub operations
 - Reserve `gh` CLI for operations MCP doesn't support (run rerun/watch, release create)
 
+## Information Lookup
+
+Don't ask me for context you can look up yourself (see the [Information Lookup guide](../04-configuration/information-lookup.md) for the full pattern).
+
+- Conceptual ("how does X work", "is there a decision about Y", "what's our standard for Z") -> **local docs first**: follow the relevant repo's `AGENTS.md` index; org standards in the org RFC repo; process in the methodology repo. Map: the workspace `DOCUMENTATION-GUIDE.md`.
+- Ticket ID / tracker URL -> issue-tracker MCP
+- Wiki / docs URL -> wiki fetch tool
+- Chat URL / thread -> chat MCP for that workspace
+- GitHub PR / repo -> GitHub MCP (by host, see MCP Routing above)
+- Logs / metrics / data -> the matching telemetry or database tool
+- "Has anyone discussed X?" -> local docs first, then fan out across wiki + chat + tracker search
+
+Trust discovery search for *where* something lives, not the exact quote - cross-check names/dates/numbers before citing. When reading a ticket/thread/PR, follow all linked resources before starting work.
+
 ## Common Tasks
 
 ### Jira

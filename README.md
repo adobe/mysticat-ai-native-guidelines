@@ -66,6 +66,7 @@ AI tool configuration, plugins, and MCP integration:
 | **Plugins** | [Overview](docs/04-configuration/plugins/README.md), [Superpowers](docs/04-configuration/plugins/superpowers.md), [Adobe Skills](docs/04-configuration/plugins/adobe-skills.md) |
 | **Skills** | [Skills Ecosystem](docs/04-configuration/skills/overview.md) - agentskills.io standard, SKILL.md format, package management |
 | **Cross-Tool** | [Cross-Tool Setup](docs/04-configuration/cross-tool-setup.md) - AGENTS.md, thin adapters, multi-tool config |
+| **Information Lookup** | [Information Lookup](docs/04-configuration/information-lookup.md) - artifact-to-tool routing, local-docs-first, fan-out research, discovery trust model |
 | **MCP** | [Overview](docs/04-configuration/mcp/overview.md), [Servers](docs/04-configuration/mcp/servers.md), [Workflows](docs/04-configuration/mcp/workflows.md) |
 | **Secrets** | [Environment & Secrets](docs/04-configuration/env-secrets.md) |
 

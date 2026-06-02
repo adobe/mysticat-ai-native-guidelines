@@ -116,6 +116,7 @@ nav:
     - ACI Design: 04-configuration/aci-design.md
     - Token Efficiency: 04-configuration/token-efficiency.md
     - Cross-Tool Setup: 04-configuration/cross-tool-setup.md
+    - Information Lookup: 04-configuration/information-lookup.md
     - Environment & Secrets: 04-configuration/env-secrets.md
   - Guardrails:
     - MUST Rules: 05-guardrails/must-rules.md

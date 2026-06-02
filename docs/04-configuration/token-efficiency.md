@@ -99,7 +99,7 @@ Most of this guide is about input - the context you re-send every turn. But outp
 2. **Edit style.** A surgical edit emits only the changed lines; a full-file rewrite emits the whole file - on a 1,000-line file that is the difference between tens and thousands of output tokens. Claude Code defaults to diff-style edits; reinforce it when needed ("make minimal edits, don't reprint the file").
 3. **Narration.** Recent models already scale response length to task difficulty, but you can dial prose down further with a standing instruction ("be concise, skip non-essential context, keep examples minimal") in CLAUDE.md or per prompt.
 4. **Scope of output.** "The whole module with tests and docs" is inherently large; "just the core function" is small. Scope the ask to what you need now.
-5. **Output style.** The active [output style](https://docs.anthropic.com/en/docs/claude-code/output-styles) shapes verbosity at the system-prompt level - the built-in Explanatory and Learning styles are longer by design, Default is the lean baseline. Encode a recurring preference once as a custom style (via `/config`) rather than re-prompting every turn. Because the style is part of the system prompt, changing it mid-session busts the cache and only takes full effect after `/clear` or a new session.
+5. **Output style.** The active [output style](https://docs.anthropic.com/en/docs/claude-code/output-styles) shapes verbosity at the system-prompt level - the built-in Explanatory and Learning styles are longer by design, Default is the lean baseline. Encode a recurring preference once as a custom style (via `/config`) rather than re-prompting every turn. Because the style is part of the system prompt, changing it mid-session busts the cached prefix. And since the system prompt is assembled at session start, the change only fully takes effect after `/clear` or a new session.
 
 ## Design Principles
 
@@ -137,6 +137,8 @@ The [effort parameter](https://docs.anthropic.com/en/docs/build-with-claude/effo
 | `xhigh` | Deeper reasoning at higher spend; default on Opus 4.7 | More thinking |
 | `max` | Demanding tasks; can show diminishing returns and overthinking - test before adopting broadly | Maximum thinking |
 | `ultracode` | Not a pure level: sets extra-high effort and has Claude orchestrate dynamic multi-agent workflows for substantive tasks | Highest, plus orchestration |
+
+> `ultracode` is the odd one out: it is not just a thinking-depth setting but also switches Claude into orchestrating dynamic multi-agent workflows. Reach for it when the task warrants fan-out and verification, not merely deeper thinking.
 
 Available levels depend on the model. Match effort to the task's difficulty *and the cost of being wrong* - bias toward the choice that minimizes rework, not per-token price. A cheaper, lower-effort setting that produces subtly wrong output you then have to catch and fix can burn far more than it saved.
 

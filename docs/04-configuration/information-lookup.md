@@ -63,7 +63,7 @@ A request like "give me the full picture on the `acme/checkout` rate-limit work"
 
 For "deep dive / full context / everything we know about X" requests, do not serialize a dozen lookups - fan out and cache.
 
-1. **Check the cache first.** Look for a prior synthesis on this topic in your research cache (a gitignored scratch path). If found and fresh (say, under ~2 weeks old), offer to reuse it; if stale, re-run. Skip the cache on an explicit "fresh" / "from scratch".
+1. **Check the cache first.** Look for a prior synthesis on this topic in your research cache (a gitignored scratch path). If found and fresh (say, under ~2 weeks old), offer to reuse it; if stale, re-run. Age is a floor, not a ceiling - also re-run if the underlying source has changed since the cache was written (ticket reopened, decision reversed, new PR merged), regardless of age. Skip the cache on an explicit "fresh" / "from scratch".
 2. **Fan out in parallel** across the sources that could hold the answer: local repos (grep + `AGENTS.md` indexes) **first**, then per-source external tools (wiki search, chat search, tracker search, code-host search). Delegate heavy searches to subagents so their raw output never lands in the main context.
 3. **Synthesize** into one summary, with every fact cited to its source (URL, ticket key, PR number, file path).
 4. **Cache the synthesis** (not the raw search output) to the scratch path with a header recording the date and the sources consulted. Next session, reading that file is one fast read; re-fanning costs minutes and many tokens.

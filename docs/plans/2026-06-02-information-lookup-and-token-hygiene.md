@@ -8,7 +8,7 @@
 
 **Tech Stack:** Markdown, MkDocs (Material), `make build` / `mkdocs build --strict`. This is a docs task: there are no unit tests, so the TDD loop is replaced by **edit -> run validation command -> confirm expected output -> commit**.
 
-**Content authority:** the committed spec `docs/superpowers/specs/2026-06-02-information-lookup-and-token-hygiene-design.md` (in this repo) defines all content and the verified-facts table. Each task cites the spec section that defines its content; read that section before editing. Do not re-derive facts - use the spec's verified-facts table.
+**Content authority:** the committed spec `docs/plans/2026-06-02-information-lookup-and-token-hygiene-design.md` (in this repo) defines all content and the verified-facts table. Each task cites the spec section that defines its content; read that section before editing. Do not re-derive facts - use the spec's verified-facts table.
 
 **Conventions (all tasks):** Read the full target file before editing. No emojis. Use normal dash, not em-dash. No force-push, no `--amend`, no direct commits to `main`. Commit after each task.
 

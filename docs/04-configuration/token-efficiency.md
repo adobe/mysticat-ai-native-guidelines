@@ -91,6 +91,16 @@ The cost formula is roughly: `(fixed overhead + conversation history + your mess
 
 Token-efficient tool use is built into all Claude 4+ models, reducing output token consumption by up to 70% for tool calls compared to earlier models ([token-saving updates](https://www.anthropic.com/news/token-saving-updates)).
 
+## The Output Side
+
+Most of this guide is about input - the context you re-send every turn. But output tokens are the most expensive part of a turn (several times the input rate) and are never cached, so they get their own levers. Largest first:
+
+1. **Thinking effort.** Reasoning tokens are billed as output even when hidden, and are usually the biggest swing. Control them with the session [effort level](#3-effort-appropriate-reasoning); add `ultrathink` for a one-off deeper think. High effort on a trivial task is waste; low effort on a hard one causes wrong turns you then pay to fix.
+2. **Edit style.** A surgical edit emits only the changed lines; a full-file rewrite emits the whole file - on a 1,000-line file that is the difference between tens and thousands of output tokens. Claude Code defaults to diff-style edits; reinforce it when needed ("make minimal edits, don't reprint the file").
+3. **Narration.** Recent models already scale response length to task difficulty, but you can dial prose down further with a standing instruction ("be concise, skip non-essential context, keep examples minimal") in CLAUDE.md or per prompt.
+4. **Scope of output.** "The whole module with tests and docs" is inherently large; "just the core function" is small. Scope the ask to what you need now.
+5. **Output style.** The active [output style](https://docs.anthropic.com/en/docs/claude-code/output-styles) shapes verbosity at the system-prompt level - the built-in Explanatory and Learning styles are longer by design, Default is the lean baseline. Encode a recurring preference once as a custom style (via `/config`) rather than re-prompting every turn. Because the style is part of the system prompt, changing it mid-session busts the cache and only takes full effect after `/clear` or a new session.
+
 ## Design Principles
 
 These principles connect token efficiency to the broader [harness engineering](../01-foundations/harness-engineering.md) philosophy. A well-designed harness naturally saves tokens.
@@ -113,7 +123,7 @@ Not every task needs the most capable model. Model selection is a per-task decis
 | Routine coding, file edits, test writing, PR descriptions | Sonnet | Handles 80%+ of coding tasks well |
 | Simple subagent tasks: searches, classification, formatting | Haiku | 5x cheaper than Opus, sufficient for mechanical work |
 
-Switch models mid-session with `/model sonnet` or `/model opus`. The harness engineering insight applies here: the model matters less than the harness. But the cost difference is real - Opus is roughly 5x the cost of Haiku - so defaulting to the most expensive model for everything is wasteful.
+Switch models mid-session with `/model sonnet` or `/model opus`. The harness engineering insight applies here: the model matters less than the harness. But the cost difference is real - Opus is roughly 5x the cost of Haiku - so defaulting to the most expensive model for everything is wasteful. One caveat: switching model mid-session busts the cached prefix (the cache is per-model), so a quick detour to a cheaper model for a single question can cost more in cache rebuild than it saves - for a one-off cheaper sub-task, reach for a subagent instead of flipping the main session's model.
 
 ### 3. Effort-Appropriate Reasoning
 
@@ -147,7 +157,9 @@ Every line in CLAUDE.md is reprocessed on every message. Skills that load on-dem
 
 Moving specialized workflows from CLAUDE.md into [skills](skills/overview.md) is the most direct way to reduce per-message overhead. The CLAUDE.md keeps a one-line description (the map), and the skill loads the full instructions only when needed (the territory).
 
-**SHOULD** keep CLAUDE.md under 200 lines. If it exceeds this, audit for content that belongs in skills or @import'd docs.
+**Caveat - the skill *description* budget.** Skill bodies are deferred, but each skill's name and one-line description load up front so the model knows the skill exists. Those descriptions share a budget that defaults to roughly 1% of the context window (`skillListingBudgetFraction`, raisable in `settings.json`). Once you install enough skills to overflow it, the least-used descriptions get shortened or dropped - and a skill with a truncated description can silently stop firing, with no error to tell you why. So the reason to curate skills is reliability, not context cost: keep descriptions tight, prune genuinely unused skills, and use `/doctor` or `/skills` to check whether you are overflowing the budget.
+
+**SHOULD** keep CLAUDE.md stable and high-signal - roughly 100-200 lines of conventions that prevent rework, not the lowest line count you can manage. A right-sized CLAUDE.md is cached after the first turn and *saves* tokens by stopping rediscovery; its real costs are noise (which dilutes signal) and editing it mid-session (which busts the cached prefix behind it). Prune dead or contradictory content, and edit between sessions rather than during. If it grows past ~200 lines, audit for content that belongs in skills or @import'd docs.
 
 ### 5. Minimize Idle Tool Overhead
 
@@ -187,11 +199,13 @@ Refine your workflow with these practices.
 
 **Use `/btw` for side questions.** The `/btw` command answers your question in a dismissible overlay that never enters conversation history. Use it for tangential lookups ("btw what's the syntax for X?") that would otherwise add tokens to every future message. Zero context growth.
 
-**Keep CLAUDE.md under 200 lines.** Move specialized workflows (PR review checklists, database migration procedures, deployment runbooks) into [skills](skills/overview.md) that load on demand. The CLAUDE.md should be a map of pointers, not a dump of procedures. See [ACI design - progressive disclosure](aci-design.md#progressive-disclosure-as-a-general-pattern).
+**Keep CLAUDE.md high-signal (~100-200 lines).** Move specialized workflows (PR review checklists, database migration procedures, deployment runbooks) into [skills](skills/overview.md) that load on demand. The CLAUDE.md should be a map of pointers, not a dump of procedures - optimize for signal, not the lowest line count. See [ACI design - progressive disclosure](aci-design.md#progressive-disclosure-as-a-general-pattern).
 
 **Write specific prompts.** "Add input validation to the login handler in `src/routes/auth.ts`" is cheaper than "make the auth system more secure." Specific prompts require fewer exploratory tool calls (file reads, searches) and produce less context accumulation. Name files, state outcomes, define scope. See [Claude Code best practices](https://docs.anthropic.com/en/docs/claude-code/best-practices).
 
 **Specify cheaper models for subagents.** When spawning subagents for mechanical tasks (searches, formatting, simple edits), specify `model: "haiku"` or `model: "sonnet"` in the agent configuration. Each subagent creates a fresh context - the model choice directly affects the cost of that context.
+
+**Trim what you paste in.** A 5,000-line build log, a giant JSON blob, or a full-resolution screenshot pasted into chat becomes context you carry and re-read for the rest of the session. Paste the relevant slice - the same principle as targeted file reads.
 
 ### Tier 3: Refinements
 
@@ -215,6 +229,8 @@ This reduces context from thousands of tokens to the handful that matter. See [A
 **Cap search results.** Configure tools to return bounded results and force query refinement rather than dumping hundreds of matches into context. See [ACI design - constrain search](aci-design.md#1-constrain-search-to-force-precision).
 
 **Use `/clear` between unrelated tasks.** When switching topics within a session, `/clear` resets the context. Rename the session with `/rename` first so you can resume later. This eliminates stale context from the previous task being reprocessed on every message of the new task.
+
+**Undo a wrong turn with `/rewind`, not `/clear`.** To roll back a single bad turn, `/rewind` truncates the conversation to an earlier point while keeping the warm cache intact - much cheaper than `/clear` (which drops the whole session and discards the cache) when all you need is to undo one step.
 
 **Monitor with `/cost` or `/stats`.** Check token spend at natural breakpoints - after completing a feature, before spawning multiple agents, before starting a new task. Awareness drives behavior change. See [Measurement and Monitoring](#measurement-and-monitoring) below.
 

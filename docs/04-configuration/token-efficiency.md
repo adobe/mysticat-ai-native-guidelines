@@ -138,7 +138,7 @@ The [effort parameter](https://docs.anthropic.com/en/docs/build-with-claude/effo
 | `max` | Demanding tasks; can show diminishing returns and overthinking - test before adopting broadly | Maximum thinking |
 | `ultracode` | Not a pure level: sets extra-high effort and has Claude orchestrate dynamic multi-agent workflows for substantive tasks | Highest, plus orchestration |
 
-> `ultracode` is the odd one out: it is not just a thinking-depth setting but also switches Claude into orchestrating dynamic multi-agent workflows. Reach for it when the task warrants fan-out and verification, not merely deeper thinking.
+> Reach for `ultracode` when the task warrants orchestrated fan-out and verification, not merely deeper thinking on a single thread.
 
 Available levels depend on the model. Match effort to the task's difficulty *and the cost of being wrong* - bias toward the choice that minimizes rework, not per-token price. A cheaper, lower-effort setting that produces subtly wrong output you then have to catch and fix can burn far more than it saved.
 

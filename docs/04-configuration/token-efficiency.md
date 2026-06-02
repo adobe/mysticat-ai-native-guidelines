@@ -53,19 +53,23 @@ Every message in a Claude Code conversation reprocesses the full context. This i
           v  OUTPUT TOKENS (more expensive than input)
 ```
 
-The fixed overhead (system prompt, tools, CLAUDE.md) is reprocessed on every message but benefits from [prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) - cache hits cost 90% less than fresh processing. Conversation history grows and eventually triggers compaction, which summarizes older content to make room.
+The fixed overhead (system prompt, tools, CLAUDE.md) is reprocessed on every message but benefits from [prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching): cache reads cost 10% of the base input price, while the first write of new content costs a premium of 1.25x (5-minute TTL, the default Claude Code uses) or 2x (1-hour TTL, for direct-API integrators). Caching is automatic in Claude Code. Conversation history grows and eventually triggers compaction, which summarizes older content to make room.
+
+Caching cuts cost and latency but does **not** reduce the model's attention over cached tokens, so signal dilution is unaffected by how much is cached. Several mid-session changes also bust the cached prefix and force a full re-process on the next turn: editing CLAUDE.md or the system prompt, switching model, changing effort level, or changing output style. Prefer making those changes between sessions, and reach for a subagent rather than flipping the main session's model when you want a cheaper one-off sub-task.
 
 ### Model Pricing
 
-Token costs vary significantly by model. All models support 1M context at standard pricing - there is no long-context surcharge ([context windows docs](https://docs.anthropic.com/en/docs/build-with-claude/context-windows)).
+Token costs vary significantly by model. Opus 4.8/4.7/4.6 and Sonnet 4.6 support a 1M-token context window at standard pricing - there is no long-context surcharge. Haiku 4.5 and the 4.5-generation models (Opus 4.5, Sonnet 4.5) are 200k ([context windows docs](https://docs.anthropic.com/en/docs/build-with-claude/context-windows)).
 
 | Model | Input (per MTok) | Cache Hit (per MTok) | Output (per MTok) | Relative Cost |
 |-------|-------------------|----------------------|--------------------|---------------|
-| Opus 4.6 | $5.00 | $0.50 | $25.00 | 1x (baseline) |
+| Opus 4.8 | $5.00 | $0.50 | $25.00 | 1x (baseline) |
 | Sonnet 4.6 | $3.00 | $0.30 | $15.00 | ~0.6x |
 | Haiku 4.5 | $1.00 | $0.10 | $5.00 | ~0.2x |
 
 Source: [Anthropic pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)
+
+> **Tokenizer note:** Opus 4.7 and later use a new tokenizer that can use up to ~35% more tokens for the same text than earlier models. The common "~4 characters per token" rule of thumb is approximate and not directly comparable across model generations.
 
 ### Baseline Numbers
 
@@ -113,18 +117,20 @@ Switch models mid-session with `/model sonnet` or `/model opus`. The harness eng
 
 ### 3. Effort-Appropriate Reasoning
 
-The [effort parameter](https://docs.anthropic.com/en/docs/build-with-claude/effort) controls how many tokens Claude spends on thinking before responding. It affects text responses, tool call decisions, and extended thinking depth.
+The [effort parameter](https://docs.anthropic.com/en/docs/build-with-claude/effort) controls how many tokens Claude spends on thinking before responding. It affects text responses, tool call decisions, and extended thinking depth. Reasoning tokens are billed as output, so effort is usually the biggest single lever on output cost.
 
 | Level | Use Case | Token Impact |
 |-------|----------|--------------|
-| `max` | Deepest reasoning, Opus only | Maximum thinking spend |
-| `high` | Complex agentic tasks | Full thinking (default in most setups) |
-| `medium` | Balanced - recommended for Sonnet agentic work | Meaningful reduction in thinking tokens |
-| `low` | Simple lookups, classification, subagent tasks | Minimal thinking |
+| `low` | Short, scoped, latency-sensitive work that is not intelligence-sensitive | Minimal thinking |
+| `medium` | Cost-sensitive work that can trade off some intelligence | Reduced thinking |
+| `high` | Balances token usage and intelligence; default on Opus 4.8, Opus 4.6, Sonnet 4.6 | Full thinking |
+| `xhigh` | Deeper reasoning at higher spend; default on Opus 4.7 | More thinking |
+| `max` | Demanding tasks; can show diminishing returns and overthinking - test before adopting broadly | Maximum thinking |
+| `ultracode` | Not a pure level: sets extra-high effort and has Claude orchestrate dynamic multi-agent workflows for substantive tasks | Highest, plus orchestration |
 
-For most Claude Code work with Sonnet, `medium` effort is the recommended default per [Anthropic's best practices](https://docs.anthropic.com/en/docs/claude-code/best-practices). At lower effort, Claude makes fewer tool calls, uses terse confirmations, and may skip extended thinking for straightforward problems.
+Available levels depend on the model. Match effort to the task's difficulty *and the cost of being wrong* - bias toward the choice that minimizes rework, not per-token price. A cheaper, lower-effort setting that produces subtly wrong output you then have to catch and fix can burn far more than it saved.
 
-Switch mid-session with `/effort medium` or `/effort high`.
+Set effort per session with `/effort <level>`, bare `/effort` for a slider, or `/effort auto` to reset to the model default. Raise it only for the hard phases. For a one-off deeper think on a single turn, add `ultrathink` to your prompt.
 
 ### 4. Progressive Disclosure is Token Efficiency
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Most of these guidelines describe how to set up an agent-ready environment: instruction files, hooks, enforcement gates, legible documentation. They implicitly assume a codebase you can shape from the start. This document covers the harder, more common case: **retrofitting an existing codebase** — one with years of accumulated string dispatch, copy-paste seams, god-files, and a test suite that breaks on every rename — into a shape where agents reliably produce correct changes.
+Most of these guidelines describe how to set up an agent-ready environment: instruction files, hooks, enforcement gates, legible documentation. They implicitly assume a codebase you can shape from the start. This document covers the harder, more common case: **retrofitting an existing codebase** — one with years of accumulated string dispatch, copy-paste seams, god-files, and a test suite that breaks on every rename — into a shape where agents reliably produce correct changes. Where [Mechanical Enforcement](mechanical-enforcement.md) describes the gates a finished environment enforces absolutely, this document covers how to sequence the retrofit that *adds* those gates to a codebase that cannot yet pass them.
 
 The core observation from doing this in practice: when agents repeatedly produce wrong implementations in a codebase, the cause is usually structural, not a model limitation. Agents imitate the code they read and follow the path of least resistance. If the wrong implementation is the easy one, agents (and humans) will keep producing it. The fix is to refactor until **the correct implementation is the path of least resistance** — and to do that refactoring safely in a codebase that resists change.
 
@@ -133,12 +133,14 @@ Define the unit of migration so that no transition window exists where a contrac
 
 ### Rules
 
-- **MUST** define, per refactoring issue, the mechanical check that proves behavior is preserved (artifact diff, green characterization tests, structural guard) — "carefully reviewed" is not a check.
-- **SHOULD** stage multi-site refactors as: new seam added alongside old → call sites flipped incrementally → old seam deleted last. Every intermediate state is shippable.
+- **MUST** define, per refactoring issue, the mechanical check that proves behavior is preserved (artifact diff, green characterization tests, structural guard) — "carefully reviewed" is not a check. Prefer checks the agent can run at edit time ([Mechanical Enforcement: Edit-Time](mechanical-enforcement.md#1-edit-time-hooks-and-linters)) — a verification loop that only closes in CI costs a full round-trip per attempt.
+- **SHOULD** stage multi-site refactors as: new seam added alongside old → call sites flipped incrementally → old seam deleted last. Every intermediate state is shippable. This is Fowler's [parallel change](https://martinfowler.com/bliki/ParallelChange.html) (expand–contract) applied at PR granularity.
 
 ## Test Suites That Permit Refactoring
 
 A test suite can be the main obstacle to the refactoring it should enable. The failure mode: tests pinned to the internal call graph — patching private functions by string path, asserting that mocks were called, hardcoding dates — break on every rename even when behavior is unchanged. The agent then cannot distinguish real regressions from name-pin noise, and either reverts good changes or "fixes" tests by pinning them harder.
+
+One terminology note: Feathers' characterization tests (*Working Effectively with Legacy Code*) are also called *pinning tests* — those pin observable **behavior** before a refactor and are exactly the safety net you want. The pinning this section removes is **implementation**-pinning: tests welded to the internal call graph rather than to behavior.
 
 ### Measure pinning before restructuring
 
@@ -157,7 +159,7 @@ Weight and rank per file; the highest-scoring files are the de-pinning order. Cr
 
 Suites grown by copy-paste contain tests that add nothing. Before deleting:
 
-- **Mutation sampling** per module: tests that kill no mutants are deletable with evidence.
+- **Mutation sampling** per module: tests that kill no mutants are deletion *candidates* — equivalent mutants and sampling variance produce false "worthless test" verdicts, so confirm intent before deleting.
 - **Coverage contexts** (`--cov-context=test`): a test whose covered lines are a strict subset of another's is a dedup candidate.
 - **Convert, don't only delete:** mock-call tests with real intent become component tests (in-memory fakes of the I/O layer, assertions on real state); the rest go.
 - **Golden/table-driven tests at real seams** (parsers, classifiers, exporters): one golden test with N cases replaces N brittle mock tests and documents the contract.
@@ -177,14 +179,14 @@ Without it, an agent's natural move is to copy the nearest existing example — 
 
 ## Sequencing the Retrofit
 
-Order the work by **safety and protective value**, not by impact ranking:
+Order the work by **safety and protective value**, not by impact ranking — each step either carries zero production risk or is mechanically verified, and each makes the steps after it safer:
 
 1. **Ratchets first.** Zero production risk, and every later refactor benefits from frozen baselines from day one.
 2. **Docs and navigation in parallel.** Zero risk, and they reduce the error rate of every subsequent agent session.
-3. **Mechanical migrations next** (constant extraction, name registries) — verified by empty-artifact diffs and structural guards.
+3. **Mechanical migrations next** (constant extraction, name registries) — verified by empty-artifact diffs and structural guards, so they need no support from the test suite and can proceed before de-pinning.
 4. **Chokepoint/registry refactors** — behavior-preserving by construction, staged old-alongside-new. Do **not** rename or move functions while tests still pin them by string path.
-5. **Test de-pinning** — the gate for everything structural.
-6. **God-file splits and shared-base extraction last**, module by module, rewriting each module's tests behaviorally as the split forces touching them.
+5. **Test de-pinning** — the gate for everything structural: it converts the suite from rename-hostile to rename-safe, which is what the next step consumes.
+6. **God-file splits and shared-base extraction last**, module by module, rewriting each module's tests behaviorally as the split forces touching them — the highest-blast-radius work, attempted only once ratchets, guards, and de-pinned tests protect it.
 
 Group the backlog into dependency tiers and state the execution order separately — "what depends on what" and "what to do first" are different orderings, and conflating them confuses both humans and agents reading the epic.
 

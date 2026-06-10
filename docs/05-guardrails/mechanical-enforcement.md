@@ -281,6 +281,7 @@ The goal is to push as many checks as possible toward the top of this table. Eve
 - [MUST Rules](must-rules.md) - Non-negotiable requirements
 - [SHOULD Rules](should-rules.md) - Strong recommendations
 - [AI Task Boundaries](ai-task-boundaries.md) - Durable vs fluid substrate classification
+- [Agent-Ergonomic Refactoring](agent-ergonomic-refactoring.md) - Ratchets and retrofit patterns for brownfield codebases where absolute enforcement is not yet possible
 - [Anti-Patterns](anti-patterns.md) - Common mistakes to avoid
 - [Harness Engineering](../01-foundations/harness-engineering.md) - Environment audit mindset and feedback loop design
 - [ACI Design](../04-configuration/aci-design.md) - Agent-friendly error messages and interface design

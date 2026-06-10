@@ -466,5 +466,6 @@ const posts = await getPostsForUsers(userIds); // Single query
 - [MUST Rules](must-rules.md) - Non-negotiable requirements
 - [SHOULD Rules](should-rules.md) - Strong recommendations
 - [Mechanical Enforcement](mechanical-enforcement.md) - Prevent anti-patterns with automated gates
+- [Agent-Ergonomic Refactoring](agent-ergonomic-refactoring.md) - Retrofitting codebases where these anti-patterns are already entrenched
 - [Multi-Session Patterns](../02-lifecycle/multi-session-patterns.md) - Avoid amnesia loops and shared worktree problems
 - [Baseline Alignment](../02-lifecycle/baseline-alignment.md) - Full guide on detecting and preventing review-cycle drift

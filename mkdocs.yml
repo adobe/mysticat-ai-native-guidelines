@@ -122,6 +122,7 @@ nav:
     - MUST Rules: 05-guardrails/must-rules.md
     - SHOULD Rules: 05-guardrails/should-rules.md
     - Mechanical Enforcement: 05-guardrails/mechanical-enforcement.md
+    - Agent-Ergonomic Refactoring: 05-guardrails/agent-ergonomic-refactoring.md
     - Anti-Patterns: 05-guardrails/anti-patterns.md
     - AI Task Boundaries: 05-guardrails/ai-task-boundaries.md
     - Vibecoding Best Practices: 05-guardrails/vibecoding-best-practices.md

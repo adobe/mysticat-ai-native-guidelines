@@ -4,6 +4,12 @@ Recent changes to the AI-First Development Guidelines, newest first. For the ful
 
 ---
 
+## 2026-06-10 - Agent-Ergonomic Refactoring (Brownfield Retrofit)
+
+Added [Agent-Ergonomic Refactoring](05-guardrails/agent-ergonomic-refactoring.md) - retrofitting existing codebases into agent-ergonomic shape, distilled from a production retrofit (`adobe-rnd/llmo-data-retrieval-service` epic 2066). Covers the agent-ergonomics audit (multi-agent dimensional sweep + evidence-backed issue template), find-all-usages design (typed registries, chokepoints, cross-plane name contracts), the ratchet pattern (count-must-not-increase baselines, report→enforce two-phase, version-pinning lesson), mechanical verification of behavior-preserving refactors (empty-artifact-diff gates, grow-only structural guards, atomic migration units), test suites that permit refactoring (fragility scoring, evidence-driven reduction), and scaffolding as steering.
+
+---
+
 ## 2026-03-21 - Harness Engineering and ACI Design
 
 Added 4 new docs covering harness engineering concepts from the "Harness Is Everything" analysis (SWE-agent ACI research, Anthropic Claude Code harness, OpenAI Codex zero-manual-code experiment).

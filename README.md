@@ -80,6 +80,7 @@ Rules and anti-patterns:
 | [SHOULD Rules](docs/05-guardrails/should-rules.md) | Strong recommendations |
 | [AI Task Boundaries](docs/05-guardrails/ai-task-boundaries.md) | What to delegate to AI vs own manually |
 | [Mechanical Enforcement](docs/05-guardrails/mechanical-enforcement.md) | Automated gates, agent-friendly errors, structural tests |
+| [Agent-Ergonomic Refactoring](docs/05-guardrails/agent-ergonomic-refactoring.md) | Retrofitting brownfield codebases for agents: audits, ratchets, find-all-usages design |
 | [Anti-Patterns](docs/05-guardrails/anti-patterns.md) | Common mistakes to avoid |
 
 ### [06 - Adoption](docs/06-adoption/)

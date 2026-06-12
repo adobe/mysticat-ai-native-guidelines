@@ -180,12 +180,6 @@ Each engineer needs their own user token - there is no way to share one via a te
     "description": "Personal Slack MCP integration for AI-assisted development",
     "background_color": "#c55100"
   },
-  "features": {
-    "bot_user": {
-      "display_name": "Claude MCP",
-      "always_online": false
-    }
-  },
   "oauth_config": {
     "redirect_urls": [
       "https://localhost:3000/oauth/callback"
@@ -205,27 +199,8 @@ Each engineer needs their own user token - there is no way to share one via a te
         "mpim:write",
         "search:read",
         "users:read"
-      ],
-      "bot": [
-        "channels:history",
-        "channels:read",
-        "chat:write",
-        "files:read",
-        "files:write",
-        "groups:history",
-        "groups:read",
-        "im:history",
-        "im:read",
-        "mpim:history",
-        "mpim:read",
-        "reactions:read",
-        "reactions:write",
-        "users:read",
-        "users:read.email",
-        "users.profile:read"
       ]
-    },
-    "pkce_enabled": false
+    }
   },
   "settings": {
     "org_deploy_enabled": false,
@@ -236,6 +211,8 @@ Each engineer needs their own user token - there is no way to share one via a te
 ```
 
 </details>
+
+> **Why no bot section?** `slack-mcp-server` authenticates with the User OAuth Token (`xoxp-...`) only - a bot user and bot token (`xoxb-...`) are never used (see the [upstream authentication docs](https://github.com/korotovsky/slack-mcp-server/blob/master/docs/01-authentication-setup.md)). A manifest with both bot and user scopes triggers a combined granular install that fails with a generic **500 "Server Error"** on Slack's OAuth install page in Adobe's Enterprise Grid workspace. The `redirect_urls` entry must stay even though the stdio flow never uses it - Slack's manifest validation rejects the manifest without it once OAuth scopes are present.
 
 > **Why not use the SpaceCat Slack app?** Being a "Collaborator" on an existing Slack app lets you manage its settings, but does not give you a user token. `xoxp` tokens are per-user and per-installation - each person must install their own app. The SpaceCat app uses a bot token (`xoxb`) for server-side operations, which is a different token type.
 

@@ -310,7 +310,7 @@ pr-review: spec discoverable → no banner; no spec found → banner present in 
 
 - Dedicated PR template (this spec's companion): `docs/plans/2026-06-17-mysticat-pr-skill-template.md`.
 - Documentation decision guide: `mysticat-architecture/DOCUMENTATION-GUIDE.md` (why this spec lives in ai-native-guidelines).
-- Existing PR template: `docs/03-templates/pull-request-template.md` (AI-disclosure / vibeproofing).
+- Existing PR template: `docs/03-templates/pull-request-template.md` — it suggests AI disclosure as a practice and links to vibeproofing (`docs/05-guardrails/must-rules.md`) for rationale. Note: vibeproofing itself does NOT mandate PR AI-disclosure, so the Mysticat footer is team convention, not a MUST.
 - Existing review skill: `experience-success-skills/skills/review-kit/skills/pr-review/SKILL.md` and `agents/spec-compliance-reviewer.md`, `agents/project-conventions-reviewer.md`.
 - Existing workspace hooks: `mysticat-workspace/hooks/pre-push-main-check.sh`, `hooks/lint-staged.sh`.
 
@@ -318,7 +318,7 @@ pr-review: spec discoverable → no banner; no spec found → banner present in 
 
 - Hooks cannot call skills directly; they block/allow tool calls and inject text the model reads.
 - `PreToolUse` stdin JSON includes `tool_name` and `tool_input` (`tool_input.command` for Bash; tool params for MCP).
-- Matchers: a value containing `|` is alternation of **exact tool names** (this is what we rely on for the create-PR matcher — the three literal names `Bash`, `mcp__github__create_pull_request`, `mcp__github-enterprise__create_pull_request`); a matcher may instead be a regex when it contains regex metacharacters. We deliberately use exact-name alternation, not a regex, so the matcher is unambiguous.
+- Matchers: a value containing `|` is alternation of **exact tool names** (this is what we rely on for the create-PR matcher — the three literal names `Bash`, `mcp__github__create_pull_request`, `mcp__github-enterprise__create_pull_request`); a matcher may instead be a regex when it contains regex metacharacters. We deliberately use exact-name alternation, not a regex, so the matcher is unambiguous. (This reflects documented hook-matcher behavior and the team's research; confirm against the installed Claude Code version when implementing.)
 - All hooks across user/project/local settings run (merge, not override); any deny wins.
 - Proven block format in this workspace: stdout `{"decision":"deny","message":"..."}`; silent exit 0 = allow/fall-through.
 - Skills live under `~/.claude/skills/`, `<repo>/.claude/skills/`, or plugin install paths; identified by `SKILL.md`.
@@ -332,3 +332,4 @@ pr-review: spec discoverable → no banner; no spec found → banner present in 
 | 2026-06-17 | Rainer Friederich | Review: cover direct GitHub API surface; sentinel threat model + uniform bypass; status → Draft |
 | 2026-06-17 | Rainer Friederich | Review: empty-bullet rendering contract; matcher-tracks-.mcp.json, dynamic-command + repeated-deny notes; Appendix A matcher clarification |
 | 2026-06-17 | Rainer Friederich | Fold all remaining decisions inline (skill home, allow `--web`, committed-workspace registration, Claude-Code-footer disclosure, all-source grounding degrading only on missing spec, creation-only scope, agent-only coverage); removed the Open Questions section |
+| 2026-06-17 | Rainer Friederich | Review: correct vibeproofing attribution (footer is team convention, not a MUST); mark Appendix A matcher semantics confirm-at-implementation |

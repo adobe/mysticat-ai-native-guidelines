@@ -2,9 +2,9 @@
 
 This is the canonical Mysticat PR body template — the companion artifact to the [PR skill design spec](2026-06-17-mysticat-pr-skill-design.md). Its purpose is to give every Mysticat PR one consistent, human-readable structure that the `create-pr` skill fills automatically from the current session.
 
-**How it is used.** At implementation, the content **between the two `---` markers** below is copied verbatim into the `create-pr` skill's `assets/pr_template.md` (in `experience-success-skills`, `mysticat-dev` plugin). Everything outside the markers (this title, introduction, and example) is documentation and is NOT part of the PR body. When rendering a PR, the skill: replaces every `{{TOKEN}}`, strips every `AGENT:` instruction comment, and fills-or-drops each `[CONDITIONAL]` section. A leftover `{{TOKEN}}` is a bug — the skill fails rather than open a PR with raw placeholders. See the spec for the full fill-guide and the hard exclusions (no code snippets, no passing-test counts, no lint-success statements).
+**How it is used.** At implementation, the content **between the two `---` markers** below is copied verbatim into the `create-pr` skill's `assets/pr_template.md` (in `experience-success-skills`, `mysticat-dev` plugin). Everything outside the markers (this title, introduction, and example) is documentation and is NOT part of the PR body. When rendering a PR, the skill: replaces every `{{TOKEN}}`, strips every `AGENT:` instruction comment, and fills-or-drops each `[CONDITIONAL]` section. When a placeholder resolves to empty/null the skill removes the **entire line or bullet** (not just the token), so no dangling `- Spec:` remains. A `{{TOKEN}}` the skill cannot resolve at all (as opposed to a deliberately empty optional) is a bug — the skill fails rather than open a PR with raw placeholders. See the spec for the full fill-guide and the hard exclusions (no code snippets, no passing-test counts, no lint-success statements).
 
-**Example (filled-in).** The body of PR adobe/mysticat-ai-native-guidelines#37 is a rendered instance of this template: abstract, reasoning, high-level overview, required-information links, affected workspace projects, and test plan, with the conditional sections (5, 6, 8) present or dropped according to what applied.
+**Example (filled-in).** The body of PR adobe/mysticat-ai-native-guidelines#37 is a manually authored instance following this template's structure (the skill does not exist yet): abstract, reasoning, high-level overview, required-information links, affected workspace projects, and test plan, with the conditional sections (5, 6, 8) present or dropped according to what applied.
 
 ---
 
@@ -21,7 +21,7 @@ This is the canonical Mysticat PR body template — the companion artifact to th
 {{OVERVIEW}}
 
 ## 4. Required information
-<!-- AGENT: Links to supporting material. Include only the ones that exist; omit bullets with no link. Jira: workspace convention key (e.g. SITES-1234 / LLMO-1234). Look for spec/plan/ADR under docs/ in the touched repos and in session context. -->
+<!-- AGENT: Links to supporting material. Include only the ones that exist; when a value is empty, remove the ENTIRE bullet line (do not leave a dangling "- Spec:"). Jira: workspace convention key (e.g. SITES-1234 / LLMO-1234). Look for spec/plan/ADR under docs/ in the touched repos and in session context. -->
 - Jira / issue: {{JIRA_LINK}}
 - Spec: {{SPEC_LINK}}
 - Implementation plan: {{PLAN_LINK}}

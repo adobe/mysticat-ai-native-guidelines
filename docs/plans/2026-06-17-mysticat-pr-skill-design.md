@@ -133,6 +133,8 @@ Two markers, with distinct roles:
 }
 ```
 
+**Matcher names track `.mcp.json`.** The `mcp__github__create_pull_request` / `mcp__github-enterprise__create_pull_request` entries are the *configured MCP server names* from the workspace `.mcp.json` (server name + tool name). Treat the matcher as a living list: if the GitHub MCP server is renamed, removed, or a new GitHub MCP server is added, the matcher must be kept in sync. The `Bash` arm is stable; only the MCP arm is config-coupled.
+
 **Direct-API detection heuristics (Bash).** Treat a Bash command as a PR-create attempt when it matches any of:
 - `gh pr create` (the primary path).
 - `gh api` AND a `pulls` endpoint AND a write (e.g. `-X POST` / `--method POST`, or `-f`/`--field`/`--input` present which makes `gh api` default to POST) — e.g. `gh api repos/{owner}/{repo}/pulls -f title=... -f head=... -f base=...`.
@@ -140,6 +142,10 @@ Two markers, with distinct roles:
 - `curl` AND a GitHub API host (`api.github.com` or the enterprise host) AND a `/pulls` path AND a POST.
 
 These are heuristics over command strings and can over- or under-match (e.g. a `gh api ... pulls` GET to *list* PRs); see O10. They are advisory routing, not enforcement, so a false positive degrades to "use the skill" and a false negative degrades to a raw PR — both acceptable.
+
+**Known limitation — dynamically constructed commands.** Commands assembled at runtime (`eval "$cmd"`, heredocs, a variable holding the command string, base64-decoded payloads) can evade the substring heuristics. This is accepted: a miss degrades to a raw PR, consistent with the convenience-guard framing in §A. It is not worth trying to defeat, since it is not a security control.
+
+**Repeated non-compliance.** A `deny` is idempotent — there is no counter or escalation. If the model retries the raw call after a deny, the hook simply denies again; if it keeps retrying, resolution is user intervention (invoke the skill, or set `MYSTICAT_PR_SKILL_BYPASS=1`). The hook never blocks the session, only the specific PR-create call.
 
 **Decision table** (the `MYSTICAT_PR_SKILL_BYPASS=1` env override short-circuits to no-op/allow on every row):
 
@@ -177,6 +183,8 @@ Properties of the template (full text in the companion file):
 - Eight sections; sections 5, 6, and 8 are conditional (the skill drops the whole section when not applicable).
 - Each section carries an `<!-- AGENT: ... -->` instruction comment (stripped after filling) and a `{{TOKEN}}` placeholder (replaced). The skill MUST replace every token, strip every comment, and fill-or-remove each conditional section; a leftover `{{TOKEN}}` is a bug and the skill should fail rather than open a PR with raw placeholders.
 
+**Rendering contract for empty values.** This is the contract an implementer (or the optional `render_body.py`) MUST follow, stated here so it does not live only in a stripped instruction comment: when a placeholder — or a section-4 bullet's value — resolves to **empty/null**, the skill removes the **entire line or bullet**, not just the `{{TOKEN}}`, so no dangling `- Spec:` remains. The "leftover token is a bug → fail" rule applies only to a token the skill *cannot resolve at all*, which is distinct from a deliberately-empty optional that is removed cleanly.
+
 **Fill-guide (placeholder → content → data source):**
 
 | Placeholder | What the skill writes | Primary source |
@@ -184,9 +192,9 @@ Properties of the template (full text in the companion file):
 | `{{ABSTRACT}}` | 1-2 sentence what-is-this | branch name, PR title, Jira summary, diff summary |
 | `{{REASONING}}` | the why / trigger | Jira/issue description, commit messages, session context |
 | `{{OVERVIEW}}` | behaviour delta (before->after), human-readable | diff analysis + the model's understanding of the change |
-| `{{JIRA_LINK}}` | issue key + URL (e.g. `SITES-1234`) | issue keys parsed from branch/commits/session; omit bullet if none |
-| `{{SPEC_LINK}}` / `{{PLAN_LINK}}` / `{{ADR_LINK}}` | links to spec/plan/ADR | `docs/` in touched repos (`decisions/`, `plans/`, `proposals/`), session context; omit bullet if none |
-| `{{OTHER_LINKS}}` | any other relevant links | session context; omit bullet if none |
+| `{{JIRA_LINK}}` | issue key + URL (e.g. `SITES-1234`) | issue keys parsed from branch/commits/session; remove bullet if none |
+| `{{SPEC_LINK}}` / `{{PLAN_LINK}}` / `{{ADR_LINK}}` | links to spec/plan/ADR | `docs/` in touched repos (`decisions/`, `plans/`, `proposals/`), session context; remove bullet if none |
+| `{{OTHER_LINKS}}` | any other relevant links | session context; remove bullet if none |
 | `{{AFFECTED_PROJECTS}}` | bullet list of workspace repos touched/depended-on + nature | diff scope across repos + cross-repo contract reasoning; drop section if none |
 | `{{OUTSIDE_CODE_INFO}}` | manual/agent validation results + infra observations | session record; drop section if none |
 | `{{TEST_PLAN}}` | (a) local e2e done + result, (b) per-env verification steps | session record + the model's plan for eph/dev/stage/prod |
@@ -211,9 +219,10 @@ These are enforced by the rendering step (and a skill test). A known *failure or
 - **Phase 3 (Consolidate + post):** when not grounded, prepend a prominent **"⚠ Degraded review"** banner to the consolidated review and include it in the body posted to GitHub. Suggested wording: *"Degraded review — no linked spec or implementation plan was found. This review covers code-level quality but could not validate the change against an agreed design, so confidence is reduced. Add a spec/plan link (PR template section 4) and re-request review for a full-confidence pass."*
 
 Design points:
+- **Grounding threshold + exemption (decided — resolves O8).** A PR is *grounded* when section 4 links **at least one** of a spec OR an implementation plan (not both — a small change often has only one). A PR may be explicitly **exempted** — for trivial/mechanical changes (typo, dependency bump, formatting) where no design is warranted — via either a `no-spec-needed` label on the PR or an `Exemption: <reason>` bullet in section 4. Exempted PRs get no degraded banner. This keeps the signal meaningful and avoids alert fatigue eroding the gate.
 - **Severity is advisory, not blocking.** The review still runs and posts; the banner adjusts stated confidence.
 - **Complements the existing `spec-compliance-reviewer` agent.** That agent checks implementation-vs-spec *when a spec exists*; the grounding gate handles the *absence* case (no spec → spec-compliance cannot run → degraded). It also fits the Always-on `project-conventions-reviewer`'s remit of checking alignment with documented contracts.
-- **Grounding threshold** (what counts as grounded) and **discovery scope** (PR-body link only vs repo/Jira discovery) are open questions O8/O9.
+- **Discovery scope** (PR-body link only vs also probing repo/Jira) remains open question O9.
 
 #### F. Fallback behavior
 
@@ -234,12 +243,13 @@ Three separate PRs (two repos). The skill PR should merge first so the hook's "p
 | Decision | Options | Verdict |
 |---|---|---|
 | Routing as security vs convenience | hard gate / security boundary vs convenience guard with override | convenience guard (selected); a hard gate contradicts the non-goals and cannot be enforced against opaque clients anyway |
-| Recursion sentinel | env-var prefix; `--body-file`-path check; wrapper script | env-var prefix (selected, simplest); revisit if brittle |
+| Recursion sentinel (O1) | env-var prefix; `--body-file`-path check; wrapper script | env-var prefix (selected, simplest); revisit if brittle |
 | MCP/direct-API escape hatch | no override (block when skill present) vs uniform `MYSTICAT_PR_SKILL_BYPASS` env | uniform bypass env (selected); keeps "router not gate" on surfaces that cannot carry an inline sentinel |
 | Routing event | PreToolUse (intercept the tool call) vs UserPromptSubmit (intercept the prompt) | PreToolUse — it sees the actual action and arguments; UserPromptSubmit fires too early and would block the whole turn |
 | Template vs repo template | replace at create time vs merge with repo template | replace (one consistent body); surface repo-specific critical items in §6/§7 |
-| Conditional sections | drop-when-empty vs always render with "N/A" | drop-when-empty (selected); flip if reviewers want a fixed shape |
-| Plugin placement | new `mysticat-dev` plugin vs existing plugin | new plugin (no existing plugin is a clean fit) |
+| Conditional sections (O3) | drop-when-empty vs always render with "N/A" | drop-when-empty (selected); flip if reviewers want a fixed shape |
+| Plugin placement (O4) | new `mysticat-dev` plugin vs existing plugin | new plugin (selected); no existing plugin is a clean fit |
+| Grounding threshold (O8) | spec AND plan vs spec OR plan; with/without exemption | spec OR plan, plus an explicit exemption (label / Section-4 bullet) for trivial changes |
 | Degraded review severity | advisory banner vs hard block | advisory (selected); a hard block would be hostile to small/independent changes |
 | PR template storage | inline in spec/SKILL.md vs dedicated `assets/pr_template.md` file | dedicated file (selected); read from disk, copied verbatim from the spec companion file |
 
@@ -247,12 +257,13 @@ Three separate PRs (two repos). The skill PR should merge first so the hook's "p
 
 ### Functional Requirements
 - [ ] `create-pr` opens a PR whose body is the rendered 8-section template with all `{{TOKEN}}`s filled and all instruction comments stripped.
+- [ ] Empty optional placeholders/bullets are removed whole (no dangling `- Spec:`); an unresolvable token fails the skill.
 - [ ] Conditional sections (5, 6, 8) are present when applicable and absent otherwise.
 - [ ] The hook blocks raw `gh pr create`, direct-API PR creation, and MCP create-PR when the skill is present, and instructs the model to use the skill.
 - [ ] The hook allows the skill's sentinel-carrying `gh pr create` (recursion guard).
 - [ ] The hook allows any surface when `MYSTICAT_PR_SKILL_BYPASS=1` is set (operator override).
 - [ ] The hook allows raw creation with a stderr warning when the skill is absent.
-- [ ] `pr-review` posts a "degraded review" banner when no spec/implementation plan is found, and omits it when grounding exists.
+- [ ] `pr-review` posts a "degraded review" banner when no spec/implementation plan is found and the PR is not exempted, and omits it when grounding (or an exemption) exists.
 
 ### Non-Functional Requirements
 - [ ] The hook adds negligible latency and is a clean no-op on unrelated Bash calls.
@@ -261,8 +272,8 @@ Three separate PRs (two repos). The skill PR should merge first so the hook's "p
 
 ### Validation Plan
 Hook (unit-testable via stdin fixtures, like existing hooks): unrelated Bash → no-op; `gh pr create` + sentinel → allowed (recursion guard); `MYSTICAT_PR_SKILL_BYPASS=1` → allowed on every surface; `gh pr create` no sentinel, skill present → deny; skill absent → exit 0 + stderr warning; `gh api .../pulls` POST and `curl .../pulls` POST, skill present → deny, absent → warn+allow; MCP create-PR present → deny, absent → warn+allow; `gh pr create --web` → per O5.
-Skill: renders all sections from a sample session; produces a valid body file and a well-formed sentinel-carrying invocation; `npm run validate` passes; marketplace entry resolves.
-pr-review: grounded PR → no banner; ungrounded PR → banner present in posted review; gate never blocks.
+Skill: renders all sections from a sample session; empty optional → bullet removed; produces a valid body file and a well-formed sentinel-carrying invocation; `npm run validate` passes; marketplace entry resolves.
+pr-review: grounded PR → no banner; ungrounded PR → banner present in posted review; exempted PR → no banner; gate never blocks.
 
 ## Dependencies
 
@@ -273,7 +284,7 @@ pr-review: grounded PR → no banner; ungrounded PR → banner present in posted
 ### Internal
 - `experience-success-skills` marketplace + `enabledPlugins` so the skill is discoverable and the hook's presence-check passes.
 - `review-kit` `pr-review` skill (the grounding gate modifies it).
-- `mysticat-workspace` `.claude/settings.json` and `hooks/` conventions.
+- `mysticat-workspace` `.claude/settings.json` and `hooks/` conventions (and `.mcp.json` for the MCP matcher names).
 
 ## Risks and Mitigations
 
@@ -281,23 +292,27 @@ pr-review: grounded PR → no banner; ungrounded PR → banner present in posted
 |---|---|---|---|
 | Recursion: hook blocks the skill's own `gh pr create` | High if unhandled | High | Sentinel (§A); explicit recursion-guard test |
 | Two Bash hooks now fire (pre-push + pr-route) | Certain | Low | Both must no-op cleanly on irrelevant commands; keep fast |
-| Nudge not followed (model doesn't call the skill after deny) | Medium | Low | Imperative deny `message`; strong skill `description`; worst case is a re-blocked raw call or manual invocation |
-| Direct-API heuristics over/under-match (e.g. `gh api pulls` GET) | Medium | Low | Advisory routing only; false positive → "use the skill", false negative → raw PR; refine patterns (O10) |
+| Nudge not followed (model doesn't call the skill after deny) | Medium | Low | Imperative deny `message`; strong skill `description`; deny is idempotent, worst case is user intervention or bypass |
+| Direct-API heuristics over/under-match (e.g. `gh api pulls` GET); dynamic commands evade | Medium | Low | Advisory routing only; false positive → "use the skill", false negative → raw PR; refine patterns (O10) |
 | PR created by an opaque non-shell client (script/IDE/web) | Medium | Low | Out of scope by design (§B limitation); team convention + skill-as-default; not a security control |
+| MCP matcher drifts from `.mcp.json` server names | Low | Low | Documented as a living list to sync (§B) |
 | Template drift vs per-repo templates | Medium | Low | Template replaces at create time; repo checks stay in pre-commit/CI |
-| Degraded-review false positives (spec exists but not linked) | Medium | Medium | Advisory only; discovery scope (O9) can probe repo/Jira, not just the body |
+| Degraded-review false positives (spec exists but not linked) or alert fatigue | Medium | Medium | Advisory only; spec-OR-plan threshold + explicit exemption (§E); discovery scope (O9) can probe repo/Jira |
 | gh unauthenticated / skill not installed | Low | Low | Fallback handles install; auth is the skill's pre-flight responsibility |
 
 ## Open Questions
 
-- **O1 — Sentinel mechanism.** Env-var prefix (recommended) vs `--body-file`-path check vs wrapper script. (Threat model is now resolved in §A: convenience guard, not security.)
+### Resolved in this spec
+- **O1 — Sentinel mechanism.** Decided: inline env-var prefix; threat model is convenience guard, not security (§A; Alternatives).
+- **O3 — Conditional sections.** Decided: drop-when-empty (§D; Alternatives).
+- **O4 — Plugin placement.** Decided: new `mysticat-dev` plugin (§C; Alternatives).
+- **O8 — Grounding threshold + exemption.** Decided: grounded = spec OR implementation plan; explicit exemption via `no-spec-needed` label or `Exemption:` bullet (§E; Alternatives).
+
+### Open
 - **O2 — Exact plugin install path** for the presence-check glob; confirm against a real install (paths in §B are provisional until then).
-- **O3 — Conditional sections** drop-when-empty (chosen) vs render-with-N/A.
-- **O4 — Plugin placement.** New `mysticat-dev` plugin (recommended) vs existing plugin.
 - **O5 — `gh pr create --web` scope.** Likely allow through (lets the human fill the body); decide whether to exempt.
 - **O6 — Hook registration location.** Committed workspace `.claude/settings.json` (recommended) vs per-user.
 - **O7 — AI-disclosure reconciliation.** Should the Mysticat template fold in an AI-usage disclosure section (per `03-templates/pull-request-template.md` and the vibeproofing MUST rule)?
-- **O8 — Grounding threshold.** Is a PR "grounded" by a spec OR a plan, or does it need both? Do trivial/mechanical PRs get an exemption?
 - **O9 — Grounding discovery scope.** PR-body section-4 links only, or also probe touched repos / architecture docs / linked Jira for a spec/plan?
 - **O10 — Direct-API detection precision.** How aggressively should the hook match `gh api` / `curl` PR-create patterns vs accept false negatives? In particular, distinguishing a POST-create from a GET-list on the `pulls` endpoint.
 - **O11 — Non-shell clients.** Confirm that opaque clients (script/IDE/web) are accepted as out of scope, or decide on a complementary control (e.g. a server-side GitHub Action that posts a "missing template" comment).
@@ -314,7 +329,7 @@ pr-review: grounded PR → no banner; ungrounded PR → banner present in posted
 
 - Hooks cannot call skills directly; they block/allow tool calls and inject text the model reads.
 - `PreToolUse` stdin JSON includes `tool_name` and `tool_input` (`tool_input.command` for Bash; tool params for MCP).
-- Matchers: `|`-separated exact names; regex supported; MCP tool names like `mcp__github__create_pull_request` are matchable.
+- Matchers: a value containing `|` is alternation of **exact tool names** (this is what we rely on for the create-PR matcher — the three literal names `Bash`, `mcp__github__create_pull_request`, `mcp__github-enterprise__create_pull_request`); a matcher may instead be a regex when it contains regex metacharacters. We deliberately use exact-name alternation, not a regex, so the matcher is unambiguous.
 - All hooks across user/project/local settings run (merge, not override); any deny wins.
 - Proven block format in this workspace: stdout `{"decision":"deny","message":"..."}`; silent exit 0 = allow/fall-through.
 - Skills live under `~/.claude/skills/`, `<repo>/.claude/skills/`, or plugin install paths; identified by `SKILL.md`.
@@ -326,3 +341,4 @@ pr-review: grounded PR → no banner; ungrounded PR → banner present in posted
 | 2026-06-17 | Rainer Friederich | Initial draft (create-pr skill + routing hook + pr-review grounding gate) |
 | 2026-06-17 | Rainer Friederich | Extract PR template to dedicated file; §D references it instead of inline |
 | 2026-06-17 | Rainer Friederich | Review: cover direct GitHub API surface; sentinel threat model + uniform bypass; provisional glob paths; status → Draft |
+| 2026-06-17 | Rainer Friederich | Review 2: empty-bullet rendering contract (§D); resolve O1/O3/O4/O8; matcher-tracks-.mcp.json, dynamic-command + repeated-deny notes (§B); Appendix A matcher clarification |

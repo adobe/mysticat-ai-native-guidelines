@@ -21,7 +21,7 @@ This is the canonical Mysticat PR body template — the companion artifact to th
 {{OVERVIEW}}
 
 ## 4. Required information
-<!-- AGENT: Links to supporting material. Include only the ones that exist; when a value is empty, remove the ENTIRE bullet line (do not leave a dangling "- Spec:"). Jira: workspace convention key (e.g. SITES-1234 / LLMO-1234). Look for spec/plan/ADR under docs/ in the touched repos AND in the workspace mysticat-architecture + mysticat-ai-native-guidelines docs (where specs/ADRs/migration-plans live per the DOCUMENTATION-GUIDE 70% rule), keyed on the Jira key / branch / PR title, plus session context. This discovery scope matches the pr-review grounding gate so the spec link the skill writes and the link the gate checks agree. -->
+<!-- AGENT: Links to supporting material. Include only the ones that exist; when a value is empty, remove the ENTIRE bullet line (do not leave a dangling "- Spec:"). Jira: workspace convention key (e.g. SITES-1234 / LLMO-1234). Look for spec/plan/ADR under docs/ in the touched repos AND in the workspace mysticat-architecture + mysticat-ai-native-guidelines docs (where specs/ADRs/migration-plans live per the DOCUMENTATION-GUIDE 70% rule), keyed on the Jira key / branch / PR title, plus session context. -->
 - Jira / issue: {{JIRA_LINK}}
 - Spec: {{SPEC_LINK}}
 - Implementation plan: {{PLAN_LINK}}

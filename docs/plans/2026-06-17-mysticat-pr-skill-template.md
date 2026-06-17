@@ -2,7 +2,7 @@
 
 This is the canonical Mysticat PR body template — the companion artifact to the [PR skill design spec](2026-06-17-mysticat-pr-skill-design.md). Its purpose is to give every Mysticat PR one consistent, human-readable structure that the `create-pr` skill fills automatically from the current session.
 
-**How it is used.** At implementation, the content **between the two `---` markers** below is copied verbatim into the `create-pr` skill's `assets/pr_template.md` (in `experience-success-skills`, `mysticat-dev` plugin). Everything outside the markers (this title, introduction, and example) is documentation and is NOT part of the PR body. When rendering a PR, the skill: replaces every `{{TOKEN}}`, strips every `AGENT:` instruction comment, and fills-or-drops each `[CONDITIONAL]` section. When a placeholder resolves to empty/null the skill removes the **entire line or bullet** (not just the token), so no dangling `- Spec:` remains. A `{{TOKEN}}` the skill cannot resolve at all (as opposed to a deliberately empty optional) is a bug — the skill fails rather than open a PR with raw placeholders. See the spec for the full fill-guide and the hard exclusions (no code snippets, no passing-test counts, no lint-success statements).
+**How it is used.** At implementation, the content **between the two `---` markers** below is copied verbatim into the `create-pr` skill's `assets/pr_template.md` (in `experience-success-skills`, `mysticat-dev` plugin). Everything outside the markers (this title, introduction, and example) is documentation and is NOT part of the PR body. When rendering a PR, the skill: replaces every `{{TOKEN}}`, strips every `AGENT:` instruction comment, and fills-or-drops each `[CONDITIONAL]` section. When a placeholder resolves to empty/null the skill removes the **entire line or bullet** (not just the token), so no dangling `- Spec:` remains. A `{{TOKEN}}` the skill cannot resolve at all (as opposed to a deliberately empty optional) is a bug — the skill fails rather than open a PR with raw placeholders. The fixed `🤖 Generated with Claude Code` footer at the end is static (lightweight AI-usage disclosure) and is part of the body. See the spec for the full fill-guide and the hard exclusions (no code snippets, no passing-test counts, no lint-success statements).
 
 **Example (filled-in).** The body of PR adobe/mysticat-ai-native-guidelines#37 is a manually authored instance following this template's structure (the skill does not exist yet): abstract, reasoning, high-level overview, required-information links, affected workspace projects, and test plan, with the conditional sections (5, 6, 8) present or dropped according to what applied.
 
@@ -49,5 +49,7 @@ This is the canonical Mysticat PR body template — the companion artifact to th
 ## 8. Deployment & merge order
 <!-- AGENT: If this change depends on other PRs (must merge/deploy after them) or is related to other PRs (e.g. a coordinated cross-repo change), list them and state the required order to merge and deploy safely. One line per PR: link + relationship (depends-on / blocks / related) + why. End with the explicit ordered sequence. Omit the section entirely if this PR is independent. -->
 {{DEPLOYMENT_ORDER}}
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
 ---

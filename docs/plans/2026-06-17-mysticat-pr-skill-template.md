@@ -4,7 +4,7 @@ This is the canonical Mysticat PR body template — the companion artifact to th
 
 **How it is used.** At implementation, the content **between the two `---` markers** below is copied verbatim into the `create-pr` skill's `assets/pr_template.md` (in `experience-success-skills`, `mysticat-dev` plugin). Everything outside the markers (this title, introduction, and example) is documentation and is NOT part of the PR body. When rendering a PR, the skill: replaces every `{{TOKEN}}`, strips every `AGENT:` instruction comment, and fills-or-drops each `[CONDITIONAL]` section. When a placeholder resolves to empty/null the skill removes the **entire line or bullet** (not just the token), so no dangling `- Spec:` remains. A `{{TOKEN}}` the skill cannot resolve at all (as opposed to a deliberately empty optional) is a bug — the skill fails rather than open a PR with raw placeholders. The fixed `🤖 Generated with Claude Code` footer at the end is static (lightweight AI-usage disclosure) and is part of the body. See the spec for the full fill-guide and the hard exclusions (no code snippets, no passing-test counts, no lint-success statements).
 
-**Example (filled-in).** The body of PR adobe/mysticat-ai-native-guidelines#37 is a manually authored instance following this template's structure (the skill does not exist yet): abstract, reasoning, high-level overview, required-information links, affected workspace projects, and test plan, with the conditional sections (5, 6, 8) present or dropped according to what applied.
+**Example (filled-in).** The body of the PR that introduced this spec is a manually authored instance following this template's structure: abstract, reasoning, high-level overview, required-information links, affected workspace projects, and test plan, with the conditional sections (5, 6, 8) present or dropped according to what applied.
 
 ---
 
@@ -21,7 +21,7 @@ This is the canonical Mysticat PR body template — the companion artifact to th
 {{OVERVIEW}}
 
 ## 4. Required information
-<!-- AGENT: Links to supporting material. Include only the ones that exist; when a value is empty, remove the ENTIRE bullet line (do not leave a dangling "- Spec:"). Jira: workspace convention key (e.g. SITES-1234 / LLMO-1234). Look for spec/plan/ADR under docs/ in the touched repos and in session context. -->
+<!-- AGENT: Links to supporting material. Include only the ones that exist; when a value is empty, remove the ENTIRE bullet line (do not leave a dangling "- Spec:"). Jira: workspace convention key (e.g. SITES-1234 / LLMO-1234). Look for spec/plan/ADR under docs/ in the touched repos AND in the workspace mysticat-architecture + mysticat-ai-native-guidelines docs (where specs/ADRs/migration-plans live per the DOCUMENTATION-GUIDE 70% rule), keyed on the Jira key / branch / PR title, plus session context. This discovery scope matches the pr-review grounding gate so the spec link the skill writes and the link the gate checks agree. -->
 - Jira / issue: {{JIRA_LINK}}
 - Spec: {{SPEC_LINK}}
 - Implementation plan: {{PLAN_LINK}}

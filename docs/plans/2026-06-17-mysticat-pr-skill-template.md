@@ -1,0 +1,49 @@
+<!-- Canonical Mysticat PR template. Spec companion to 2026-06-17-mysticat-pr-skill-design.md.
+     At implementation this file is copied verbatim to the create-pr skill's
+     assets/pr_template.md (experience-success-skills, mysticat-dev plugin).
+     The skill MUST: replace every {{TOKEN}}, strip every "AGENT:" instruction comment,
+     and fill-or-drop each [CONDITIONAL] section. A leftover {{TOKEN}} is a bug — the skill
+     fails rather than opening a PR with raw placeholders. See the spec for the fill-guide
+     and the hard exclusions (no code snippets, no passing-test counts, no lint-success). -->
+
+## 1. Abstract
+<!-- AGENT: One or two sentences — what is this PR about, at a glance. No "why" here (that is section 2), just what it is. -->
+{{ABSTRACT}}
+
+## 2. Reasoning
+<!-- AGENT: Why was this changed? The problem, motivation, or trigger. Reference the bug/incident/request that prompted it. Source: Jira/issue description, session context, commit messages. -->
+{{REASONING}}
+
+## 3. High-level overview of the changes
+<!-- AGENT: Explain to a person who understands the system (not necessarily this code) WHAT this changes and HOW it changes the behaviour of the application. Prose + bullets. Describe behaviour deltas (before -> after), not a file-by-file diff. Call out anything user-visible or operationally visible. -->
+{{OVERVIEW}}
+
+## 4. Required information
+<!-- AGENT: Links to supporting material. Include only the ones that exist; omit bullets with no link. Jira: workspace convention key (e.g. SITES-1234 / LLMO-1234). Look for spec/plan/ADR under docs/ in the touched repos and in session context. -->
+- Jira / issue: {{JIRA_LINK}}
+- Spec: {{SPEC_LINK}}
+- Implementation plan: {{PLAN_LINK}}
+- ADR(s): {{ADR_LINK}}
+- Other: {{OTHER_LINKS}}
+
+<!-- [CONDITIONAL] Include section 5 ONLY if the change affects or relies on other mysticat-workspace projects. Otherwise remove the whole section. -->
+## 5. Affected / used mysticat-workspace projects
+<!-- AGENT: List ONLY mysticat-workspace projects this change touches OR depends on at runtime. Example: this PR changes an API request shape -> list spacecat-api-service because it must serve it. For each, one line on the nature of the dependency (changed / consumed / contract). Do not list the repo the PR is in unless cross-repo coordination is needed. -->
+{{AFFECTED_PROJECTS}}
+
+<!-- [CONDITIONAL] Include section 6 ONLY if validation/verification outside the code was actually done. Otherwise remove the whole section. -->
+## 6. Additional information outside the code
+<!-- AGENT: Evidence gathered outside the code itself, ONLY if performed this session. Manual or agent validation/verification (what was checked and the result), and infrastructure observations (logs, queues, DynamoDB, S3, dashboards) with the concrete query or location. Do not fabricate; if nothing was done, the section is omitted. -->
+{{OUTSIDE_CODE_INFO}}
+
+## 7. Test plan
+<!-- AGENT: End-to-end verification, NOT automated unit tests (CI runs those). Two parts:
+  (a) What was tested locally beyond unit tests (manual e2e, local stack, through-API checks) and the result.
+  (b) How to verify on each relevant environment: eph / dev / stage / prod — concrete steps, commands, or checks. Include only the environments that apply.
+  Do NOT state how many tests pass or that static analysis/linting succeeded — CI owns that. -->
+{{TEST_PLAN}}
+
+<!-- [CONDITIONAL] Include section 8 ONLY if this PR depends on, or is related to, other PRs. Otherwise remove the whole section. -->
+## 8. Deployment & merge order
+<!-- AGENT: If this change depends on other PRs (must merge/deploy after them) or is related to other PRs (e.g. a coordinated cross-repo change), list them and state the required order to merge and deploy safely. One line per PR: link + relationship (depends-on / blocks / related) + why. End with the explicit ordered sequence. Omit the section entirely if this PR is independent. -->
+{{DEPLOYMENT_ORDER}}

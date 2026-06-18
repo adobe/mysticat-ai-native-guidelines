@@ -18,13 +18,13 @@
 
 ---
 
-## Part 0 - Reconcile the spec deviation (pre-req, gates Part 1)
+## Part 0 - Reconcile the spec deviation (done in this PR; gates Part 1)
 
-The plan deviates from spec §C on plugin placement (see the Part 1 callout). The merged spec is the contract every downstream PR cites, and its §A/§B/§C/§D still name the `mysticat-dev` plugin install root - the text Part 2 reads back for presence detection - so the divergence MUST be reconciled before Part 1 merges, not deferred.
+The plan deviates from spec §C on plugin placement (see the Part 1 callout). The merged spec is the contract every downstream PR cites - and Part 2 reads its §B presence-detection text back - so the divergence is reconciled **in this PR** (the spec is amended alongside the plan) rather than deferred.
 
-- [ ] **Step 1: Approver ack.** Get explicit sign-off on `review-kit` placement from the spec approvers (solaris007, iuliag) on this PR or the spec PR.
-- [ ] **Step 2: Amend the spec** `docs/plans/2026-06-17-mysticat-pr-skill-design.md`: update §C placement, §B skill-presence detection, §A/§D marker references, the Alternatives "Plugin placement" row, and add a Revision History entry - changing `mysticat-dev` to `review-kit`. Preferred: replace the hardcoded plugin name with the **live-plugin-layout glob** abstraction (Task 2.1 Step 5 already uses it), so presence detection no longer depends on the plugin name and placement becomes purely a distribution decision.
-- [ ] **Step 3: Verify** no `mysticat-dev` reference remains as a load-bearing string -> `grep -rn "mysticat-dev" docs/plans/2026-06-17-mysticat-pr-skill*.md` returns only historical Revision-History / Alternatives mentions.
+- [x] **Step 2 (done here): Amended the spec** `docs/plans/2026-06-17-mysticat-pr-skill-design.md`: §B skill-presence detection, §C placement, the overview diagram, and the Alternatives "Plugin placement" row changed from `mysticat-dev` to the existing `review-kit` plugin, plus a Revision History entry. §B's existing live-plugin-layout note already keeps presence detection from hard-depending on the plugin name (§A/§D reference only the marker, not the plugin, so they were unaffected).
+- [x] **Step 3 (done here): Verified** `grep -n "mysticat-dev" docs/plans/2026-06-17-mysticat-pr-skill-design.md` returns only the Alternatives "vs" comparison and Revision-History mentions - no load-bearing references remain.
+- [ ] **Step 1: Approver ack.** Sign-off on `review-kit` placement from the spec approvers (solaris007, iuliag) = approval of this PR. This is the one remaining human gate before Part 1 implementation starts.
 
 ---
 

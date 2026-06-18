@@ -4,7 +4,7 @@
 
 **Goal:** Implement the three coordinated deliverables defined in the spec: (1) a `create-pr` skill in `experience-success-skills` (in the existing `review-kit` plugin, alongside `pr-review`) that opens a GitHub PR from one skill-bundled 8-section template; (2) a PreToolUse routing hook in `mysticat-workspace` that routes all three PR-creation surfaces (`gh pr create`, direct GitHub API, GitHub MCP) through that skill with a graceful fallback; (3) a `pr-review` grounding gate in `experience-success-skills` / `review-kit` plus the `grounding`-labelled review-cost split in `mysticat-github-service`.
 
-**Architecture:** Three independent PRs across two implementation repos (plus a metrics change in a third). They are sequenced by one soft dependency: the skill PR (Part 1) should merge first so the hook's "skill present" path is exercisable (Part 2). The pr-review grounding gate (Part 3) is independent and can land in parallel.
+**Architecture:** Three independent PRs across two implementation repos (plus a metrics change in a third). They are sequenced by one soft dependency: the skill PR (Part 1) should merge first so the hook's "skill present" path is exercisable (Part 2). The dependency is soft, not hard - Part 2 is safe to merge before Part 1 because skill-absent degrades to warn+allow (§F); only Part 2's "skill present" test fixture needs the skill layout, which the tests stub. The pr-review grounding gate (Part 3) is independent and can land in parallel.
 
 - **Part 1 - Skill** lands in `experience-success-skills` (branch off its `origin/main`).
 - **Part 2 - Hook** lands in `mysticat-workspace` (branch off its `origin/main`).
@@ -18,17 +18,27 @@
 
 ---
 
+## Part 0 - Reconcile the spec deviation (pre-req, gates Part 1)
+
+The plan deviates from spec §C on plugin placement (see the Part 1 callout). The merged spec is the contract every downstream PR cites, and its §A/§B/§C/§D still name the `mysticat-dev` plugin install root - the text Part 2 reads back for presence detection - so the divergence MUST be reconciled before Part 1 merges, not deferred.
+
+- [ ] **Step 1: Approver ack.** Get explicit sign-off on `review-kit` placement from the spec approvers (solaris007, iuliag) on this PR or the spec PR.
+- [ ] **Step 2: Amend the spec** `docs/plans/2026-06-17-mysticat-pr-skill-design.md`: update §C placement, §B skill-presence detection, §A/§D marker references, the Alternatives "Plugin placement" row, and add a Revision History entry - changing `mysticat-dev` to `review-kit`. Preferred: replace the hardcoded plugin name with the **live-plugin-layout glob** abstraction (Task 2.1 Step 5 already uses it), so presence detection no longer depends on the plugin name and placement becomes purely a distribution decision.
+- [ ] **Step 3: Verify** no `mysticat-dev` reference remains as a load-bearing string -> `grep -rn "mysticat-dev" docs/plans/2026-06-17-mysticat-pr-skill*.md` returns only historical Revision-History / Alternatives mentions.
+
+---
+
 ## Part 1 - `create-pr` skill (experience-success-skills)
 
 **Spec authority:** §C (skill), §D (template + fill-guide + hard exclusions + rendering contract), §A (the in-body marker).
 
-> **Deviation from spec §C (plugin placement).** The spec chose a new `mysticat-dev` plugin ("no existing plugin is a clean fit"). This plan instead places `create-pr` in the existing **`review-kit`** plugin, alongside `pr-review`. Rationale: Part 3's grounding gate already modifies `review-kit`; `create-pr` and `pr-review` are explicitly coordinated (the template captures the spec link that the §E gate then checks); one plugin install covers the whole PR lifecycle; and the create-vs-review parity logic lives in one place. This supersedes the spec §C decision and the "Plugin placement" alternatives row - update the spec to match (or note the supersession there).
+> **Deviation from spec §C (plugin placement).** The spec chose a new `mysticat-dev` plugin ("no existing plugin is a clean fit"). This plan instead places `create-pr` in the existing **`review-kit`** plugin, alongside `pr-review`. Rationale: Part 3's grounding gate already modifies `review-kit`; `create-pr` and `pr-review` are explicitly coordinated (the template captures the spec link that the §E gate then checks); one plugin install covers the whole PR lifecycle; and the create-vs-review parity logic lives in one place. Mechanically clean: skills auto-discover from `skills/review-kit/skills/*` (the plugin `marketplace.json` lists plugins, not skills; `plugin.json` does not enumerate them), so no manifest change is needed. The remaining cost is design-of-record drift: this supersedes the spec §C decision and the "Plugin placement" alternatives row, and the merged spec's §A/§B/§C/§D still name the `mysticat-dev` plugin install root - the same text Part 2 reads back for presence detection. That divergence MUST be reconciled before Part 1 merges, not deferred - see **Part 0** below.
 
 **Repo facts (verified):**
 - Placement: `skills/review-kit/skills/create-pr/{SKILL.md, assets/pr_template.md, scripts/, tests/}` (a new skill dir inside the existing `review-kit` plugin; `review-kit` already holds `pr-review`, `triage-pr-reviews`, `implement-pr-reviews`, `review-*`). No new plugin, no `plugin.json`, no `marketplace.json` change.
 - Validator (`scripts/validate-skills.py`, run via `npm run validate`) allows frontmatter keys: `name, description, license, allowed-tools, metadata, compatibility, user-invocable, argument-hint, model` and nothing else; `name` must be lowercase `[a-z0-9][a-z0-9-]*`, no `--`, and equal the parent dir name; `description` <= 1024 chars.
 - `AGENTS.md` requires invocable skills to carry `name, description, user-invocable: true, argument-hint`. No SKILL.md in the repo uses `allowed-tools` today; only `pr-review` uses `model:`.
-- CI (`.github/workflows/ci.yml`, Python 3.12): `validate` job (`npm run validate` + persona-reference check), `script-tests` job (stdlib `unittest discover`). A new Python helper with tests needs its dir added to the `script-tests` job.
+- CI (`.github/workflows/ci.yml`, Python 3.12): `validate` job (runs `python3 scripts/validate-skills.py` directly - `npm run validate` is the local equivalent - plus a persona-reference check), `script-tests` job (stdlib `unittest discover`). A new Python helper with tests needs its dir added to the `script-tests` job.
 - Closest existing PR-creation convention: `skills/domain-expert/skills/develop-llmo-feature/SKILL.md` "4d - Push and open PR" (MCP-first: `mcp__github__create_pull_request` for `adobe/spacecat-*`, `mcp__github-enterprise__*` / `mcp__adobe-ghec__*` per host; reserve `gh pr create` for what MCP cannot do).
 
 ### Task 1.1: Author the bundled PR template (copied verbatim from the spec companion)
@@ -40,7 +50,7 @@
 
 - [ ] **Step 1: Copy the between-markers block verbatim** into `assets/pr_template.md`. It starts with `<!-- mysticat-pr-skill -->` (the first line) and ends with the `🤖 Generated with [Claude Code](https://claude.com/claude-code)` footer.
 - [ ] **Step 2: Confirm fidelity.** The file MUST contain: the 8 sections; the `<!-- AGENT: ... -->` instruction comment on each; one `{{TOKEN}}` per section (section 4 has the 5 bullet tokens); the `[CONDITIONAL]` markers on sections 5, 6, 8; and the literal first-line marker `<!-- mysticat-pr-skill -->`.
-- [ ] **Step 3: Verify** -> Run `grep -c '{{' assets/pr_template.md` (expect the placeholder count) and `head -1 assets/pr_template.md` -> Expected: `<!-- mysticat-pr-skill -->`.
+- [ ] **Step 3: Verify** -> Run `grep -c '{{' assets/pr_template.md` (expect the placeholder count) and `grep -m1 -n 'mysticat-pr-skill' assets/pr_template.md` -> the marker is the first non-blank line (the verbatim between-markers block opens with a blank line, so do NOT assert `head -1`).
 
 ### Task 1.2: Write `SKILL.md` (the workflow)
 
@@ -66,7 +76,7 @@
 - Create: `skills/review-kit/skills/create-pr/tests/test_render_body.py` (stdlib `unittest`)
 - Modify: `.github/workflows/ci.yml` (add the new tests dir to the `script-tests` job)
 
-> **Why Python (not shell).** Python 3 stdlib is the established skill-helper convention here (51 Python helpers vs 2 shell), and Python 3.12 is already a hard repo dependency - `scripts/validate-skills.py` (run by `npm run validate`) and every CI job require it - so a Python helper adds no new portability burden. The default path uses NO helper at all: the model renders the body inline per the §D contract, and a script is added only when deterministic token-replacement / empty-bullet removal proves unreliable inline.
+> **Why Python (not shell).** Python 3 stdlib is the established skill-helper convention here (73 Python helpers vs 2 shell), and Python 3.12 is already a hard repo dependency - `scripts/validate-skills.py` (run by `npm run validate`) and every CI job require it - so a Python helper adds no new portability burden. The default path uses NO helper at all: the model renders the body inline per the §D contract, and a script is added only when deterministic token-replacement / empty-bullet removal proves unreliable inline.
 
 - [ ] **Step 1: Decide.** Default to no script. Add `render_body.py` only if deterministic token replacement / empty-bullet removal / Jira-key extraction is hard to do reliably inline.
 - [ ] **Step 2: If added, implement** the §D rendering contract: replace tokens, strip `AGENT:` comments, retain the `mysticat-pr-skill` marker, drop empty lines/bullets and empty conditional sections, append footer, fail on an unresolvable token.
@@ -179,7 +189,7 @@
 - Label reading: `src/worker/steps/label.py` is write-only (`add_label`). For the `no-spec-needed` label add a `list_labels` helper (mirror `add_label`'s `gh api .../issues/{n}/labels` shape) OR parse the `Exemption:` bullet from the body in `detect_grounding`. Worker clones only `mysticat-workspace` + 3 context repos + skills repo (`workspace.py` `_CONTEXT_REPOS`); the PR repo is reached via `gh api`.
 - Tests: pytest, `tests/steps/test_amp.py` (must keep `test_build_series_rejects_unknown_label` green and assert the `grounding` value lands in the snappy/protobuf wire), `tests/steps/test_metrics.py` (CloudWatch dimensions), `tests/steps/test_parser.py` (inline-body `detect_grounding` cases), `tests/test_pipeline.py` (assert `grounding` threaded into mocked emitters). Closest precedent: `docs/plans/2026-06-03-stage-duration-dedup-metrics-worker.md`.
 
-- [ ] **Step 1: `detect_grounding(body)`** in `parser.py` - reuse the fence-skipping loop; return `exempt` on the `Exemption:` bullet (and/or label lookup), `degraded` on the `⚠ Degraded review` banner, else `spec_found`. None-safe (`if not body: return ...`).
+- [ ] **Step 1: `detect_grounding(body)`** in `parser.py` - reuse the fence-skipping loop; return `exempt` on the `Exemption:` bullet (and/or label lookup), `degraded` on the `⚠ Degraded review` banner, else `spec_found`. None-safe (`if not body: return ...`). **Cross-repo string contract:** this parser keys on the literal banner prefix and `Exemption:` bullet that Part 3A emits in the other repo, with no shared constant - so treat the banner text and bullet wording as tokens of record. Any change to Part 3A's banner/exemption wording is a breaking change to this parser even though the two halves deploy independently; the runtime decoupling does not remove this coupling. Pin both literals in the `test_parser.py` cases below so a drift fails a test.
 - [ ] **Step 2: Allow the label.** Add `"grounding"` to `_ALLOWED_LABELS` in `amp.py`; add a `grounding` kwarg to `emit_amp_success` and thread it into the `M_COST` and `M_INPUT_TOKENS` series.
 - [ ] **Step 3: Wire the pipeline.** Compute `grounding` after `count_findings`; pass to `emit_amp_success` and (optionally) `emit_success_metrics` + the Check Run metadata. Decide CloudWatch mirror vs AMP-only: follow the `review_state` precedent (AMP-only) to avoid CloudWatch dimension-cardinality growth - recommend **AMP-only** for the `grounding` label, matching `metrics.yaml`.
 - [ ] **Step 4: Update the catalog.** Add `grounding` to the `labels:` lists of `mysticat_github_review_cost_usd` and `mysticat_github_review_input_tokens` in `metrics.yaml`.
@@ -192,6 +202,7 @@
 - [ ] Worker no-clone fixture: a PR whose spec lives in `mysticat-architecture`, reachable only via `get_file_contents` (touched repo links up; arch repo NOT cloned) -> spec discovered, NO banner (pins the under-discovery regression).
 - [ ] Create-vs-review consistency: for that same PR shape, the `create-pr` skill resolves the `mysticat-architecture` spec into section 4 (not dropped) - skill and gate agree.
 - [ ] The `grounding` label (`spec_found|degraded|exempt`) is emitted on the cost + input-token series; "cost with a spec vs without" is a single split (upper bound on cost attributable to the gate, not total - §G confounder).
+- [ ] The Part 3A banner-prefix and `Exemption:` bullet wording are pinned as literal tokens in `test_parser.py`, so a wording drift in Part 3A fails a Part 3B test (the 3A/3B decoupling is runtime-only; the string contract is enforced by test).
 
 ---
 

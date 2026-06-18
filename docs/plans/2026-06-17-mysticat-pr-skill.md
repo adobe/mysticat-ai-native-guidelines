@@ -1,8 +1,8 @@
 # Mysticat PR Skill + PR-Routing Hook + pr-review Grounding Gate - Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> Tasks use checkbox (`- [ ]`) syntax for tracking; implement one task at a time and commit after each.
 
-**Goal:** Implement the three coordinated deliverables defined in the spec: (1) a `create-pr` skill in `experience-success-skills` (new `mysticat-dev` plugin) that opens a GitHub PR from one skill-bundled 8-section template; (2) a PreToolUse routing hook in `mysticat-workspace` that routes all three PR-creation surfaces (`gh pr create`, direct GitHub API, GitHub MCP) through that skill with a graceful fallback; (3) a `pr-review` grounding gate in `experience-success-skills` / `review-kit` plus the `grounding`-labelled review-cost split in `mysticat-github-service`.
+**Goal:** Implement the three coordinated deliverables defined in the spec: (1) a `create-pr` skill in `experience-success-skills` (in the existing `review-kit` plugin, alongside `pr-review`) that opens a GitHub PR from one skill-bundled 8-section template; (2) a PreToolUse routing hook in `mysticat-workspace` that routes all three PR-creation surfaces (`gh pr create`, direct GitHub API, GitHub MCP) through that skill with a graceful fallback; (3) a `pr-review` grounding gate in `experience-success-skills` / `review-kit` plus the `grounding`-labelled review-cost split in `mysticat-github-service`.
 
 **Architecture:** Three independent PRs across two implementation repos (plus a metrics change in a third). They are sequenced by one soft dependency: the skill PR (Part 1) should merge first so the hook's "skill present" path is exercisable (Part 2). The pr-review grounding gate (Part 3) is independent and can land in parallel.
 
@@ -22,30 +22,19 @@
 
 **Spec authority:** §C (skill), §D (template + fill-guide + hard exclusions + rendering contract), §A (the in-body marker).
 
+> **Deviation from spec §C (plugin placement).** The spec chose a new `mysticat-dev` plugin ("no existing plugin is a clean fit"). This plan instead places `create-pr` in the existing **`review-kit`** plugin, alongside `pr-review`. Rationale: Part 3's grounding gate already modifies `review-kit`; `create-pr` and `pr-review` are explicitly coordinated (the template captures the spec link that the §E gate then checks); one plugin install covers the whole PR lifecycle; and the create-vs-review parity logic lives in one place. This supersedes the spec §C decision and the "Plugin placement" alternatives row - update the spec to match (or note the supersession there).
+
 **Repo facts (verified):**
-- New plugin layout: `skills/mysticat-dev/.claude-plugin/plugin.json` + `skills/mysticat-dev/skills/create-pr/{SKILL.md, assets/pr_template.md, scripts/, tests/}`.
-- Marketplace registration is a 3-field entry `{name, source: "./skills/mysticat-dev", description}` in `.claude-plugin/marketplace.json` under `plugins` (no `skills` array - skills are auto-discovered from the plugin dir).
-- Per-plugin `plugin.json` schema: `{name, description, version, author:{name}, repository, license, keywords[]}` (mirror an existing plugin, e.g. `skills/spacecat-diagnostics/.claude-plugin/plugin.json`).
+- Placement: `skills/review-kit/skills/create-pr/{SKILL.md, assets/pr_template.md, scripts/, tests/}` (a new skill dir inside the existing `review-kit` plugin; `review-kit` already holds `pr-review`, `triage-pr-reviews`, `implement-pr-reviews`, `review-*`). No new plugin, no `plugin.json`, no `marketplace.json` change.
 - Validator (`scripts/validate-skills.py`, run via `npm run validate`) allows frontmatter keys: `name, description, license, allowed-tools, metadata, compatibility, user-invocable, argument-hint, model` and nothing else; `name` must be lowercase `[a-z0-9][a-z0-9-]*`, no `--`, and equal the parent dir name; `description` <= 1024 chars.
 - `AGENTS.md` requires invocable skills to carry `name, description, user-invocable: true, argument-hint`. No SKILL.md in the repo uses `allowed-tools` today; only `pr-review` uses `model:`.
 - CI (`.github/workflows/ci.yml`, Python 3.12): `validate` job (`npm run validate` + persona-reference check), `script-tests` job (stdlib `unittest discover`). A new Python helper with tests needs its dir added to the `script-tests` job.
 - Closest existing PR-creation convention: `skills/domain-expert/skills/develop-llmo-feature/SKILL.md` "4d - Push and open PR" (MCP-first: `mcp__github__create_pull_request` for `adobe/spacecat-*`, `mcp__github-enterprise__*` / `mcp__adobe-ghec__*` per host; reserve `gh pr create` for what MCP cannot do).
 
-### Task 1.1: Scaffold the `mysticat-dev` plugin
+### Task 1.1: Author the bundled PR template (copied verbatim from the spec companion)
 
 **Files:**
-- Create: `skills/mysticat-dev/.claude-plugin/plugin.json`
-- Modify: `.claude-plugin/marketplace.json`
-
-- [ ] **Step 1: Read references.** Read `.claude-plugin/marketplace.json`, an existing `skills/<plugin>/.claude-plugin/plugin.json`, and `README.md` "Adding a New Plugin".
-- [ ] **Step 2: Create `plugin.json`** with `name: "mysticat-dev"`, a description ("Mysticat team developer-workflow skills (PR creation, ...)"), `version: "0.1.0"`, `author.name: "Experience Success"`, `repository`, `license: "Apache-2.0"`, `keywords`.
-- [ ] **Step 3: Register in marketplace.** Add `{"name": "mysticat-dev", "source": "./skills/mysticat-dev", "description": "..."}` to the `plugins` array.
-- [ ] **Step 4: Validate.** Run `npm ci && npm run validate` -> Expected: passes (it will warn until a SKILL.md exists; create the skill in 1.3 before relying on a clean run).
-
-### Task 1.2: Author the bundled PR template (copied verbatim from the spec companion)
-
-**Files:**
-- Create: `skills/mysticat-dev/skills/create-pr/assets/pr_template.md`
+- Create: `skills/review-kit/skills/create-pr/assets/pr_template.md`
 
 **Content authority:** §D + the companion `2026-06-17-mysticat-pr-skill-template.md`. The template body is the content **between the two `---` markers** of the companion file (the H1, intro, and example outside the markers are documentation and are NOT part of the body).
 
@@ -53,10 +42,10 @@
 - [ ] **Step 2: Confirm fidelity.** The file MUST contain: the 8 sections; the `<!-- AGENT: ... -->` instruction comment on each; one `{{TOKEN}}` per section (section 4 has the 5 bullet tokens); the `[CONDITIONAL]` markers on sections 5, 6, 8; and the literal first-line marker `<!-- mysticat-pr-skill -->`.
 - [ ] **Step 3: Verify** -> Run `grep -c '{{' assets/pr_template.md` (expect the placeholder count) and `head -1 assets/pr_template.md` -> Expected: `<!-- mysticat-pr-skill -->`.
 
-### Task 1.3: Write `SKILL.md` (the workflow)
+### Task 1.2: Write `SKILL.md` (the workflow)
 
 **Files:**
-- Create: `skills/mysticat-dev/skills/create-pr/SKILL.md`
+- Create: `skills/review-kit/skills/create-pr/SKILL.md`
 
 **Content authority:** §C (workflow steps 1-5), §D (fill-guide table, rendering contract, hard exclusions), §A (marker is the one comment NOT stripped).
 
@@ -70,24 +59,26 @@
 - [ ] **Step 8: Workflow - report (§C step 5).** Print the PR URL.
 - [ ] **Step 9: Validate** -> Run `npm run validate` -> Expected: passes (SKILL.md dir name equals `name`, frontmatter keys allowed).
 
-### Task 1.4: Optional deterministic renderer + tests
+### Task 1.3: Optional deterministic renderer + tests
 
 **Files (only if rendering proves fiddly - §C says default to no scripts):**
-- Create: `skills/mysticat-dev/skills/create-pr/scripts/render_body.py` (Python 3 stdlib only)
-- Create: `skills/mysticat-dev/skills/create-pr/tests/test_render_body.py` (stdlib `unittest`)
+- Create: `skills/review-kit/skills/create-pr/scripts/render_body.py` (Python 3 stdlib only)
+- Create: `skills/review-kit/skills/create-pr/tests/test_render_body.py` (stdlib `unittest`)
 - Modify: `.github/workflows/ci.yml` (add the new tests dir to the `script-tests` job)
+
+> **Why Python (not shell).** Python 3 stdlib is the established skill-helper convention here (51 Python helpers vs 2 shell), and Python 3.12 is already a hard repo dependency - `scripts/validate-skills.py` (run by `npm run validate`) and every CI job require it - so a Python helper adds no new portability burden. The default path uses NO helper at all: the model renders the body inline per the §D contract, and a script is added only when deterministic token-replacement / empty-bullet removal proves unreliable inline.
 
 - [ ] **Step 1: Decide.** Default to no script. Add `render_body.py` only if deterministic token replacement / empty-bullet removal / Jira-key extraction is hard to do reliably inline.
 - [ ] **Step 2: If added, implement** the §D rendering contract: replace tokens, strip `AGENT:` comments, retain the `mysticat-pr-skill` marker, drop empty lines/bullets and empty conditional sections, append footer, fail on an unresolvable token.
 - [ ] **Step 3: Tests** mirror existing stdlib `unittest` style: all sections rendered from a sample context; empty optional -> bullet removed (no dangling `- Spec:`); footer present; marker present; all `AGENT:` comments stripped; unresolvable token -> raises.
-- [ ] **Step 4: Wire CI.** Add the tests dir to the `script-tests` `unittest discover` invocation. Run locally: `python3 -m unittest discover skills/mysticat-dev/skills/create-pr/tests` -> Expected: all pass.
+- [ ] **Step 4: Wire CI.** Add the tests dir to the `script-tests` `unittest discover` invocation. Run locally: `python3 -m unittest discover skills/review-kit/skills/create-pr/tests` -> Expected: all pass.
 
-### Task 1.5: Part 1 acceptance
+### Task 1.4: Part 1 acceptance
 
 - [ ] `create-pr` opens a PR whose body is the rendered 8-section template, all tokens filled, all `AGENT:` comments stripped, the `<!-- mysticat-pr-skill -->` marker retained, footer present (spec Success Criteria).
 - [ ] Empty optional placeholders/bullets removed whole; unresolvable token fails the skill.
 - [ ] Conditional sections 5/6/8 present when applicable, absent otherwise.
-- [ ] `npm run validate` passes; marketplace entry resolves.
+- [ ] `npm run validate` passes; the `create-pr` skill is discovered under the `review-kit` plugin.
 
 ---
 
@@ -117,7 +108,7 @@
 - [ ] **Step 2: Bypass first (§A.2).** If `MYSTICAT_PR_SKILL_BYPASS=1` in the hook env -> `exit 0` (optional one-line stderr note). Short-circuits every surface.
 - [ ] **Step 3: Resolve the PR body per surface (§A) and allow on the marker.** For `Bash`: read `.tool_input.command`; for `--body/-b` use inline text, for `--body-file/-F <path>` read that file, for `gh api .../pulls -f body=<text|@file>` / `--input <file>` and `curl -d/--data <text|@file>` read the field or referenced file. For MCP: read `.tool_input.body`. If the resolved body contains the marker **key** `mysticat-pr-skill` (match the key, not the literal string - §H may extend the marker with `base`/`head`/`commits`/`files`) -> `exit 0` (allow; skill's own templated output, any transport).
 - [ ] **Step 4: Scope - creation only (§B).** Treat a `Bash` command as a PR-create attempt ONLY when it matches: `gh pr create` (but NOT `gh pr create --web` -> allow through); `gh api` + POST to the `pulls` **collection** with create fields (NOT `.../pulls/{n}` sub-resources, NOT GET lists); `gh api graphql` + `createPullRequest`; `curl` + a GitHub API host + POST to `/pulls` collection. Anything else (comments, reviews, lists, merges, edits) -> `exit 0` no-op.
-- [ ] **Step 5: Detect skill presence (§B).** Glob for `create-pr/SKILL.md` across skill roots: the marketplace-installed `mysticat-dev` plugin install root (read the live Claude Code plugin layout, do not assume a fixed string), `<repo>/.claude/skills/create-pr/SKILL.md`, and `~/.claude/skills/create-pr/SKILL.md`. Any match -> present.
+- [ ] **Step 5: Detect skill presence (§B).** Glob for `create-pr/SKILL.md` across skill roots: the marketplace-installed `review-kit` plugin install root (read the live Claude Code plugin layout, do not assume a fixed string), `<repo>/.claude/skills/create-pr/SKILL.md`, and `~/.claude/skills/create-pr/SKILL.md`. Any match -> present.
 - [ ] **Step 6: Decision (§A decision table).** No marker + create attempt + skill present -> deny with an imperative `message` naming the `create-pr` skill. No marker + create attempt + skill absent -> `exit 0` + stderr warning (allow fallback). Unresolvable `--body-file` (missing/unreadable) -> fail-safe: deny when the skill is present (degrade to the raw-call path, never a silent allow).
 - [ ] **Step 7: Output format.** Use the legacy shape (`{"decision":"deny","message":"..."}` on stdout; stderr warning + `exit 0` for fallback). Do NOT use `hookSpecificOutput.permissionDecision` or speculative fields.
 - [ ] **Step 8: `chmod +x hooks/pr-route-to-skill.sh`.**

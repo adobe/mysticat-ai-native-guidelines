@@ -2,12 +2,12 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | Draft |
+| **Status** | Review |
 | **Author** | Rainer Friederich |
 | **Created** | 2026-06-17 |
-| **Updated** | 2026-06-17 |
-| **Decided** | N/A |
-| **Approvers** | N/A |
+| **Updated** | 2026-06-18 |
+| **Decided** | Pending Part 0 approver ack (review-kit placement) |
+| **Approvers** | solaris007, iuliag (pending) |
 
 > Spec only — no implementation in this document. Cross-repo references use repo-relative paths anchored at each repo root (e.g. `mysticat-workspace/hooks/...`, `experience-success-skills/skills/...`).
 
@@ -368,3 +368,4 @@ pr-review: spec discoverable → no banner; no spec found → banner present in 
 | 2026-06-17 | Rainer Friederich | Add §H future-work note: in-session post-push PR-description sync (PostToolUse hook detects drift via a creation-time body marker → nudges create-pr update mode; watches `git push` + GitHub MCP file-commit tools, agent-only; depends on create-pr skill with §B/§F fallback; spec-drift flag extends §E; centralized backstop = MysticatBot webhook, not per-repo Actions) |
 | 2026-06-18 | Rainer Friederich | Review (MysticatBot nits): §G "upper bound" clarified (cost attributable to the gate, not total); §A forward-references the §H marker extension (match on marker key, not literal); split this revision-history entry into per-change rows; §G quality methodology marked illustrative/confirm-at-implementation; validation plan adds the unresolvable `--body-file` fail-safe case |
 | 2026-06-18 | Rainer Friederich | Implementation-planning reconciliation: plugin placement changed from a new `mysticat-dev` plugin to the existing `review-kit` plugin (alongside `pr-review`) — coordinated PR lifecycle, shared discovery parity, one install, skills auto-discover (no manifest change). Updated §B, §C, the overview diagram, and the Alternatives "Plugin placement" row. Done in the implementation-plan PR so the spec and plan stay consistent |
+| 2026-06-18 | Rainer Friederich | Review (solaris007): status Draft → Review now that the spec is the cited build contract; Decided/Approvers pending the Part 0 `review-kit`-placement ack |

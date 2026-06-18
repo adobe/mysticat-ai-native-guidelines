@@ -2,12 +2,12 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | Draft |
+| **Status** | Review |
 | **Author** | Rainer Friederich |
 | **Created** | 2026-06-17 |
-| **Updated** | 2026-06-17 |
-| **Decided** | N/A |
-| **Approvers** | N/A |
+| **Updated** | 2026-06-18 |
+| **Decided** | Pending Part 0 approver ack (review-kit placement) |
+| **Approvers** | solaris007, iuliag (pending) |
 
 > Spec only — no implementation in this document. Cross-repo references use repo-relative paths anchored at each repo root (e.g. `mysticat-workspace/hooks/...`, `experience-success-skills/skills/...`).
 
@@ -86,7 +86,7 @@ Three artifacts working together:
                               ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │ experience-success-skills                                            │
-│  skills/mysticat-dev/skills/create-pr/                                │
+│  skills/review-kit/skills/create-pr/                                  │
 │        SKILL.md                  ← gather session context            │
 │        assets/pr_template.md     ← the bundled 8-section template     │
 │                                                                       │
@@ -161,13 +161,13 @@ This is advisory routing, not enforcement: a false positive degrades to "use the
 
 **Output format** — use the repo's proven legacy shape (as in `pre-push-main-check.sh`): block with stdout `{"decision":"deny","message":"<imperative reason naming the skill>"}`; for the fallback warning, exit 0 and write the warning to stderr. Avoid the newer `hookSpecificOutput.permissionDecision` fields and speculative values (`"defer"`, `updatedInput`, per-hook `if:`) — unverified in research.
 
-**Skill-presence detection.** The `create-pr` skill is distributed in the **`experience-success-skills`** repo as part of the **`mysticat-dev` plugin** (adobe-experience-success marketplace) and installed like the team's other plugins. The hook detects its presence by globbing for the skill's `SKILL.md` across the Claude Code skill roots: the plugin install root (the marketplace-installed `mysticat-dev` plugin), the project skill dir (`<repo>/.claude/skills/create-pr/SKILL.md`), and the personal skill dir (`~/.claude/skills/create-pr/SKILL.md`). Any match → present. (The implementation reads the live plugin install location from the Claude Code plugin layout rather than assuming a fixed string.)
+**Skill-presence detection.** The `create-pr` skill is distributed in the **`experience-success-skills`** repo as part of the **`review-kit` plugin** (adobe-experience-success marketplace), alongside `pr-review`, and installed like the team's other plugins. The hook detects its presence by globbing for the skill's `SKILL.md` across the Claude Code skill roots: the plugin install root (the marketplace-installed `review-kit` plugin), the project skill dir (`<repo>/.claude/skills/create-pr/SKILL.md`), and the personal skill dir (`~/.claude/skills/create-pr/SKILL.md`). Any match → present. (The implementation reads the live plugin install location from the Claude Code plugin layout rather than assuming a fixed string, so presence detection does not hard-depend on the plugin name.)
 
 **Scope — Claude Code agent only.** By design the hook covers only the Claude Code agent's tool calls (`Bash` and the named MCP tools). PRs opened from anywhere else — an opaque script (`python create_pr.py` using PyGithub/requests, a Node script using octokit), an IDE button, the GitHub web UI, or any non-Claude-Code tooling — are out of scope and are not intercepted. This is deliberate: the hook is a guard *for the agent*, where consistency most needs help, not an org-wide enforcement layer. Broader coverage, if ever wanted, belongs in a server-side control (e.g. a GitHub Action), not this hook.
 
 #### C. Skill (experience-success-skills)
 
-- Placement: new plugin `mysticat-dev` (dev-workflow skills), skill `create-pr` inside it. Layout `skills/mysticat-dev/skills/create-pr/{SKILL.md, assets/pr_template.md, scripts/}`; register in `marketplace.json`.
+- Placement: the existing `review-kit` plugin (alongside `pr-review`), skill `create-pr` inside it. Layout `skills/review-kit/skills/create-pr/{SKILL.md, assets/pr_template.md, scripts/}`. No `marketplace.json` / `plugin.json` change needed: skills auto-discover from the plugin's `skills/` dir (the manifest lists plugins, not skills). Co-located with `pr-review` because the two are a coordinated PR lifecycle (the template captures the spec link the §E gate then checks) and Part 3's grounding gate already modifies `review-kit`.
 - SKILL.md frontmatter follows repo convention (`name`, `description`, `user-invocable`, `argument-hint`; no em-dashes in body). The description must be strong enough that the model reliably selects the skill when the hook nudges it.
 - Workflow: (1) pre-flight (a PR-creation transport is available and authenticated — the GitHub MCP `create_pull_request` tool is connected, or `gh` is authenticated; not on the default branch; branch pushed); (2) gather session context (branch, `git log` since base, diff summary, Jira keys, what was verified); (3) render the body from `assets/pr_template.md` to a temp file — the rendered body carries the sanctioned `<!-- mysticat-pr-skill -->` marker (§A/§D); (4) create the PR through **whatever transport is available — no `gh` hardcode**: prefer the GitHub MCP `create_pull_request` tool when it is connected (pass the rendered body as `body`), else `gh pr create --base <base> --title "<title>" --body-file <tmp-body> [--draft]`, else a direct-API `gh api`/`curl` POST — always submitting through a hook-resolvable body form (§A) so the in-body marker, not an inline env prefix, guards against recursion on every surface; (5) report the PR URL.
 - Scripts: existing plugins are Python 3 stdlib. Default to no scripts; a small stdlib `render_body.py` is justified only if deterministic rendering / Jira-key extraction proves fiddly.
@@ -281,7 +281,7 @@ Three separate PRs (two repos). The skill PR should merge first so the hook's "p
 | Template vs repo template | replace at create time vs merge with repo template | replace (one consistent body); surface repo-specific critical items in §6/§7 |
 | Conditional sections | drop-when-empty vs always render with "N/A" | drop-when-empty |
 | AI disclosure | full checklist/disclosure section vs fixed footer | fixed `🤖 Generated with Claude Code` footer (lightweight) |
-| Plugin placement | new `mysticat-dev` plugin vs existing plugin | new plugin; no existing plugin is a clean fit |
+| Plugin placement | new `mysticat-dev` plugin vs existing `review-kit` plugin | existing `review-kit` plugin (alongside `pr-review`) — coordinated PR lifecycle, shared create-vs-review discovery parity, one install; skills auto-discover so no manifest change. (Superseded the original "new plugin" choice during implementation planning.) |
 | Grounding: threshold + discovery | spec AND plan, body-only vs spec-only, all-sources | discover from all sources; degrade only on a missing spec; trivial PRs exempt |
 | Degraded review severity | advisory banner vs hard block | advisory; a hard block would be hostile to small/independent changes |
 | PR template storage | inline in spec/SKILL.md vs dedicated `assets/pr_template.md` file | dedicated file; read from disk, copied verbatim from the spec companion file |
@@ -367,3 +367,5 @@ pr-review: spec discoverable → no banner; no spec found → banner present in 
 | 2026-06-17 | Rainer Friederich | Add §G observability: review-cost split by a low-cardinality `grounding` label (spec_found/degraded/exempt) on the existing cost metric, with confounder caveat + optional fetch-volume metric; plus a deferred review-quality measurement note (one-time controlled replay + pairwise/LLM-judge eval on spec-bearing PRs; continuous proxies = footer-reaction read-back + grounding-labelled verdict/finding split) |
 | 2026-06-17 | Rainer Friederich | Add §H future-work note: in-session post-push PR-description sync (PostToolUse hook detects drift via a creation-time body marker → nudges create-pr update mode; watches `git push` + GitHub MCP file-commit tools, agent-only; depends on create-pr skill with §B/§F fallback; spec-drift flag extends §E; centralized backstop = MysticatBot webhook, not per-repo Actions) |
 | 2026-06-18 | Rainer Friederich | Review (MysticatBot nits): §G "upper bound" clarified (cost attributable to the gate, not total); §A forward-references the §H marker extension (match on marker key, not literal); split this revision-history entry into per-change rows; §G quality methodology marked illustrative/confirm-at-implementation; validation plan adds the unresolvable `--body-file` fail-safe case |
+| 2026-06-18 | Rainer Friederich | Implementation-planning reconciliation: plugin placement changed from a new `mysticat-dev` plugin to the existing `review-kit` plugin (alongside `pr-review`) — coordinated PR lifecycle, shared discovery parity, one install, skills auto-discover (no manifest change). Updated §B, §C, the overview diagram, and the Alternatives "Plugin placement" row. Done in the implementation-plan PR so the spec and plan stay consistent |
+| 2026-06-18 | Rainer Friederich | Review (solaris007): status Draft → Review now that the spec is the cited build contract; Decided/Approvers pending the Part 0 `review-kit`-placement ack |

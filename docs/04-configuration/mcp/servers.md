@@ -294,7 +294,9 @@ search_splunk(
 
 ### Coralogix MCP
 
-**Purpose**: Query Coralogix logs, metrics, alerts, dashboards, and parsing rules
+> **DEPRECATED**: Coralogix ingestion is being decommissioned on 2026-06-24 (SITES-46480). Use the **Splunk MCP** above to query SpaceCat logs. The Coralogix server remains available for historical queries against data ingested before the cutoff.
+
+**Purpose**: Query Coralogix logs, metrics, alerts, dashboards, and parsing rules (historical data only after 2026-06-24)
 
 **Supports**: Claude Code
 
@@ -423,8 +425,8 @@ GetFlexLinks(
 
 | Server | Best For | Query Language |
 |--------|----------|----------------|
-| Splunk | Internal logs | SPL |
-| Coralogix | Cloud-native logging | Lucene/DataPrime |
+| **Splunk** (recommended) | SpaceCat logs (`index=dx_aem_engineering`) | SPL |
+| Coralogix (deprecated - decommissioned 2026-06-24) | Historical data only | Lucene/DataPrime |
 | CloudWatch (via AWS CLI) | AWS-native apps | CloudWatch Insights |
 
 ### Source Control Options

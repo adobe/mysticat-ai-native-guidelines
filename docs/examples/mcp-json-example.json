@@ -30,8 +30,18 @@
         "postgresql://user:password@localhost:5432/mydb"
       ]
     },
+    "splunk": {
+      "$comment": "Splunk observability - recommended log tool for SpaceCat (index=dx_aem_engineering, sourcetype dx_aem_sites_spacecat_backend_{dev,stage,prod})",
+      "command": "node",
+      "args": ["<PATH_TO_ADOBE_MCP_SERVERS>/src/splunk-mcp-server/dist/index.js"],
+      "env": {
+        "SPLUNK_API_URL": "https://splunk-api.or1.adobe.net",
+        "SPLUNK_API_USER": "${SPLUNK_USERNAME}",
+        "SPLUNK_API_PASSWORD": "${SPLUNK_PASSWORD}"
+      }
+    },
     "coralogix": {
-      "$comment": "Coralogix observability",
+      "$comment": "DEPRECATED: Coralogix ingestion decommissioned 2026-06-24 (SITES-46480). Retained for historical queries only. Use 'splunk' above for current SpaceCat logs.",
       "command": "npx",
       "args": ["-y", "coralogix-mcp@latest"],
       "env": {

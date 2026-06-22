@@ -223,7 +223,7 @@ Some MCP tools warrant extra caution. Leave these out of allow lists (they'll pr
 
 - **Database query tools** (`mcp__postgres__query`) - Accepts arbitrary SQL. A `SELECT` is fine; a `DROP TABLE` is not. The tool can't distinguish.
 - **Deployment tools** (`mcp__flex__AddOrRemoveEnvironmentsInFlex`) - Modifies shared infrastructure.
-- **Alert management** (`mcp__coralogix__create_alert`, `delete_alert`) - Changes team-wide monitoring.
+- **Alert management** (`mcp__coralogix__create_alert`, `delete_alert`) - Changes team-wide monitoring. Note: Coralogix is being decommissioned 2026-06-24; use `mcp__splunk__search_splunk` for SpaceCat log queries.
 
 ## Deny Rules as Defense-in-Depth
 

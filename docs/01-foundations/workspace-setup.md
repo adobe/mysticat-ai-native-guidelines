@@ -275,7 +275,7 @@ Skills are portable instruction packages that work across AI tools. See [Agent S
 The `docs/` directory contains operational reference files that get `@import`ed into CLAUDE.md:
 
 - Tool routing tables (which MCP server handles which GitHub org)
-- Observability query patterns (Coralogix DataPrime, Splunk SPL)
+- Observability query patterns (Splunk SPL; Coralogix DataPrime - deprecated, decommissioned 2026-06-24)
 - Deployment procedures
 - Auth flows and SSO configuration
 - Cloud provider notes

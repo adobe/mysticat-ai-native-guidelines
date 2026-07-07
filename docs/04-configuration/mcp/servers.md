@@ -170,7 +170,7 @@ Each engineer needs their own user token - there is no way to share one via a te
 3. Go to **Install App** and click **Install to Workspace**, then authorize
 4. Copy the **User OAuth Token** (`xoxp-...`) - this is your `SLACK_MCP_XOXP_TOKEN`
 
-> **Important**: The app must be created in the **AEM Engineering** Slack workspace, not the "Adobe" workspace. The "Adobe" workspace does not allow you to install the app, so you must select **AEM Engineering** when creating it.
+> **Important**: The app must be created in the **AEM Engineering** Slack workspace, not the "Adobe" workspace – the "Adobe" workspace won't let you install it.
 
 <details>
 <summary>Slack App Manifest</summary>

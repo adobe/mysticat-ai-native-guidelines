@@ -1,0 +1,4507 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Comprehensive guidelines for teams adopting AI-first development practices">
+      
+      
+      
+        <link rel="canonical" href="https://solaris007.github.io/ai-first-guidelines/plans/2026-06-17-mysticat-pr-skill/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Mysticat PR Skill + PR-Routing Hook + pr-review Grounding Gate - Implementation Plan - AI-First Development Guidelines</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mysticat-pr-skill-pr-routing-hook-pr-review-grounding-gate-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI-First Development Guidelines" class="md-header__button md-logo" aria-label="AI-First Development Guidelines" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-First Development Guidelines
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Mysticat PR Skill + PR-Routing Hook + pr-review Grounding Gate - Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/solaris007/ai-first-guidelines" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    solaris007/ai-first-guidelines
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../LATEST/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  What's New
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-foundations/philosophy/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-lifecycle/overview/" class="md-tabs__link">
+          
+  
+  
+  Development Lifecycle
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-templates/spec-proposal/" class="md-tabs__link">
+          
+  
+  
+  Templates
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04-configuration/" class="md-tabs__link">
+          
+  
+  
+  Configuration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-guardrails/must-rules/" class="md-tabs__link">
+          
+  
+  
+  Guardrails
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/workspace-claude-md/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-adoption/onboarding-guide/" class="md-tabs__link">
+          
+  
+  
+  Adoption
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-leadership/ai-first-leadership/" class="md-tabs__link">
+          
+  
+  
+  Leadership
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../presentations/" class="md-tabs__link">
+          
+  
+  
+  Presentations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-First Development Guidelines" class="md-nav__button md-logo" aria-label="AI-First Development Guidelines" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-First Development Guidelines
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/solaris007/ai-first-guidelines" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    solaris007/ai-first-guidelines
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LATEST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/operating-modes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operating Modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/harness-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Harness Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/substrate-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Substrate Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/workspace-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/tools-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/agent-dx-vision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent DX Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/skill-distribution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/blackboard-mental-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blackboard Mental Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-foundations/agentic-memory-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic Memory Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development Lifecycle
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/01-design-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Design & Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/02-planning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/03-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/04-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/05-closure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Closure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/multi-session-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Session Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/baseline-alignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Baseline Alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/06-config-evolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Configuration Evolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_10" id="__nav_4_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Evaluation-Driven Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/eval-driven-development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/edd-implementation-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/evaluation-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/evaluation-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/prompt-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/tool-replay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/dual-tracing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/unified-optimization-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Optimization Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/optimization-process-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimization Process Diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/llm-powered-evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-Powered Evals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/llm-powered-evals-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-Powered Evals Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/self-improving-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-Improving Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/dataset-persistence-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Persistence Proposal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/evals-dashboard-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evals Dashboard Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/langsmith-evaluation-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangSmith Evaluation Fixes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-lifecycle/shadow-mode-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shadow Mode Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Templates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-templates/spec-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spec Proposal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-templates/migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-templates/decision-record/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Record
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-templates/contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-templates/pull-request-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pull Request Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-templates/TODO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/ai-tools/claude-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/ai-tools/permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Permissions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/ai-tools/cursor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cursor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/ai-tools/copilot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copilot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/ai-tools/codex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/ai-tools/gemini-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemini CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/plugins/superpowers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Superpowers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/plugins/adobe-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adobe Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/mcp/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/mcp/servers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/mcp/workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/skills/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/skills/auto-improve-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto-Improve Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/aci-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ACI Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/token-efficiency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/cross-tool-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cross-Tool Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/information-lookup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Information Lookup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-configuration/env-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment & Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guardrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/must-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MUST Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/should-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SHOULD Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/mechanical-enforcement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mechanical Enforcement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/agent-ergonomic-refactoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent-Ergonomic Refactoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/anti-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/ai-task-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Task Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/vibecoding-best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vibecoding Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-guardrails/repo-consolidation-decision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repo Consolidation Decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/workspace-claude-md/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace CLAUDE.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/project-claude-md/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project CLAUDE.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adoption
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Adoption
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-adoption/onboarding-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboarding Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-adoption/ai-readiness-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Readiness Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Leadership
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Leadership
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/ai-first-leadership/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-First Leadership
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/junior-engineers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    For Junior Engineers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/experienced-engineers-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    For Experienced Engineers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/ai-native-engineering-phase1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Phase 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/domain-experts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    For Domain Experts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/ai-native-leveling-ic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Leveling (IC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/ai-native-leveling-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Leveling (Manager)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-leadership/ai-native-leveling-domain-expert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Native Leveling (Domain Expert)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/blackboard-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blackboard Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/smc-components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SMC Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_6" id="__nav_11_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Evals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/evals/evaluation-presentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Presentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/evals/handout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentations/evals/speaker-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Speaker Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-reconcile-the-spec-deviation-done-in-this-pr-gates-part-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0 - Reconcile the spec deviation (done in this PR; gates Part 1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-create-pr-skill-experience-success-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1 - create-pr skill (experience-success-skills)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1 - create-pr skill (experience-success-skills)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-11-author-the-bundled-pr-template-copied-verbatim-from-the-spec-companion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1.1: Author the bundled PR template (copied verbatim from the spec companion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-12-write-skillmd-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1.2: Write SKILL.md (the workflow)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-13-optional-deterministic-renderer-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1.3: Optional deterministic renderer + tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-14-part-1-acceptance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1.4: Part 1 acceptance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-pretooluse-routing-hook-mysticat-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2 - PreToolUse routing hook (mysticat-workspace)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2 - PreToolUse routing hook (mysticat-workspace)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-21-write-hookspr-route-to-skillsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2.1: Write hooks/pr-route-to-skill.sh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-22-register-the-hook-in-committed-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2.2: Register the hook in committed settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-23-hook-tests-matcher-vs-mcpjson-assertion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2.3: Hook tests + matcher-vs-.mcp.json assertion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-24-part-2-acceptance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2.4: Part 2 acceptance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-pr-review-grounding-gate-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3 - pr-review grounding gate + observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3 - pr-review grounding gate + observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-3a-grounding-gate-experience-success-skills-review-kit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3A - Grounding gate (experience-success-skills / review-kit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-3b-grounding-labelled-review-cost-split-mysticat-github-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3B - grounding-labelled review-cost split (mysticat-github-service)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-3c-acceptance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3C - acceptance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-merge-order-spec-8-implementation-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment &amp; merge order (spec §8 / Implementation Phases)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deferred-not-in-this-plan-spec-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred (not in this plan - spec §H)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="mysticat-pr-skill-pr-routing-hook-pr-review-grounding-gate-implementation-plan">Mysticat PR Skill + PR-Routing Hook + pr-review Grounding Gate - Implementation Plan<a class="headerlink" href="#mysticat-pr-skill-pr-routing-hook-pr-review-grounding-gate-implementation-plan" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Tasks use checkbox (<code>- [ ]</code>) syntax for tracking; implement one task at a time and commit after each.</p>
+</blockquote>
+<p><strong>Goal:</strong> Implement the three coordinated deliverables defined in the spec: (1) a <code>create-pr</code> skill in <code>experience-success-skills</code> (in the existing <code>review-kit</code> plugin, alongside <code>pr-review</code>) that opens a GitHub PR from one skill-bundled 8-section template; (2) a PreToolUse routing hook in <code>mysticat-workspace</code> that routes all three PR-creation surfaces (<code>gh pr create</code>, direct GitHub API, GitHub MCP) through that skill with a graceful fallback; (3) a <code>pr-review</code> grounding gate in <code>experience-success-skills</code> / <code>review-kit</code> plus the <code>grounding</code>-labelled review-cost split in <code>mysticat-github-service</code>.</p>
+<p><strong>Architecture:</strong> Three independent PRs across two implementation repos (plus a metrics change in a third). They are sequenced by one soft dependency: the skill PR (Part 1) should merge first so the hook's "skill present" path is exercisable (Part 2). The dependency is soft, not hard - Part 2 is safe to merge before Part 1 because skill-absent degrades to warn+allow (§F); only Part 2's "skill present" test fixture needs the skill layout, which the tests stub. The pr-review grounding gate (Part 3) is independent and can land in parallel.</p>
+<ul>
+<li><strong>Part 1 - Skill</strong> lands in <code>experience-success-skills</code> (branch off its <code>origin/main</code>).</li>
+<li><strong>Part 2 - Hook</strong> lands in <code>mysticat-workspace</code> (branch off its <code>origin/main</code>).</li>
+<li><strong>Part 3 - Grounding gate</strong> spans <code>experience-success-skills</code> (<code>review-kit/skills/pr-review</code> + the two reviewer personas) and <code>mysticat-github-service</code> (the worker metric). It may be one cross-repo coordinated PR pair or two PRs; keep the worker change behind the same review-body banner the skill emits so the two halves are decoupled at runtime.</li>
+</ul>
+<p><strong>Tech Stack:</strong> Markdown skills (SKILL.md), Python 3 stdlib (optional skill helper + its <code>unittest</code> tests), Bash hooks (<code>{"decision":"deny"}</code> JSON contract) with stdin-fixture tests, Python 3.13 + pytest for the <code>mysticat-github-service</code> worker. Validation commands: <code>npm run validate</code> (skills), <code>bash test/test_*.sh</code> (hooks), <code>pytest</code> (worker).</p>
+<p><strong>Content authority:</strong> the committed spec <code>docs/plans/2026-06-17-mysticat-pr-skill-design.md</code> (this repo) defines all design decisions; the companion <code>docs/plans/2026-06-17-mysticat-pr-skill-template.md</code> defines the verbatim PR-body template. Each task below cites the spec section (<code>spec §X</code>) it implements. Read that section before editing. Do not re-derive decisions - the spec resolved them inline.</p>
+<p><strong>Conventions (all tasks):</strong> Read the full target file before editing. No emojis in skill/persona/review-output content. Use normal dash, not em-dash (<code>experience-success-skills/AGENTS.md</code> em-dash ban - they leak into review output). No <code>#</code>-prefixed enumeration in PR bodies (GitHub auto-links to unrelated PRs). No force-push, no <code>--amend</code>, no direct commits to <code>main</code>; feature branch per repo. Commit after each task. The <code>experience-success-skills</code> SKILL.md dir name MUST equal the frontmatter <code>name</code> (validator enforces). <code>.mcp.json</code> is secret-bearing and gitignored; only read/reference <code>.mcp.json.template</code>.</p>
+<hr />
+<h2 id="part-0-reconcile-the-spec-deviation-done-in-this-pr-gates-part-1">Part 0 - Reconcile the spec deviation (done in this PR; gates Part 1)<a class="headerlink" href="#part-0-reconcile-the-spec-deviation-done-in-this-pr-gates-part-1" title="Permanent link">&para;</a></h2>
+<p>The plan deviates from spec §C on plugin placement (see the Part 1 callout). The merged spec is the contract every downstream PR cites - and Part 2 reads its §B presence-detection text back - so the divergence is reconciled <strong>in this PR</strong> (the spec is amended alongside the plan) rather than deferred.</p>
+<ul>
+<li>[x] <strong>Step 2 (done here): Amended the spec</strong> <code>docs/plans/2026-06-17-mysticat-pr-skill-design.md</code>: §B skill-presence detection, §C placement, the overview diagram, and the Alternatives "Plugin placement" row changed from <code>mysticat-dev</code> to the existing <code>review-kit</code> plugin, plus a Revision History entry. §B's existing live-plugin-layout note already keeps presence detection from hard-depending on the plugin name (§A/§D reference only the marker, not the plugin, so they were unaffected).</li>
+<li>[x] <strong>Step 3 (done here): Verified</strong> <code>grep -n "mysticat-dev" docs/plans/2026-06-17-mysticat-pr-skill-design.md</code> returns only the Alternatives "vs" comparison and Revision-History mentions - no load-bearing references remain.</li>
+<li>[ ] <strong>Step 1: Approver ack.</strong> Sign-off on <code>review-kit</code> placement from the spec approvers (solaris007, iuliag) = approval of this PR. This is the one remaining human gate before Part 1 implementation starts.</li>
+</ul>
+<hr />
+<h2 id="part-1-create-pr-skill-experience-success-skills">Part 1 - <code>create-pr</code> skill (experience-success-skills)<a class="headerlink" href="#part-1-create-pr-skill-experience-success-skills" title="Permanent link">&para;</a></h2>
+<p><strong>Spec authority:</strong> §C (skill), §D (template + fill-guide + hard exclusions + rendering contract), §A (the in-body marker).</p>
+<blockquote>
+<p><strong>Deviation from spec §C (plugin placement).</strong> The spec chose a new <code>mysticat-dev</code> plugin ("no existing plugin is a clean fit"). This plan instead places <code>create-pr</code> in the existing <strong><code>review-kit</code></strong> plugin, alongside <code>pr-review</code>. Rationale: Part 3's grounding gate already modifies <code>review-kit</code>; <code>create-pr</code> and <code>pr-review</code> are explicitly coordinated (the template captures the spec link that the §E gate then checks); one plugin install covers the whole PR lifecycle; and the create-vs-review parity logic lives in one place. Mechanically clean: skills auto-discover from <code>skills/review-kit/skills/*</code> (the plugin <code>marketplace.json</code> lists plugins, not skills; <code>plugin.json</code> does not enumerate them), so no manifest change is needed. This supersedes the spec §C decision and the "Plugin placement" alternatives row. The design-of-record drift it would otherwise create has already been reconciled in this PR: the spec's §B/§C, overview diagram, and the alternatives row were amended to <code>review-kit</code> (commit 26b7e0e); §A/§D were unaffected (they reference the in-body marker, not the plugin name). See <strong>Part 0</strong> for the reconciliation record; the only remaining gate is approver sign-off on <code>review-kit</code> placement.</p>
+</blockquote>
+<p><strong>Repo facts (verified):</strong>
+- Placement: <code>skills/review-kit/skills/create-pr/{SKILL.md, assets/pr_template.md, scripts/, tests/}</code> (a new skill dir inside the existing <code>review-kit</code> plugin; <code>review-kit</code> already holds <code>pr-review</code>, <code>triage-pr-reviews</code>, <code>implement-pr-reviews</code>, <code>review-*</code>). No new plugin, no <code>plugin.json</code>, no <code>marketplace.json</code> change.
+- Validator (<code>scripts/validate-skills.py</code>, run via <code>npm run validate</code>) allows frontmatter keys: <code>name, description, license, allowed-tools, metadata, compatibility, user-invocable, argument-hint, model</code> and nothing else; <code>name</code> must be lowercase <code>[a-z0-9][a-z0-9-]*</code>, no <code>--</code>, and equal the parent dir name; <code>description</code> &lt;= 1024 chars.
+- <code>AGENTS.md</code> requires invocable skills to carry <code>name, description, user-invocable: true, argument-hint</code>. No SKILL.md in the repo uses <code>allowed-tools</code> today; only <code>pr-review</code> uses <code>model:</code>.
+- CI (<code>.github/workflows/ci.yml</code>, Python 3.12): <code>validate</code> job (runs <code>python3 scripts/validate-skills.py</code> directly - <code>npm run validate</code> is the local equivalent - plus a persona-reference check), <code>script-tests</code> job (stdlib <code>unittest discover</code>). A new Python helper with tests needs its dir added to the <code>script-tests</code> job.
+- Closest existing PR-creation convention: <code>skills/domain-expert/skills/develop-llmo-feature/SKILL.md</code> "4d - Push and open PR" (MCP-first: <code>mcp__github__create_pull_request</code> for <code>adobe/spacecat-*</code>, <code>mcp__github-enterprise__*</code> / <code>mcp__adobe-ghec__*</code> per host; reserve <code>gh pr create</code> for what MCP cannot do).</p>
+<h3 id="task-11-author-the-bundled-pr-template-copied-verbatim-from-the-spec-companion">Task 1.1: Author the bundled PR template (copied verbatim from the spec companion)<a class="headerlink" href="#task-11-author-the-bundled-pr-template-copied-verbatim-from-the-spec-companion" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Create: <code>skills/review-kit/skills/create-pr/assets/pr_template.md</code></p>
+<p><strong>Content authority:</strong> §D + the companion <code>2026-06-17-mysticat-pr-skill-template.md</code>. The template body is the content <strong>between the two <code>---</code> markers</strong> of the companion file (the H1, intro, and example outside the markers are documentation and are NOT part of the body).</p>
+<ul>
+<li>[ ] <strong>Step 1: Copy the between-markers block verbatim</strong> into <code>assets/pr_template.md</code>. It starts with <code>&lt;!-- mysticat-pr-skill --&gt;</code> (the first line) and ends with the <code>🤖 Generated with [Claude Code](https://claude.com/claude-code)</code> footer.</li>
+<li>[ ] <strong>Step 2: Confirm fidelity.</strong> The file MUST contain: the 8 sections; the <code>&lt;!-- AGENT: ... --&gt;</code> instruction comment on each; one <code>{{TOKEN}}</code> per section (section 4 has the 5 bullet tokens); the <code>[CONDITIONAL]</code> markers on sections 5, 6, 8; and the literal first-line marker <code>&lt;!-- mysticat-pr-skill --&gt;</code>.</li>
+<li>[ ] <strong>Step 3: Verify</strong> -&gt; Run <code>grep -c '{{' assets/pr_template.md</code> (expect the placeholder count) and <code>grep -m1 -n 'mysticat-pr-skill' assets/pr_template.md</code> -&gt; the marker is the first non-blank line (the verbatim between-markers block opens with a blank line, so do NOT assert <code>head -1</code>).</li>
+</ul>
+<h3 id="task-12-write-skillmd-the-workflow">Task 1.2: Write <code>SKILL.md</code> (the workflow)<a class="headerlink" href="#task-12-write-skillmd-the-workflow" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Create: <code>skills/review-kit/skills/create-pr/SKILL.md</code></p>
+<p><strong>Content authority:</strong> §C (workflow steps 1-5), §D (fill-guide table, rendering contract, hard exclusions), §A (marker is the one comment NOT stripped).</p>
+<ul>
+<li>[ ] <strong>Step 1: Frontmatter.</strong> <code>name: create-pr</code>, a strong <code>description</code> (must reliably win selection when the hook nudges - phrase it "Use when creating / opening a GitHub pull request ..."), <code>user-invocable: true</code>, <code>argument-hint: "[base-branch] [--draft]"</code>. No em-dashes in body.</li>
+<li>[ ] <strong>Step 2: Workflow - pre-flight (§C step 1).</strong> Document: a PR-creation transport is available and authenticated (GitHub MCP <code>create_pull_request</code> connected, or <code>gh auth status</code> ok); NOT on the default branch; branch is pushed (or push as part of the flow).</li>
+<li>[ ] <strong>Step 3: Workflow - gather session context (§C step 2).</strong> Branch name, <code>git log &lt;base&gt;..HEAD</code>, diff summary, Jira keys (parse from branch/commits/session), what was verified this session.</li>
+<li>[ ] <strong>Step 4: Workflow - render the body (§C step 3).</strong> Read <code>assets/pr_template.md</code>; fill every <code>{{TOKEN}}</code> per the §D fill-guide table; strip every <code>&lt;!-- AGENT: ... --&gt;</code> comment; fill-or-drop conditional sections 5/6/8; apply the empty-value rendering contract (remove the <strong>entire line/bullet</strong> when a value is empty - no dangling <code>- Spec:</code>); <strong>retain</strong> the <code>&lt;!-- mysticat-pr-skill --&gt;</code> marker; keep the footer. Write to a temp file. A <code>{{TOKEN}}</code> the skill cannot resolve at all is a bug -&gt; fail rather than open a PR with raw placeholders.</li>
+<li>[ ] <strong>Step 5: Encode the hard exclusions (§D).</strong> State explicitly the body must NOT contain code snippets, passing-test counts, or lint/type-check success statements. A real failure/gap may still be described in prose.</li>
+<li>[ ] <strong>Step 6: Encode spec/plan discovery scope (§D + §E parity).</strong> Spec/plan/ADR discovery searches the touched repos' <code>docs/</code> (<code>decisions/</code>, <code>plans/</code>, <code>proposals/</code>) AND the workspace <code>mysticat-architecture</code> + <code>mysticat-ai-native-guidelines</code> docs, keyed on Jira key / branch / PR title. Best-effort (a miss drops the bullet). This MUST match the §E gate's source set so the writer and the checker agree on where specs live (closes the create-vs-review asymmetry).</li>
+<li>[ ] <strong>Step 7: Workflow - create the PR (§C step 4).</strong> Pick transport with NO <code>gh</code> hardcode: prefer GitHub MCP <code>create_pull_request</code> when connected (rendered body as <code>body</code>); else <code>gh pr create --base &lt;base&gt; --title "&lt;title&gt;" --body-file &lt;tmp&gt; [--draft]</code>; else direct-API <code>gh api</code>/<code>curl</code> POST. Always submit through a hook-resolvable body form (§A) so the in-body marker guards recursion on every surface.</li>
+<li>[ ] <strong>Step 8: Workflow - report (§C step 5).</strong> Print the PR URL.</li>
+<li>[ ] <strong>Step 9: Validate</strong> -&gt; Run <code>npm run validate</code> -&gt; Expected: passes (SKILL.md dir name equals <code>name</code>, frontmatter keys allowed).</li>
+</ul>
+<h3 id="task-13-optional-deterministic-renderer-tests">Task 1.3: Optional deterministic renderer + tests<a class="headerlink" href="#task-13-optional-deterministic-renderer-tests" title="Permanent link">&para;</a></h3>
+<p><strong>Files (only if rendering proves fiddly - §C says default to no scripts):</strong>
+- Create: <code>skills/review-kit/skills/create-pr/scripts/render_body.py</code> (Python 3 stdlib only)
+- Create: <code>skills/review-kit/skills/create-pr/tests/test_render_body.py</code> (stdlib <code>unittest</code>)
+- Modify: <code>.github/workflows/ci.yml</code> (add the new tests dir to the <code>script-tests</code> job)</p>
+<blockquote>
+<p><strong>Why Python (not shell).</strong> Python 3 stdlib is the established skill-helper convention here (73 Python helpers vs 2 shell), and Python 3.12 is already a hard repo dependency - <code>scripts/validate-skills.py</code> (run by <code>npm run validate</code>) and every CI job require it - so a Python helper adds no new portability burden. The default path uses NO helper at all: the model renders the body inline per the §D contract, and a script is added only when deterministic token-replacement / empty-bullet removal proves unreliable inline.</p>
+</blockquote>
+<ul>
+<li>[ ] <strong>Step 1: Decide.</strong> Default to no script. Add <code>render_body.py</code> only if deterministic token replacement / empty-bullet removal / Jira-key extraction is hard to do reliably inline.</li>
+<li>[ ] <strong>Step 2: If added, implement</strong> the §D rendering contract: replace tokens, strip <code>AGENT:</code> comments, retain the <code>mysticat-pr-skill</code> marker, drop empty lines/bullets and empty conditional sections, append footer, fail on an unresolvable token.</li>
+<li>[ ] <strong>Step 3: Tests</strong> mirror existing stdlib <code>unittest</code> style: all sections rendered from a sample context; empty optional -&gt; bullet removed (no dangling <code>- Spec:</code>); footer present; marker present; all <code>AGENT:</code> comments stripped; unresolvable token -&gt; raises.</li>
+<li>[ ] <strong>Step 4: Wire CI.</strong> Add the tests dir to the <code>script-tests</code> <code>unittest discover</code> invocation. Run locally: <code>python3 -m unittest discover skills/review-kit/skills/create-pr/tests</code> -&gt; Expected: all pass.</li>
+</ul>
+<h3 id="task-14-part-1-acceptance">Task 1.4: Part 1 acceptance<a class="headerlink" href="#task-14-part-1-acceptance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <code>create-pr</code> opens a PR whose body is the rendered 8-section template, all tokens filled, all <code>AGENT:</code> comments stripped, the <code>&lt;!-- mysticat-pr-skill --&gt;</code> marker retained, footer present (spec Success Criteria).</li>
+<li>[ ] Empty optional placeholders/bullets removed whole; unresolvable token fails the skill.</li>
+<li>[ ] Conditional sections 5/6/8 present when applicable, absent otherwise.</li>
+<li>[ ] <code>npm run validate</code> passes; the <code>create-pr</code> skill is discovered under the <code>review-kit</code> plugin.</li>
+</ul>
+<hr />
+<h2 id="part-2-pretooluse-routing-hook-mysticat-workspace">Part 2 - PreToolUse routing hook (mysticat-workspace)<a class="headerlink" href="#part-2-pretooluse-routing-hook-mysticat-workspace" title="Permanent link">&para;</a></h2>
+<p><strong>Spec authority:</strong> §A (marker + bypass), §B (hook, matcher, scope, decision table, presence detection), §F (fallback). <strong>Depends on Part 1</strong> being installable so the presence check has something to find.</p>
+<p><strong>Repo facts (verified):</strong>
+- Mirror <code>hooks/pre-push-main-check.sh</code> exactly: <code>#!/usr/bin/env bash</code>, <code>set -euo pipefail</code>, <code>input=$(cat)</code>, parse with <code>jq -r '... // empty'</code>, allow = silent <code>exit 0</code>, deny = print single-line <code>{"decision":"deny","message":"..."}</code> to stdout via heredoc. Guard every external call with <code>|| exit 0</code> / <code>2&gt;/dev/null</code> so the hook never hard-errors.
+- Register in the <strong>committed</strong> <code>.claude/settings.json</code> (symlink to the workspace root; applies to all sessions). There is one existing PreToolUse entry (<code>"matcher": "Bash"</code>). Add a <strong>new</strong> array object - do not merge into the Bash one.
+- Directory-walk wrapper command pattern (mirror verbatim, swapping the script name):
+  <code>bash -c 'd=$PWD; while [ "$d" != / ] &amp;&amp; [ ! -x "$d/hooks/pr-route-to-skill.sh" ]; do d=$(dirname "$d"); done; [ "$d" != / ] &amp;&amp; exec "$d/hooks/pr-route-to-skill.sh"'</code>
+  Use <code>exec</code> (not the <code>file=$(cat|jq)</code> wrapper variant) so the script reads stdin itself.
+- GitHub MCP server names from <code>.mcp.json.template</code>: <code>github</code> (github.com) and <code>github-enterprise</code> (git.corp.adobe.com). <code>reference-tools.md</code> documents a third per-user server <code>adobe-ghec</code> (GHEC EMU orgs) not in the template today - enumerate it in the matcher for forward-compat.
+- <code>deny</code> wins over an <code>allow</code> permission even though <code>mcp__github__create_pull_request</code> is in the (gitignored) <code>settings.local.json</code> allowlist - the routing hook still fires.
+- Do NOT touch <code>lib/hooks.sh</code> (it only symlinks git-native hooks; Claude Code hooks live in settings only). <code>chmod +x</code> the new script.
+- Hook test precedent: per-script <code>test/test_&lt;name&gt;.sh</code> + paths-scoped <code>.github/workflows/test-&lt;name&gt;.yml</code> (mirror <code>test/test_lint_staged.sh</code> + <code>test-lint-staged.yml</code>: <code>set -uo pipefail</code>, <code>pass</code>/<code>fail</code> counters, SKIP-if-missing-<code>jq</code>, <code>mktemp -d</code> sandbox + <code>trap</code>). No existing PreToolUse-hook test and no settings-vs-<code>.mcp.json</code> consistency test exist - this task establishes both.</p>
+<h3 id="task-21-write-hookspr-route-to-skillsh">Task 2.1: Write <code>hooks/pr-route-to-skill.sh</code><a class="headerlink" href="#task-21-write-hookspr-route-to-skillsh" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Create: <code>mysticat-workspace/hooks/pr-route-to-skill.sh</code> (chmod +x)</p>
+<p><strong>Content authority:</strong> §A decision table, §B scope + presence detection, §F fallback.</p>
+<ul>
+<li>[ ] <strong>Step 1: Read</strong> <code>hooks/pre-push-main-check.sh</code> and <code>hooks/lint-staged.sh</code> for the exact style.</li>
+<li>[ ] <strong>Step 2: Bypass first (§A.2).</strong> If <code>MYSTICAT_PR_SKILL_BYPASS=1</code> in the hook env -&gt; <code>exit 0</code> (optional one-line stderr note). Short-circuits every surface.</li>
+<li>[ ] <strong>Step 3: Resolve the PR body per surface (§A) and allow on the marker.</strong> For <code>Bash</code>: read <code>.tool_input.command</code>; for <code>--body/-b</code> use inline text, for <code>--body-file/-F &lt;path&gt;</code> read that file, for <code>gh api .../pulls -f body=&lt;text|@file&gt;</code> / <code>--input &lt;file&gt;</code> and <code>curl -d/--data &lt;text|@file&gt;</code> read the field or referenced file. For <code>gh api graphql</code> + <code>createPullRequest</code>: resolve the body from the <code>body:</code> field of the mutation (inline string or the value of a <code>-f body=</code>/<code>-F body=@file</code> variable). For MCP: read <code>.tool_input.body</code>. If the resolved body contains the marker <strong>key</strong> <code>mysticat-pr-skill</code> (match the key, not the literal string - §H may extend the marker with <code>base</code>/<code>head</code>/<code>commits</code>/<code>files</code>) -&gt; <code>exit 0</code> (allow; skill's own templated output, any transport). (Low real risk on graphql since the skill never emits via graphql, but the rule keeps the recursion guard total across every surface scoped in Step 4.)</li>
+<li>[ ] <strong>Step 4: Scope - creation only (§B).</strong> Treat a <code>Bash</code> command as a PR-create attempt ONLY when it matches: <code>gh pr create</code> (but NOT <code>gh pr create --web</code> -&gt; allow through); <code>gh api</code> + POST to the <code>pulls</code> <strong>collection</strong> with create fields (NOT <code>.../pulls/{n}</code> sub-resources, NOT GET lists); <code>gh api graphql</code> + <code>createPullRequest</code>; <code>curl</code> + a GitHub API host + POST to <code>/pulls</code> collection. Anything else (comments, reviews, lists, merges, edits) -&gt; <code>exit 0</code> no-op.</li>
+<li>[ ] <strong>Step 5: Detect skill presence (§B) - resolve the ACTIVE install, do not bare-glob the cache.</strong> This is the most implementation-fragile step; a naive recursive glob over the plugin cache is wrong. Verified live: the marketplace cache holds multiple versions side by side (<code>~/.claude/plugins/cache/&lt;marketplace&gt;/review-kit/{1.10.1,1.11.0,1.12.0}/skills/...</code>), and the authoritative active install is recorded only in <code>~/.claude/plugins/installed_plugins.json</code> (<code>installPath</code>, with a user-vs-project <code>scope</code>). A bare cache glob matches stale version dirs and reports "present" after a downgrade/uninstall, trapping the agent in a deny loop with no installed skill to satisfy it (the documented escape "invoke the skill" then does not exist). Concrete recipe, in order:</li>
+<li>Read <code>~/.claude/plugins/installed_plugins.json</code>; resolve the active root from <code>plugins["review-kit@&lt;marketplace&gt;"][].installPath</code> (honor <code>scope</code>); check <code>&lt;installPath&gt;/skills/create-pr/SKILL.md</code>.</li>
+<li>Also check the project skill dir <code>&lt;repo&gt;/.claude/skills/create-pr/SKILL.md</code> and the personal <code>~/.claude/skills/create-pr/SKILL.md</code>.</li>
+<li>Fall back to a cache glob ONLY if <code>installed_plugins.json</code> is absent/unreadable; note that multiple cached version dirs coexist, so a bare glob is NOT authoritative.
+  Any of (1)-(2) present -&gt; present. Keep it cheap (file stat + one small JSON read; no network, no tree walk). The Task 2.3 "skill present" fixture MUST exercise this exact recipe (stale cache dir present but <code>installed_plugins.json</code> points elsewhere) so the test cannot pass while real detection diverges.</li>
+<li>[ ] <strong>Step 6: Decision (§A decision table).</strong> No marker + create attempt + skill present -&gt; deny. No marker + create attempt + skill absent -&gt; <code>exit 0</code> + stderr warning (allow fallback). Unresolvable <code>--body-file</code> (missing/unreadable) -&gt; fail-safe: deny when the skill is present (degrade to the raw-call path, never a silent allow). The deny <code>message</code> is the entire nudge-reliability lever, so pin the literal recommended string (and surface both escape hatches in it, so the override is discoverable at the moment of friction):<blockquote>
+<p><code>Open this PR with the create-pr skill (it fills the team PR template). To create a raw PR instead, set MYSTICAT_PR_SKILL_BYPASS=1, or run gh pr create --web to fill the body in the browser.</code>
+  Keep it imperative and naming the skill; adjust wording but retain the skill name plus the two escape hatches.</p>
+</blockquote>
+</li>
+<li>[ ] <strong>Step 7: Output format.</strong> Use the legacy shape (<code>{"decision":"deny","message":"..."}</code> on stdout; stderr warning + <code>exit 0</code> for fallback). Do NOT use <code>hookSpecificOutput.permissionDecision</code> or speculative fields.</li>
+<li>[ ] <strong>Step 8: <code>chmod +x hooks/pr-route-to-skill.sh</code>.</strong></li>
+</ul>
+<h3 id="task-22-register-the-hook-in-committed-settings">Task 2.2: Register the hook in committed settings<a class="headerlink" href="#task-22-register-the-hook-in-committed-settings" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Modify: <code>mysticat-workspace/.claude/settings.json</code> (the committed workspace file - edit via the workspace root, it is a symlink target)</p>
+<ul>
+<li>[ ] <strong>Step 1: Add a new <code>PreToolUse</code> array object</strong> with matcher <code>"Bash|mcp__github__create_pull_request|mcp__github-enterprise__create_pull_request"</code> (add <code>|mcp__adobe-ghec__create_pull_request</code> for forward-compat) and the directory-walk wrapper command for <code>pr-route-to-skill.sh</code>. The <code>Bash</code> arm routes the direct-API/<code>gh</code> surfaces (they are Bash commands); the MCP arms route the MCP tool calls.</li>
+<li>[ ] <strong>Step 2: Confirm</strong> the existing <code>"matcher": "Bash"</code> (pre-push) entry is untouched; both Bash hooks now fire and must each no-op cleanly on irrelevant commands.</li>
+</ul>
+<h3 id="task-23-hook-tests-matcher-vs-mcpjson-assertion">Task 2.3: Hook tests + matcher-vs-<code>.mcp.json</code> assertion<a class="headerlink" href="#task-23-hook-tests-matcher-vs-mcpjson-assertion" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- Create: <code>mysticat-workspace/test/test_pr_route_to_skill.sh</code>
+- Create: <code>mysticat-workspace/.github/workflows/test-pr-route-to-skill.yml</code>
+- Create (or fold into the above): a matcher-vs-<code>.mcp.json</code> consistency check (§B Phase-2 loud-failure assertion)</p>
+<p><strong>Content authority:</strong> spec Validation Plan (the enumerated hook cases) + §B assertion.</p>
+<ul>
+<li>[ ] <strong>Step 1: Stdin-fixture cases</strong> (mirror <code>test/test_lint_staged.sh</code> structure). Cover: unrelated Bash -&gt; no-op; <code>gh pr create --web</code> -&gt; allow; body with the <code>mysticat-pr-skill</code> marker -&gt; allow, across all three resolved-body forms (<code>gh pr create --body-file &lt;tmp&gt;</code>, <code>curl</code>/<code>gh api .../pulls</code> POST with marker in body, MCP with marker in <code>tool_input.body</code>); <code>MYSTICAT_PR_SKILL_BYPASS=1</code> -&gt; allow on every surface; <code>gh pr create</code> no marker, skill present -&gt; deny, skill absent -&gt; exit 0 + stderr warning; <code>gh api .../pulls</code> POST and <code>curl .../pulls</code> POST no marker, present -&gt; deny, absent -&gt; warn+allow; <code>gh api .../pulls/{n}/comments</code> POST -&gt; no-op (creation-only scope); MCP create-PR no marker, present -&gt; deny, absent -&gt; warn+allow; <code>gh pr create --body-file &lt;missing path&gt;</code> -&gt; deny when skill present (fail-safe). Use a SKIP-if-missing-<code>jq</code> guard, <code>mktemp -d</code> sandbox + <code>trap</code>, <code>pass</code>/<code>fail</code> counters, final tally <code>exit 1</code> on any failure.</li>
+<li>[ ] <strong>Step 1b: Skill-presence fixtures (pins Step 5's recipe).</strong> Stale cache version dir present but <code>installed_plugins.json</code> <code>installPath</code> points elsewhere (or is absent) -&gt; NOT present (no deny loop); active <code>installPath</code> contains <code>skills/create-pr/SKILL.md</code> -&gt; present; project/personal skill dir contains it -&gt; present. The "skill present" stub used by the deny/allow cases above MUST resolve presence via the same recipe, so a test cannot pass while real detection diverges.</li>
+<li>[ ] <strong>Step 2: Matcher-vs-<code>.mcp.json</code> assertion (§B).</strong> Add a check that every <code>mcp__*__create_pull_request</code> name in the settings matcher resolves to a GitHub MCP server declared in the workspace <code>.mcp.json</code> (or <code>.mcp.json.template</code> for CI, since <code>.mcp.json</code> is gitignored) and, conversely, every GitHub-MCP server there is covered by the matcher; a mismatch fails with the offending name.</li>
+<li>[ ] <strong>Step 3: CI workflow</strong> - paths-scoped to the hook, the test, the workflow, settings, and the mcp template; <code>ubuntu-latest</code>; <code>bash test/test_pr_route_to_skill.sh</code>.</li>
+<li>[ ] <strong>Step 4: Run locally</strong> -&gt; <code>bash test/test_pr_route_to_skill.sh</code> -&gt; Expected: all cases pass.</li>
+</ul>
+<h3 id="task-24-part-2-acceptance">Task 2.4: Part 2 acceptance<a class="headerlink" href="#task-24-part-2-acceptance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Hook denies raw <code>gh pr create</code>, direct-API PR creation, and MCP create-PR when the skill is present and names the skill.</li>
+<li>[ ] Hook allows <code>gh pr create --web</code>, any PR-create whose resolved body carries the marker (all transports), and any surface under <code>MYSTICAT_PR_SKILL_BYPASS=1</code>.</li>
+<li>[ ] Hook does NOT match existing-PR interactions (comments, reviews, lists, merges).</li>
+<li>[ ] Hook allows raw creation + stderr warning when the skill is absent; clean no-op on unrelated Bash.</li>
+<li>[ ] Latency bound (the hook runs on every Bash call): at most a file stat plus one small JSON read (<code>installed_plugins.json</code>) on the create path, and an early <code>exit 0</code> with no I/O on the no-op path. No network, no clone, no filesystem tree walk.</li>
+</ul>
+<hr />
+<h2 id="part-3-pr-review-grounding-gate-observability">Part 3 - pr-review grounding gate + observability<a class="headerlink" href="#part-3-pr-review-grounding-gate-observability" title="Permanent link">&para;</a></h2>
+<p><strong>Spec authority:</strong> §E (grounding gate, reuse Phase 2.1), §G (cost split by <code>grounding</code> label). Spans <code>experience-success-skills</code> (review-kit) and <code>mysticat-github-service</code> (worker metric). Independent of Parts 1-2; can land in parallel.</p>
+<h3 id="part-3a-grounding-gate-experience-success-skills-review-kit">Part 3A - Grounding gate (experience-success-skills / review-kit)<a class="headerlink" href="#part-3a-grounding-gate-experience-success-skills-review-kit" title="Permanent link">&para;</a></h3>
+<p><strong>Repo facts (verified):</strong>
+- <code>pr-review</code> is a 3-phase skill: <code>skills/review-kit/skills/pr-review/SKILL.md</code>. Phase 1 Triage, Phase 2 Review (2.1 builds the brief), Phase 3 Consolidate + post.
+- Phase 2.1 already solves cloneless cross-repo doc discovery: <code>project_docs_paths</code> (touched-repo docs, path-only, token-overlap-with-diff rule, 20-cap), <code>upstream_docs_paths</code> (cross-repo refs parsed from the touched repo's <code>AGENTS.md</code>/<code>CLAUDE.md</code> "Platform Context" links; <code>{host,owner,repo,ref,path}</code>; host-routed lazy fetch - <code>gh api</code> for github.com, MCP <code>get_file_contents</code> for enterprise; 10-cap), plus a 50-path CLAUDE.md cap and the status-discrimination contract (<code>gh api --include</code>, suppress only 404, log any other non-200).
+- Reviewer personas live one level up at <code>skills/review-kit/agents/</code>: <code>spec-compliance-reviewer.md</code> (checks impl-vs-spec only WHEN a spec exists) and <code>project-conventions-reviewer.md</code> (owns the <code>project_docs_paths</code>/<code>upstream_docs_paths</code> lazy-fetch + status-discrimination contract; has a <code>status: decided|proposed|...</code> frontmatter filter where only <code>decided</code> is flaggable).
+- <code>AGENTS.md</code> cross-skill rule: <code>pr-review</code> is the canonical pattern source; any Phase 2/3 mechanics change MUST be mirrored into <code>review-kit/skills/review-practices/SKILL.md</code>.
+- CI enforces a Scout probe-name coupling grep gate and persona-reference checks; keep coupled tokens in sync.</p>
+<p><strong>Files:</strong>
+- Modify: <code>skills/review-kit/skills/pr-review/SKILL.md</code> (Phase 1 grounding discovery; Phase 3 banner)
+- Modify: <code>skills/review-kit/skills/review-practices/SKILL.md</code> (mirror Phase 2/3 changes - AGENTS.md rule)
+- Possibly modify: <code>skills/review-kit/agents/spec-compliance-reviewer.md</code> / <code>project-conventions-reviewer.md</code> (only if the gate adds a discovery responsibility to a persona)</p>
+<ul>
+<li>[ ] <strong>Step 1: Read</strong> <code>pr-review/SKILL.md</code> (Phases 1-3, esp. 2.1), <code>review-practices/SKILL.md</code>, and both reviewer personas.</li>
+<li>[ ] <strong>Step 2: Phase 1 - discover grounding from all sources (§E).</strong> Determine a <code>has-spec</code> flag by gathering from the section-4 PR-body links, the touched repos' <code>docs/</code>, and - reached ONLY via the link chain (<code>upstream_docs_paths</code> from the touched repo's <code>AGENTS.md</code>/<code>CLAUDE.md</code> "Platform Context" links) - the <code>mysticat-architecture</code> / <code>mysticat-ai-native-guidelines</code> docs, plus any linked Jira. <strong>Reuse the existing Phase 2.1 machinery - do NOT add a second discovery path.</strong> Inherit its execution-context split (local clones interactively; <code>get_file_contents</code> in the no-clone worker) and status-discrimination contract.</li>
+<li>[ ] <strong>Step 3: Degrade only on a missing spec (§E).</strong> A missing plan/ADR/Jira alone does NOT degrade. Honor the self-attested, human-visible exemption: a <code>no-spec-needed</code> label OR an <code>Exemption: &lt;reason&gt;</code> bullet in section 4 -&gt; no banner.</li>
+<li>[ ] <strong>Step 4: Phase 3 - banner (§E).</strong> When no spec is found and the PR is not exempt, prepend a prominent <code>⚠ Degraded review</code> banner to the consolidated review and include it in the GitHub-posted body. Use the spec's suggested wording (searched the PR links, touched-repo docs, architecture/guidelines docs, linked Jira; confidence reduced; add a spec link in section 4 and re-request review). Advisory only - never block or fail the review.</li>
+<li>[ ] <strong>Step 5: Mirror to <code>review-practices</code></strong> per the AGENTS.md cross-skill rule.</li>
+<li>[ ] <strong>Step 6: Validate</strong> -&gt; <code>npm run validate</code>; run the review-kit fixtures (<code>bash skills/review-kit/scripts/run-fixtures.sh</code>). Keep any Scout probe-name coupling grep gate satisfied.</li>
+</ul>
+<h3 id="part-3b-grounding-labelled-review-cost-split-mysticat-github-service">Part 3B - <code>grounding</code>-labelled review-cost split (mysticat-github-service)<a class="headerlink" href="#part-3b-grounding-labelled-review-cost-split-mysticat-github-service" title="Permanent link">&para;</a></h3>
+<p><strong>Repo facts (verified):</strong>
+- Catalog <code>metrics.yaml</code>: <code>mysticat_github_review_cost_usd</code> labels <code>[service, environment, job_type, model]</code>; <code>mysticat_github_review_input_tokens</code> same labels; <code>mysticat_github_review_findings</code> labels <code>[service, environment, severity]</code>. Drift guard <code>tests/test_metrics_catalog.py</code> checks metric <strong>names</strong> only (adding a label does NOT trip it).
+- <code>src/worker/steps/amp.py</code>: <code>_ALLOWED_LABELS</code> frozenset MUST gain <code>"grounding"</code> or <code>_build_series</code> raises <code>ValueError</code>. <code>emit_amp_success(...)</code> builds the cost + input/output-token series - add a <code>grounding: str</code> kwarg and thread it into the cost and input-token dicts.
+- <code>src/worker/steps/parser.py</code>: body-parsing helpers (<code>count_findings</code>, <code>_count_new_format</code>/<code>_count_legacy_format</code> with the <code>```</code>-fence-skipping idiom, <code>_classify_review</code>). Add <code>detect_grounding(body) -&gt; str</code> ("spec_found" | "degraded" | "exempt") here, None-safe/best-effort like <code>count_findings</code>.
+- <code>src/worker/pipeline.py</code>: after <code>findings = count_findings(posted["body"])</code> (~line 593) compute <code>grounding = detect_grounding(posted["body"])</code>; thread it into <code>emit_success_metrics(...)</code> (~695-704, CloudWatch) and <code>emit_amp_success(...)</code> (~705-717, AMP), and into the Check Run metadata dict (~657-670).
+- Label reading: <code>src/worker/steps/label.py</code> is write-only (<code>add_label</code>). §E defines TWO equivalent exemption channels - a <code>no-spec-needed</code> label OR an <code>Exemption:</code> bullet - and the posted review body carries neither for a label-only exemption. So a body-only <code>detect_grounding</code> would misclassify a label-exempt PR as <code>spec_found</code> (the exact bucket §G's split tries to isolate). <strong>Decision: add a <code>list_labels</code> helper</strong> (mirror <code>add_label</code>'s <code>gh api repos/{owner}/{repo}/issues/{n}/labels</code> shape; the PR repo is reached via <code>gh api</code>, no clone - worker clones only <code>mysticat-workspace</code> + 3 context repos + skills repo per <code>workspace.py</code> <code>_CONTEXT_REPOS</code>) so both §E channels map to <code>exempt</code>. (If a later decision drops the label channel, document that label-only exemptions register as <code>spec_found</code>; do not leave it ambiguous.)
+- Tests: pytest, <code>tests/steps/test_amp.py</code> (must keep <code>test_build_series_rejects_unknown_label</code> green and assert the <code>grounding</code> value lands in the snappy/protobuf wire), <code>tests/steps/test_metrics.py</code> (CloudWatch dimensions), <code>tests/steps/test_parser.py</code> (inline-body <code>detect_grounding</code> cases), <code>tests/test_pipeline.py</code> (assert <code>grounding</code> threaded into mocked emitters). Closest precedent: <code>docs/plans/2026-06-03-stage-duration-dedup-metrics-worker.md</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: <code>detect_grounding(body, labels)</code></strong> in <code>parser.py</code> - reuse the fence-skipping loop. Precedence: <code>exempt</code> when EITHER the <code>no-spec-needed</code> label is present (from the <code>list_labels</code> helper above) OR an <code>Exemption:</code> bullet is in the body; else <code>degraded</code> on the <code>⚠ Degraded review</code> banner; else <code>spec_found</code>. None-safe (<code>if not body and not labels: return ...</code>). Passing labels in (rather than body-only) is what lets a label-only exemption resolve to <code>exempt</code> instead of silently folding into <code>spec_found</code> (Important review item). <strong>Cross-repo string contract:</strong> this parser keys on the literal banner prefix and <code>Exemption:</code> bullet that Part 3A emits in the other repo, with no shared constant - so treat the banner text and bullet wording as tokens of record. Any change to Part 3A's banner/exemption wording is a breaking change to this parser even though the two halves deploy independently; the runtime decoupling does not remove this coupling. Pin both literals in the <code>test_parser.py</code> cases below so a drift fails a test.</li>
+<li>[ ] <strong>Step 2: Allow the label.</strong> Add <code>"grounding"</code> to <code>_ALLOWED_LABELS</code> in <code>amp.py</code>; add a <code>grounding</code> kwarg to <code>emit_amp_success</code> and thread it into the <code>M_COST</code> and <code>M_INPUT_TOKENS</code> series.</li>
+<li>[ ] <strong>Step 3: Wire the pipeline.</strong> After <code>count_findings</code>, fetch the PR labels via the <code>list_labels</code> helper and compute <code>grounding = detect_grounding(posted["body"], labels)</code>; pass <code>grounding</code> to <code>emit_amp_success</code>. <strong>AMP-only (firm decision, do not reopen):</strong> emit the <code>grounding</code> label on the AMP cost + input-token series only - NOT as a CloudWatch dimension - matching the <code>review_state</code> precedent and <code>metrics.yaml</code>, so CloudWatch dimension cardinality does not grow. Optionally include <code>grounding</code> in the Check Run metadata dict (no cardinality cost there).</li>
+<li>[ ] <strong>Step 4: Update the catalog.</strong> Add <code>grounding</code> to the <code>labels:</code> lists of <code>mysticat_github_review_cost_usd</code> and <code>mysticat_github_review_input_tokens</code> in <code>metrics.yaml</code>.</li>
+<li>[ ] <strong>Step 5 (nice-to-have, §G).</strong> <code>grounding_docs_fetched</code> (count) + bytes for cost-vs-volume reading - needs skill-&gt;worker plumbing of those numbers; defer unless cheap.</li>
+<li>[ ] <strong>Step 6: Tests</strong> - <code>test_parser.py</code> for <code>detect_grounding</code> covering all four inputs: banner-present -&gt; <code>degraded</code>; <code>Exemption:</code> bullet -&gt; <code>exempt</code>; <code>no-spec-needed</code> label only (no bullet, no banner) -&gt; <code>exempt</code>; none -&gt; <code>spec_found</code> (pin the literal banner prefix + <code>Exemption:</code> bullet per Part 3B Step 1). <code>test_amp.py</code> for the label on the wire + the unknown-label guard still green; <code>test_pipeline.py</code> for label-fetch + threading into <code>emit_amp_success</code>; <code>test_metrics_catalog.py</code> stays green (names unchanged). Run <code>pytest</code> -&gt; Expected: all pass.</li>
+</ul>
+<h3 id="part-3c-acceptance">Part 3C - acceptance<a class="headerlink" href="#part-3c-acceptance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <code>pr-review</code> posts the degraded banner when no spec is discoverable across all sources and the PR is not exempt; omits it when a spec or exemption exists; never blocks.</li>
+<li>[ ] Worker no-clone fixture: a PR whose spec lives in <code>mysticat-architecture</code>, reachable only via <code>get_file_contents</code> (touched repo links up; arch repo NOT cloned) -&gt; spec discovered, NO banner (pins the under-discovery regression).</li>
+<li>[ ] Create-vs-review consistency: for that same PR shape, the <code>create-pr</code> skill resolves the <code>mysticat-architecture</code> spec into section 4 (not dropped) - skill and gate agree.</li>
+<li>[ ] The <code>grounding</code> label (<code>spec_found|degraded|exempt</code>) is emitted on the cost + input-token series; "cost with a spec vs without" is a single split (upper bound on cost attributable to the gate, not total - §G confounder).</li>
+<li>[ ] Label-only-exempt PR (a <code>no-spec-needed</code> label, no <code>Exemption:</code> bullet, no banner) -&gt; <code>detect_grounding</code> returns <code>exempt</code> (not <code>spec_found</code>), pinned in <code>test_parser.py</code> - so a §E label-channel exemption is not silently miscounted.</li>
+<li>[ ] The Part 3A banner-prefix and <code>Exemption:</code> bullet wording are pinned as literal tokens in <code>test_parser.py</code>, so a wording drift in Part 3A fails a Part 3B test (the 3A/3B decoupling is runtime-only; the string contract is enforced by test).</li>
+</ul>
+<hr />
+<h2 id="deployment-merge-order-spec-8-implementation-phases">Deployment &amp; merge order (spec §8 / Implementation Phases)<a class="headerlink" href="#deployment-merge-order-spec-8-implementation-phases" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Part 1 (skill)</strong> merges first so the hook's "present" path is exercisable.</li>
+<li><strong>Part 2 (hook)</strong> merges once the skill is installable (presence check has something to find); include the matcher-vs-<code>.mcp.json</code> assertion.</li>
+<li><strong>Part 3 (grounding gate + metric)</strong> is independent and can land in parallel; the worker metric (3B) and the skill banner (3A) are decoupled at runtime via the posted review body.</li>
+</ol>
+<h2 id="deferred-not-in-this-plan-spec-h">Deferred (not in this plan - spec §H)<a class="headerlink" href="#deferred-not-in-this-plan-spec-h" title="Permanent link">&para;</a></h2>
+<p>Post-creation PR-description sync (a PostToolUse drift hook -&gt; <code>create-pr</code> update mode, watching <code>git push</code> + GitHub MCP file-commit tools; spec-drift flag extending §E; centralized backstop in the <code>mysticat-github-service</code> webhook on <code>pull_request.synchronize</code>). Recorded in the spec as future work; do not build here. Note that §H extends the body marker with <code>base</code>/<code>head</code>/<code>commits</code>/<code>files</code>, which is why Part 2's recursion guard matches the marker <strong>key</strong>, not the literal string.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Spec: <code>docs/plans/2026-06-17-mysticat-pr-skill-design.md</code></li>
+<li>PR template (companion, verbatim source for <code>assets/pr_template.md</code>): <code>docs/plans/2026-06-17-mysticat-pr-skill-template.md</code></li>
+<li>Skill conventions: <code>experience-success-skills/AGENTS.md</code>, <code>README.md</code>, <code>scripts/validate-skills.py</code>, <code>.github/workflows/ci.yml</code></li>
+<li>Hook conventions: <code>mysticat-workspace/hooks/pre-push-main-check.sh</code>, <code>hooks/lint-staged.sh</code>, <code>.claude/settings.json</code>, <code>test/test_lint_staged.sh</code>, <code>.mcp.json.template</code></li>
+<li>Reused review machinery: <code>experience-success-skills/skills/review-kit/skills/pr-review/SKILL.md</code> (Phase 2.1), <code>agents/spec-compliance-reviewer.md</code>, <code>agents/project-conventions-reviewer.md</code></li>
+<li>Worker metric precedent: <code>mysticat-github-service/metrics.yaml</code>, <code>src/worker/steps/{amp.py,parser.py,metrics.py}</code>, <code>src/worker/pipeline.py</code>, <code>docs/plans/2026-06-03-stage-duration-dedup-metrics-worker.md</code></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

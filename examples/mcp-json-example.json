@@ -1,0 +1,70 @@
+{
+  "$comment": "Example .mcp.json for a workspace with multiple MCP servers configured",
+  "mcpServers": {
+    "mcp-atlassian": {
+      "$comment": "Jira and Confluence integration via uvx",
+      "command": "uvx",
+      "args": ["--python=3.12", "mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "https://jira.example.com",
+        "CONFLUENCE_URL": "https://wiki.example.com",
+        "JIRA_PERSONAL_TOKEN": "${JIRA_PERSONAL_TOKEN}",
+        "CONFLUENCE_PERSONAL_TOKEN": "${CONFLUENCE_PERSONAL_TOKEN}"
+      }
+    },
+    "slack": {
+      "$comment": "Slack workspace integration",
+      "command": "npx",
+      "args": ["-y", "slack-mcp-server@latest", "--transport", "stdio"],
+      "env": {
+        "SLACK_MCP_XOXP_TOKEN": "${SLACK_MCP_XOXP_TOKEN}",
+        "SLACK_MCP_ADD_MESSAGE_TOOL": "true"
+      }
+    },
+    "postgres-dev": {
+      "$comment": "PostgreSQL database access - connection string as argument",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://user:password@localhost:5432/mydb"
+      ]
+    },
+    "splunk": {
+      "$comment": "Splunk observability - recommended log tool for SpaceCat (index=dx_aem_engineering, sourcetype dx_aem_sites_spacecat_backend_{dev,stage,prod})",
+      "command": "node",
+      "args": ["<PATH_TO_ADOBE_MCP_SERVERS>/src/splunk-mcp-server/dist/index.js"],
+      "env": {
+        "SPLUNK_API_URL": "https://splunk-api.or1.adobe.net",
+        "SPLUNK_API_USER": "${SPLUNK_USERNAME}",
+        "SPLUNK_API_PASSWORD": "${SPLUNK_PASSWORD}"
+      }
+    },
+    "coralogix": {
+      "$comment": "DEPRECATED: Coralogix ingestion decommissioned 2026-06-24 (SITES-46480). Retained for historical queries only. Use 'splunk' above for current SpaceCat logs.",
+      "command": "npx",
+      "args": ["-y", "coralogix-mcp@latest"],
+      "env": {
+        "CORALOGIX_API_KEY": "${CORALOGIX_API_KEY}",
+        "CORALOGIX_DOMAIN": "coralogix.com"
+      }
+    },
+    "github": {
+      "$comment": "GitHub.com via HTTP MCP",
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      }
+    },
+    "github-enterprise": {
+      "$comment": "GitHub Enterprise via Docker",
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "-e", "GITHUB_HOST", "ghcr.io/github/github-mcp-server"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GH_ENTERPRISE_TOKEN}",
+        "GITHUB_HOST": "https://git.corp.example.com"
+      }
+    }
+  }
+}

@@ -1,0 +1,206 @@
+/* @theme adobe */
+
+@import 'default';
+
+:root {
+  --adobe-red: #EB1000;
+  --adobe-red-dark: #C40000;
+  --adobe-dark: #1B1B1B;
+  --adobe-gray: #505050;
+  --adobe-light-gray: #F5F5F5;
+  --adobe-white: #FFFFFF;
+  --adobe-text: #333333;
+  --adobe-text-muted: #666666;
+}
+
+section {
+  background: var(--adobe-white);
+  color: var(--adobe-text);
+  font-family: 'Adobe Clean', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 22px;
+  padding: 50px 60px 60px 60px;
+  line-height: 1.4;
+}
+
+/* Title slides */
+section.lead {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, var(--adobe-light-gray) 0%, var(--adobe-white) 100%);
+}
+
+section.lead h1 {
+  font-size: 2.2em;
+  color: var(--adobe-dark);
+  margin-bottom: 0.2em;
+  border-bottom: 3px solid var(--adobe-red);
+  padding-bottom: 0.3em;
+  display: inline-block;
+}
+
+section.lead h2 {
+  font-size: 1.2em;
+  color: var(--adobe-red);
+  font-weight: 400;
+  margin-top: 0.5em;
+}
+
+/* Regular headings */
+h1 {
+  color: var(--adobe-red);
+  font-size: 1.6em;
+  border-bottom: 2px solid var(--adobe-red);
+  padding-bottom: 0.15em;
+  margin-bottom: 0.4em;
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--adobe-dark);
+  font-size: 1.15em;
+  margin-top: 0.6em;
+  margin-bottom: 0.3em;
+}
+
+h3 {
+  color: var(--adobe-gray);
+  font-size: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+}
+
+/* Paragraphs */
+p {
+  margin: 0.4em 0;
+}
+
+/* Links */
+a {
+  color: var(--adobe-red);
+}
+
+a:hover {
+  color: var(--adobe-red-dark);
+}
+
+/* Code blocks */
+pre {
+  background: var(--adobe-light-gray);
+  border-left: 3px solid var(--adobe-red);
+  border-radius: 4px;
+  padding: 0.6em 0.8em;
+  font-size: 0.75em;
+  margin: 0.4em 0;
+}
+
+code {
+  background: var(--adobe-light-gray);
+  padding: 0.15em 0.3em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5em 0;
+  font-size: 0.85em;
+}
+
+th {
+  background: var(--adobe-red);
+  color: var(--adobe-white);
+  padding: 0.4em 0.6em;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 0.35em 0.6em;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+tr:hover td {
+  background: rgba(235, 16, 0, 0.03);
+}
+
+/* Lists */
+ul, ol {
+  margin: 0.3em 0;
+  padding-left: 1.3em;
+}
+
+li {
+  margin: 0.25em 0;
+  line-height: 1.4;
+}
+
+li::marker {
+  color: var(--adobe-red);
+}
+
+/* Nested lists */
+li ul, li ol {
+  margin: 0.15em 0;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 3px solid var(--adobe-red);
+  padding-left: 0.8em;
+  margin: 0.4em 0;
+  color: var(--adobe-text-muted);
+  font-style: italic;
+}
+
+/* Strong/Bold */
+strong {
+  color: var(--adobe-dark);
+  font-weight: 600;
+}
+
+/* Header and footer */
+header, footer {
+  color: var(--adobe-text-muted);
+  font-size: 0.55em;
+}
+
+/* Pagination */
+section::after {
+  color: var(--adobe-text-muted);
+  font-size: 0.6em;
+}
+
+/* Dark/inverted slides */
+section.invert {
+  background: var(--adobe-dark);
+  color: var(--adobe-white);
+}
+
+section.invert h1 {
+  color: var(--adobe-red);
+}
+
+section.invert strong {
+  color: var(--adobe-white);
+}
+
+section.invert pre {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+section.invert code {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Small text utility */
+section.small {
+  font-size: 20px;
+}
+
+section.smaller {
+  font-size: 18px;
+}

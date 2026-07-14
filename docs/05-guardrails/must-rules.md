@@ -88,6 +88,23 @@ AI assistants should treat MUST rules as hard constraints that cannot be overrid
 - **MUST** have rollback plan for data migrations
 - **MUST NOT** modify production data without backup
 
+### DDL on high-traffic tables (PostgreSQL)
+
+> PostgreSQL DDL acquires `ACCESS EXCLUSIVE` lock. A single blocked DDL queues every subsequent reader and writer behind it — pool exhausts, callers fail synchronously. This happened (CSOPM-73974 / SITES-44731): 9 minutes of downtime from one `ALTER TABLE` queued behind a long-running ad-hoc query.
+
+- **MUST** start every DDL migration file with `SET lock_timeout = '5s'; SET statement_timeout = '120s';` — if the migration cannot acquire the lock within 5 seconds, it fails immediately instead of queueing traffic behind it. Exempt: pure `CREATE TABLE` / `CREATE FUNCTION` / `CREATE VIEW` / `CREATE TYPE`, `CREATE INDEX CONCURRENTLY`, and DDL targeting a table created in the same transaction.
+- **MUST** run a `pg_stat_activity` pre-flight check before applying a migration in any environment — if any non-idle session is older than 30 seconds, wait or escalate before proceeding:
+  ```sql
+  SELECT pid, now() - query_start AS duration, left(query, 100) AS query
+  FROM pg_stat_activity
+  WHERE state != 'idle'
+    AND now() - query_start > interval '30 seconds';
+  ```
+- **MUST** route ad-hoc / investigative SELECTs to the read replica, never the writer — a slow query on the writer can take the whole service down behind it.
+- **MUST** run production DDL in a low-traffic window unless the change is too small to lock.
+- **MUST** enforce these rules in the migration files themselves (CI gate), not as a manual step — the guardrail must apply automatically on every apply.
+- **SHOULD** follow your service-level operational runbook for pre-flight checks and the post-apply verification steps. Example: [Mysticat DDL Migration Pre-Flight](https://github.com/adobe/mysticat-architecture/blob/main/platform/ops/runbooks/ddl-migration-preflight.md).
+
 ### Backups
 
 - **MUST** verify backup restoration works

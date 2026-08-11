@@ -16,7 +16,7 @@ Comprehensive guidelines for teams adopting AI-first development practices with 
 
 | Section | What it covers |
 |---------|----------------|
-| [Foundations](01-foundations/) | Philosophy, harness engineering, substrate model, workspace setup, tools |
+| [Foundations](01-foundations/) | Philosophy, harness engineering, agent orchestration, substrate model, workspace setup, tools |
 | [Development Lifecycle](02-lifecycle/) | 5-phase cycle, multi-session patterns, config evolution |
 | [Templates](03-templates/) | Spec proposals, contracts, migrations, ADRs, PR templates |
 | [Configuration](04-configuration/) | ACI design, token efficiency, information lookup, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |

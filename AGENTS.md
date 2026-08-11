@@ -17,7 +17,7 @@ Documentation organized in numbered sections covering the full AI-first developm
 
 | Section | What it covers |
 |---------|----------------|
-| [01 - Foundations](docs/01-foundations/) | Philosophy, harness engineering, substrate model, workspace setup, tools |
+| [01 - Foundations](docs/01-foundations/) | Philosophy, harness engineering, agent orchestration, substrate model, workspace setup, tools |
 | [02 - Lifecycle](docs/02-lifecycle/) | 5-phase development cycle, multi-session patterns, config evolution |
 | [03 - Templates](docs/03-templates/) | Spec proposals, contracts, migrations, ADRs, PR templates |
 | [04 - Configuration](docs/04-configuration/) | ACI design, token efficiency, information lookup, Claude Code, Cursor, Codex, MCP, skills, cross-tool setup |

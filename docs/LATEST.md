@@ -4,6 +4,12 @@ Recent changes to the AI-First Development Guidelines, newest first. For the ful
 
 ---
 
+## 2026-08-11 - Agent Orchestration
+
+Added [Agent Orchestration](01-foundations/agent-orchestration.md) - choosing how to split work across contexts, and the contract that makes delegated work come back. Covers the three ways a long-running main context degrades, with a measured example (59% of session cost in the main thread, 525,814-token peak, 74% of that spend on carrying context rather than doing work); when to reach for subagents, agent teams, cross-session messaging or dynamic workflows, and why pure fan-out wants subagents; nested subagents as the orchestrator pattern; the single-channel and two-channel delivery contracts and how naming an agent decides which applies; runtime facts verified against Claude Code 2.1.227 that constrain these designs; runtime parity between interactive and headless workers; and cost discipline for measuring a restructuring rather than assuming it helped.
+
+---
+
 ## 2026-06-10 - Agent-Ergonomic Refactoring (Brownfield Retrofit)
 
 Added [Agent-Ergonomic Refactoring](05-guardrails/agent-ergonomic-refactoring.md) - retrofitting existing codebases into agent-ergonomic shape, distilled from a production retrofit (`adobe-rnd/llmo-data-retrieval-service` epic 2066). Covers the agent-ergonomics audit (multi-agent dimensional sweep + evidence-backed issue template), find-all-usages design (typed registries, chokepoints, cross-plane name contracts), the ratchet pattern (count-must-not-increase baselines, report→enforce two-phase, version-pinning lesson), mechanical verification of behavior-preserving refactors (empty-artifact-diff gates, grow-only structural guards, atomic migration units), test suites that permit refactoring (fragility scoring, evidence-driven reduction), and scaffolding as steering.

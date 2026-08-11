@@ -22,6 +22,7 @@ Core concepts and environment setup:
 |----------|-------------|
 | [Philosophy](docs/01-foundations/philosophy.md) | Why AI-first, core principles |
 | [Harness Engineering](docs/01-foundations/harness-engineering.md) | The designed environment: harness stack, context management, environment audit |
+| [Agent Orchestration](docs/01-foundations/agent-orchestration.md) | Choosing between subagents, teams, cross-session messaging and workflows; the delivery contract |
 | [Substrate Model](docs/01-foundations/substrate-model.md) | Durable vs fluid layers, hiring implications |
 | [Workspace Setup](docs/01-foundations/workspace-setup.md) | Directory structure, multi-repo layout |
 | [Tools Checklist](docs/01-foundations/tools-checklist.md) | CLI tools, authentication, MCP servers |

@@ -22,7 +22,7 @@ The delivery chain in `adobe/experience-success-skills` starts from the assumpti
 
 The consequences are visible in the estate today:
 
-- Spec bodies in `mysticat-architecture` have drifted into at least five incompatible requirement styles, three filename conventions, and ad-hoc type prefixes, while the mandated YAML frontmatter is followed consistently — structure exists exactly where a machine checks it.
+- Spec bodies in `mysticat-architecture` have drifted into at least five incompatible requirement styles, three filename conventions, and ad-hoc type prefixes, while the mandated YAML frontmatter is followed consistently — structure exists exactly where a machine checks it. Quality varies as widely as structure: among the sampled specs, some carry rigorous numbered requirements with coverage maps while others state no requirements, acceptance criteria, or edge cases at all — and which one a downstream consumer gets is a function of who wrote it, not of what the work needed.
 - The downstream de-facto spec schema is checked but never authored: the spec-compliance reviewer requires numbered requirements, a task list with status, edge cases, surface-area updates, and a deviation-detectable technical approach; `implement-spec` parses a repos/branch declaration; `ship-feature` accepts a spec with none of that, and the gap surfaces as review findings instead of authoring-time fixes.
 - Research findings mostly land in gitignored scratch space and die there; no skill files Jira issues; no traceability fields connect specs, tickets, and PRs.
 - The `spec-proposal.md` template itself carries no YAML frontmatter, so a spec created from it violates `mysticat-architecture`'s own governance on arrival.
@@ -125,11 +125,11 @@ The exit is a decision recorded with a reason, not a default — so a session th
 | Adopt GitHub Spec Kit or Kiro | Mature templates; active ecosystems | Parallel doc system beside `mysticat-architecture` governance; no integration with review-kit personas or the PR-body contracts; reproduced overhead-inversion findings (roughly 10× wall-clock on small features) with no scale-down path into our exemption lane | Rejected (their conventions — clarification markers, EARS, phase gates — adopted piecemeal) |
 | One end-to-end mega-skill | Single entry point | Documented failure mode: file-writing silently skipped when a grilling skill runs inside an orchestration layer; violates one-clean-context-per-unit; unusable standalone | Rejected |
 | Specs as Jira issues | Tracker-native; no PR ceremony | No commit-SHA pinning for `implement-spec`; no review machinery; large specs outgrow what a tracker serves back | Rejected |
-| Status quo (manual template copy) | No build cost | The documented drift is the status quo's output | Rejected |
+| Status quo (manual template copy) | No build cost | Structural drift and author-dependent spec quality are the status quo's documented output — some specs rigorous, others without requirements or acceptance criteria at all | Rejected |
 
 ### Decision Rationale
 
-Three separate user-invoked skills publishing through the existing PR/review machinery is the only option that reuses what already works (the persona roster, the challenge criteria, the validation vocabulary, the PR-body contracts), keeps each stage independently useful, and leaves an honest scale-down path — while the spec-PR mode makes the spec itself subject to the same review rigor as the code it will govern.
+Three separate user-invoked skills publishing through the existing PR/review machinery is the only option that reuses what already works (the persona roster, the challenge criteria, the validation vocabulary, the PR-body contracts), keeps each stage independently useful, and leaves an honest scale-down path — while the spec-PR mode makes the spec itself subject to the same review rigor as the code it will govern. The layered validation is the quality mechanism, not the template alone: a template guarantees the sections exist, while claim verification, coverage checks, the adversarial panel, and red-at-base acceptance criteria are what guarantee the content in them is good — a floor every spec clears regardless of author.
 
 ## Success Criteria
 

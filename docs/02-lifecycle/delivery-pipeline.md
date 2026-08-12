@@ -22,10 +22,11 @@ the other two are designs.
 flowchart TD
   E["entry: Slack thread · Jira issue ·\nGitHub issue or PR · incident · file · prose"] --> G["grill-feature\nresearch + grilling"]
   G -->|"spec warranted"| WS["write-spec"]
-  G -->|"task / defect shaped"| TD1["file a Jira Bug/Story\nor GitHub issue"]
+  G -->|"task / defect shaped"| TD1["file the work item — or enrich\nthe ticket or issue the run entered from"]
   G -->|"knowledge only"| K["findings · glossary · ADRs\n(run complete)"]
   WS --> CPR["spec PR\n(create-pr, spec-PR mode)"]
-  CPR --> HG1{{"HUMAN GATE:\nat least one approving\nhuman review"}}
+  CPR --> RL["bot review loop\nuntil approval"]
+  RL --> HG1{{"HUMAN GATE:\nat least one approving\nhuman review"}}
   HG1 --> SPR["spec merged\npinned @ commit SHA"]
   SPR -.-> CT["create-tickets\n(optional, PM-gated)"]
 
@@ -51,8 +52,9 @@ crosses.
 
 **First mile → middle: a work item.** Either a merged spec resolvable to a pinned commit SHA,
 carrying its lane (light or full) and a machine-readable block naming repos, branches, edges, and
-merge order — or, on the task/defect exit, a filed Jira Bug/Story or GitHub issue that rides the
-exemption lane and never gets a spec. The knowledge-only exit terminates the pipeline before the
+merge order — or, on the task/defect exit, a work item that rides the exemption lane and never gets a spec —
+filed fresh as a Jira Bug/Story or GitHub issue, or, when the research entered from an existing
+ticket or issue, that same item enriched with the evidence instead of a duplicate. The knowledge-only exit terminates the pipeline before the
 middle: findings, glossary entries, and ADRs are the whole output, and that is a completed run.
 
 **Middle → last mile: a validated PR set.** Open PRs with merge order stated (rendered from
@@ -73,7 +75,7 @@ below is main-thread work, and a delegated agent can only escalate to it.
 | # | Gate | Rule |
 |---|---|---|
 | 1 | Research decisions | Facts come from evidence; decisions belong to the human. `grill-feature` asks with recommended answers, and the chosen exit (spec / task-defect / knowledge) is a recorded decision. |
-| 2 | **Spec PR approval** | Every spec PR requires **at least one approving human review** before it merges. Bot review does not satisfy this gate. Approval also asserts that every open question tagged *before implementation* is resolved — a spec with unresolved blocking questions is not approvable. Specs are the contract everything downstream builds on; no one builds on an unread contract. |
+| 2 | **Spec PR approval** | A spec PR runs the same bot review loop as any PR — findings triaged, the bot driven to approval — and **additionally** requires **at least one approving human review** before it merges. Bot approval does not satisfy the human half of this gate. Approval also asserts that every open question tagged *before implementation* is resolved — a spec with unresolved blocking questions is not approvable. Specs are the contract everything downstream builds on; no one builds on an unread contract. |
 | 3 | Ticket creation | Optional and PM-gated: `create-tickets` runs only for work whose PM requires Jira tracking. |
 | 4 | Questions arising during implementation | A human answers; agents propose. This gate covers only what implementation newly surfaces — the spec's own open questions were settled at gate 2, so hitting this gate for a question the spec already listed is a spec-review failure. Delegated per-question only once a written decision policy can answer it. |
 | 5 | **Unverifiable PR** | A `could not validate` outcome goes back to a human. The pipeline never proceeds past validation on its own: the human supplies the missing environment or evidence, records an accepted-risk skip under their own name, or holds the PR. |
@@ -113,6 +115,17 @@ The middle stage accepts more than specs. `/implement` classifies the input and 
 
 Unversioned inputs (issue bodies) are snapshot-pinned by content hash so the text cannot change
 under the run — the same property SHA-pinning gives a spec.
+
+## Preflight: the workspace is the runtime
+
+The pipeline runs only from a full `mysticat-workspace` checkout: repo detection and spec
+discovery need every relevant repo cloned, the lanes need the MCP servers (Atlassian for Jira,
+the GitHub MCPs, Splunk and Slack for the log-reading and alerting duties), and local
+verification needs the harness. Every entry skill therefore gates before starting: workspace
+root resolved, the repos the run needs present (cloned via `./init.sh` when missing), the MCP
+servers the run's lane requires configured and reachable, and `gh` authenticated per host. The
+gate fails closed with the exact remediation command — a run never starts in an environment
+where a later stage is already known to fail.
 
 ## Byproduct findings
 

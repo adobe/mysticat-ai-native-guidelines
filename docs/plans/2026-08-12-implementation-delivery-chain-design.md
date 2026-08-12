@@ -253,7 +253,7 @@ Constraints the recipes MUST state:
 
 | Gate | Who decides | Delegation condition |
 |---|---|---|
-| Spec PR approval | **At least one human approving review, always** — the bot review does not satisfy this gate; `pr-review-cycle` MUST NOT treat a spec PR as review-complete without it. Approval also asserts that every open question tagged *before implementation* is resolved or explicitly re-phased | None planned; specs are the contract everything downstream builds on |
+| Spec PR approval | A spec PR runs the ordinary bot review loop to approval like any PR; **at least one human approving review is required in addition, always** — bot approval does not satisfy this gate; `pr-review-cycle` MUST NOT treat a spec PR as review-complete without it. Approval also asserts that every open question tagged *before implementation* is resolved or explicitly re-phased | None planned; specs are the contract everything downstream builds on |
 | Questions arising during implementation | Human answers; agents may propose. This gate covers only what the implementation newly surfaces — a spec's own open questions are settled before the spec PR is approved (previous row), so reaching this gate for a question the spec already listed is a spec-review failure, not a normal event | Per-question, once the first-mile decision-policy layer can answer it with a written policy |
 | Review-finding pushback that stalls (escalate outcome) | Human arbitrates | None; escalation is by definition the human path |
 | `could not validate` on a PR | **Goes back to a human** — the run does not proceed past the validation gate on its own; the human either supplies the missing environment/evidence, records an accepted-risk typed skip under their name, or holds the PR | None; an unverifiable change is precisely what a person must own |
@@ -291,13 +291,34 @@ an API response, a UI, or logs, at any phase from exploration through local veri
 - Silently dropping such a finding is a defect of the run's report, the same class as rounding
   up a `could not validate`.
 
+### 8. Workspace preflight
+
+The chain runs only from a full `mysticat-workspace` checkout — repo detection, spec discovery,
+worktree sessions, and local verification all assume the workspace layout — and its lanes assume
+configured tooling. Every entry into the chain therefore runs a preflight gate before any work
+starts:
+
+- **Workspace**: the run starts from the workspace root, and the repos the work item names (plus
+  the must-have doc repos) are cloned — missing ones are fetched via `./init.sh --groups` rather
+  than worked around.
+- **Tooling**: `gh` is authenticated for each target host, and the MCP servers the run's lane
+  needs are configured and reachable — Atlassian for Jira input and ticket writes, the GitHub
+  MCPs for review operations, Splunk and Slack where the log-reading and alerting duties apply.
+- **Harness**: when the change plans local verification, the harness prerequisites (Docker,
+  ports) are checked up front, not discovered mid-run.
+
+The gate fails closed with the exact remediation command. `/implement` already checks the
+workspace half of this; the preflight generalizes it from one skill to every pipeline entry — a
+run never starts in an environment where a later stage is already known to fail.
+
 ## Implementation Phases
 
 - **Phase 0 — Gate.** PR 160 merges. Every pinned contract reference in this document is
   re-verified against the merged state; drift is corrected here before any extension lands.
 - **Phase 1 — Lanes.** The entry skill takes its name `/implement` and gains input
   classification, the Jira input shape, and snapshot-pinning for unversioned inputs;
-  `ship-feature` gains the task and defect lane phase subsets.
+  `ship-feature` gains the task and defect lane phase subsets; the workspace preflight gate is
+  generalized across the pipeline entries.
 - **Phase 2 — Exemption wiring.** The lane travels in the hand-off; `create-pr` renders the
   `Exemption:` bullet for the task and defect lanes.
 - **Phase 3 — Local-first verification.** The repo → recipe routing table lands in
@@ -307,7 +328,9 @@ an API response, a UI, or logs, at any phase from exploration through local veri
   and compose project) so concurrent worktree sessions verify independently.
 - **Phase 4 — Spec-PR human gate.** `pr-review-cycle` learns to recognize a spec PR (the
   spec-PR-mode exemption form) and blocks review-completion until an approving human review
-  exists.
+  exists, in addition to the ordinary bot review loop it already drives. The three spec homes
+  receive no bot reviews today (observed 2026-08-12: their PRs carry only CLA and Kodiak
+  checks), so enabling MysticatBot coverage there is part of this phase.
 - **Phase 5 — Merge-order precedence.** Lands together with the first-mile design's
   machine-readable block work, in whichever order that ships; this document only fixes the
   precedence rule.
@@ -356,6 +379,9 @@ them.
   human with a state report — never a silent stop and never a rounded-up success.
 - An unrelated error or warning observed during a run is traceable from the run's report to a
   filed work item with evidence attached — no byproduct finding is dropped.
+- Every pipeline entry refuses to start outside a full workspace checkout with the run's
+  required repos, MCP servers, and auth in place — and names the exact remediation when it
+  refuses.
 
 ## Dependencies
 

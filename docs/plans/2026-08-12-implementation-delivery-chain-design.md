@@ -225,9 +225,10 @@ seed/reset/dump control routes. On that infrastructure the agent self-verifies i
 Two insertion points:
 
 - **`ship-feature`, "verify it actually runs" phase**: when the change touches a service the
-  harness can run, the verification step SHOULD use the matching harness loop instead of (or in
-  addition to) the generic run skill, routed by a repo → recipe table. Scoped tests and repo
-  gates remain unchanged.
+  harness can run, the agent composes the local stack this change needs — the services, fixtures,
+  and mocks for exactly it — and validates the change end to end through it (the interactive
+  self-verification above). The packaged loops MAY serve as ready-made gates where they match;
+  a repo → recipe table routes to both. Scoped tests and repo gates remain unchanged.
 - **`pr-validate`, per-repo recipe table**: repos that deploy nothing before merge (today skipped
   with "evidence still owed") gain a harness-backed local recipe, converting the typed skip into a
   real pre-merge check where the harness covers the surface.

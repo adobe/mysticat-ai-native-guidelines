@@ -29,7 +29,7 @@ The consequences are visible in the estate today:
 
 ### Desired State
 
-A user (initially) or an upstream signal (eventually) enters the pipeline with a problem statement and leaves with: durable research findings, a validated spec merged into `mysticat-architecture` at a commit SHA, and epic-linked Jira stories with blocking edges — from which the existing chain runs to a shipped, validated PR set. One spec contract is authored, linted, reviewed, parsed, and amended by machines; humans set policy, answer batched escalations, audit samples, and authorize production.
+A user (initially) or an upstream signal (eventually) enters the pipeline with a problem statement and leaves with: durable research findings, a validated spec merged into the scope-appropriate spec home at a commit SHA, and epic-linked Jira stories with blocking edges — from which the existing chain runs to a shipped, validated PR set. One spec contract is authored, linted, reviewed, parsed, and amended by machines; humans set policy, answer batched escalations, audit samples, and authorize production.
 
 ### Gap Analysis
 
@@ -46,7 +46,7 @@ A user (initially) or an upstream signal (eventually) enters the pipeline with a
 
 - Three user-invocable skills in the `feature-delivery` plugin covering research/grilling, spec synthesis, and ticket creation, runnable in one session or standalone.
 - One unified spec template that satisfies the downstream consumers by construction: the compliance-reviewer schema, the `implement-spec` parse targets, and `mysticat-architecture` frontmatter governance — including a machine-readable block for repos, branches, work-package edges, and merge order.
-- A deterministic spec lint in `mysticat-architecture` CI enforcing the template, with block↔prose agreement checks.
+- A deterministic spec lint enforcing the template in every spec home's CI, with block↔prose agreement checks.
 - A spec-PR mode for `create-pr` requiring zero changes to the review gate (it rides the existing exemption-bullet contract).
 - Ticket creation encoding the SITES conventions: stories under the feature epic, blocking edges as issue links, spec URL as remote link, story keys written back into spec frontmatter.
 - A spec amendment flow expressing changes as ADDED / MODIFIED / REMOVED deltas, closing the deviation-nudge return edge.
@@ -67,8 +67,8 @@ A user (initially) or an upstream signal (eventually) enters the pipeline with a
 ```
 grill-feature ──same session──▶ write-spec ──spec PR merged @ SHA──▶ create-tickets
  (frontier interview,            (synthesis, validation,             (work packages →
-  research, glossary/ADR          spec PR into                        Jira stories with
-  side-writes)                    mysticat-architecture)              blocking edges)
+  research, glossary/ADR          spec PR into the                    Jira stories with
+  side-writes)                    scope-selected home)                blocking edges)
                                         │                                   │
                                         ▼                                   ▼
                               amendment loop (deltas)          implement-spec → ship-feature
@@ -82,7 +82,9 @@ Skill names are placeholders pending decision (see Open Questions).
 
 **`grill-feature`** — a frontier-driven interview: map the design tree, ask the whole frontier of currently-answerable questions per round (numbered, each with a recommended answer), recompute after answers. Facts are the agent's job — fact-finding sub-agents use the workspace's verified evidence recipes (the PostgREST/Athena query skills, Splunk recipes, Scout) and return the reproduction (query, source, date) with every claim, never just the answer. Decisions are answered from the decision-policy layer, the glossary, and prior ADRs first; only unanswered decisions go to the user, and every answer is written back as policy, a glossary term, or an ADR (via the existing `new-adr` skill). Done means: empty frontier, confirmed shared understanding, durable findings moved to `mysticat-architecture/research/`.
 
-**`write-spec`** — synthesis without re-interviewing. Fetches the canonical template from this repository (the `new-adr` pattern), fills it from the conversation, codebase, glossary, and ADRs. Requirements are written in EARS patterns (`WHEN <trigger> THE SYSTEM SHALL <response>`; the `SHALL CONTINUE TO` form for regression-preserving bugfix specs). Unresolved points carry explicit `NEEDS CLARIFICATION` markers that must reach zero — or move to Open Questions with a phase (before merge / during implementation / out of scope) — before the PR opens. Validation is layered: mechanical lint, claim verification (every load-bearing claim executed, not read; unanchored claims demoted to assumptions), requirements↔work-package coverage both directions, an adversarial panel (the `review-architecture` roster with an extended pre-check gate), and executable acceptance (each criterion provably failing at the base commit; each work package answering "what can I demo?"). Publishes as a spec PR into `mysticat-architecture` via `create-pr` spec-PR mode. The verdict vocabulary is `pr-validate`'s: validated / defect found / could not validate / skipped — never rounded up.
+**Spec placement** — a spec lands in one of three homes based on its scope: `mysticat-architecture` (platform and product architecture), `mysticat-ai-native-guidelines` (AI-native process and methodology — this document's own home), or `serenity-docs` (Adobe Brand Visibility / Serenity designs, which carries its own CONTRIBUTING naming and status taxonomy). `write-spec` classifies the scope and places accordingly — the same classify-then-place step the `new-adr` skill implements for decisions. The unified template and the lint apply identically in all three homes; `mysticat-architecture`'s `DOCUMENTATION-GUIDE.md`, which today does not name `serenity-docs`, is updated in Phase 1 to encode the rule.
+
+**`write-spec`** — synthesis without re-interviewing. Fetches the canonical template from this repository (the `new-adr` pattern), fills it from the conversation, codebase, glossary, and ADRs. Requirements are written in EARS patterns (`WHEN <trigger> THE SYSTEM SHALL <response>`; the `SHALL CONTINUE TO` form for regression-preserving bugfix specs). Unresolved points carry explicit `NEEDS CLARIFICATION` markers that must reach zero — or move to Open Questions with a phase (before merge / during implementation / out of scope) — before the PR opens. Validation is layered: mechanical lint, claim verification (every load-bearing claim executed, not read; unanchored claims demoted to assumptions), requirements↔work-package coverage both directions, an adversarial panel (the `review-architecture` roster with an extended pre-check gate), and executable acceptance (each criterion provably failing at the base commit; each work package answering "what can I demo?"). Publishes as a spec PR into the scope-selected spec home via `create-pr` spec-PR mode. The verdict vocabulary is `pr-validate`'s: validated / defect found / could not validate / skipped — never rounded up.
 
 **`create-tickets`** — reads the spec's work-package table (the table and the tickets are the same list), quizzes on granularity and blocking edges (a critic agent in the end state), then publishes blockers-first: SITES stories under the epic (`customfield_11800`), components ASO/LLMO, blocking edges as issue links, spec URL as a remote link, story keys written back into the spec's `jira:` frontmatter. Work packages are sliced per repo, always; cross-repo work defaults to expand/contract as three separately mergeable items with the contract step dated in the spec; past roughly 10 owning teams or 30 PRs the spec must plan generated changes, not hand-written ones.
 
@@ -98,7 +100,7 @@ Skill names are placeholders pending decision (see Open Questions).
 
 **Phase 0: Gate.** The four-skill chain this design extends is under active development ( https://github.com/adobe/experience-success-skills/pull/160 ). No implementation phase starts before that PR merges, and every contract reference in this document (parse targets, gate strings, template sections) MUST be re-verified against the merged state — the contracts named here track a moving branch.
 
-**Phase 1: Contract.** Rewrite `docs/03-templates/spec-proposal.md` (frontmatter, EARS requirements, work-package table, machine-readable block, lanes), update the lifecycle doc that currently instructs a manual `cp`, and land `validate-spec.py` in `mysticat-architecture` CI with a mutation-tested fixture per rule.
+**Phase 1: Contract.** Rewrite `docs/03-templates/spec-proposal.md` (frontmatter, EARS requirements, work-package table, machine-readable block, lanes), update the lifecycle doc that currently instructs a manual `cp`, encode the three-home placement rule in `DOCUMENTATION-GUIDE.md`, and land a shared `validate-spec.py` in the CI of all three spec homes with a mutation-tested fixture per rule.
 
 **Phase 2: Spec-PR mode.** Extend `create-pr` in `adobe/experience-success-skills`; usable immediately for publishing specs (including amendments to the sibling spec-to-production design) through the normal review machinery.
 
@@ -147,7 +149,7 @@ Three separate user-invoked skills publishing through the existing PR/review mac
 
 - `adobe/experience-success-skills` PR 160 — the four-skill chain this design extends, **in active development**: hard gate for all implementation phases; contracts re-verified at merge.
 - The spec-to-production design ( https://github.com/adobe/mysticat-ai-native-guidelines/pull/45 ) — sibling stage; shares the PR-body section contracts and the work-package-derived deployment order.
-- `mysticat-architecture` — spec home, frontmatter governance, `DOCUMENTATION-GUIDE.md` placement rules, the `new-adr` skill, and CI for the lint.
+- The three spec homes — `mysticat-architecture` (frontmatter governance, `DOCUMENTATION-GUIDE.md` placement rules, the `new-adr` skill), this repository (templates, lifecycle docs), and `serenity-docs` (CONTRIBUTING naming and status taxonomy) — each carrying the lint in CI.
 - Workspace Jira conventions (SITES, epic custom field, issue-type rules, components) and the review-kit persona roster.
 
 ### External Dependencies
@@ -177,6 +179,7 @@ Three separate user-invoked skills publishing through the existing PR/review mac
 - [ ] Where the machine-consultable decision-policy layer lives and who reviews write-backs. *(during implementation)*
 - [ ] Dispatcher shape (cron skill, workflow, or service) and which environments may start sessions unattended. *(out of scope for v1; gate flips are evidence-driven)*
 - [ ] Whether the glossary home is `mysticat-architecture/context/`. *(before implementation)*
+- [ ] How the unified template reconciles with `serenity-docs`' existing CONTRIBUTING header and status taxonomy — adopt, map, or migrate. *(before implementation)*
 - [ ] Convergence with `develop-llmo-feature` (parallel domain-expert entry hands off at `write-spec`?). *(out of scope for v1)*
 
 ## References

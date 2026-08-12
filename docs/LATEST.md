@@ -4,6 +4,22 @@ Recent changes to the AI-First Development Guidelines, newest first. For the ful
 
 ---
 
+## 2026-08-12 - Delivery Pipeline Overview and Middle-Stage Design of Record
+
+Added [Delivery Pipeline](02-lifecycle/delivery-pipeline.md) - how the three stages of
+spec-driven delivery fit together: the hand-off objects at each boundary, the nine human gates
+(spec PRs always need at least one approving human review; unverifiable PRs and unfixable defects
+always hand back to a human; production authorization is human for high-risk or batched
+promotions, with unconditional post-deploy alerting), the three lanes through the
+middle stage (feature / task / defect), the four verification layers, and the mapping onto the
+5-phase lifecycle. Added the companion design of record for the implemented middle chain
+(`/implement` → `ship-feature` → `create-pr` → `pr-review-cycle` → `pr-validate`) in
+`docs/plans/2026-08-12-implementation-delivery-chain-design.md`, pinned to the implementing PR's
+head commit, plus its four extensions: work-item lanes with Jira input, exemption wiring,
+local-first verification via the workspace harness, and explicit human gates.
+
+---
+
 ## 2026-06-10 - Agent-Ergonomic Refactoring (Brownfield Retrofit)
 
 Added [Agent-Ergonomic Refactoring](05-guardrails/agent-ergonomic-refactoring.md) - retrofitting existing codebases into agent-ergonomic shape, distilled from a production retrofit (`adobe-rnd/llmo-data-retrieval-service` epic 2066). Covers the agent-ergonomics audit (multi-agent dimensional sweep + evidence-backed issue template), find-all-usages design (typed registries, chokepoints, cross-plane name contracts), the ratchet pattern (count-must-not-increase baselines, report→enforce two-phase, version-pinning lesson), mechanical verification of behavior-preserving refactors (empty-artifact-diff gates, grow-only structural guards, atomic migration units), test suites that permit refactoring (fragility scoring, evidence-driven reduction), and scaffolding as steering.

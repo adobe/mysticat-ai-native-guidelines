@@ -61,6 +61,7 @@ nav:
     - Agentic Memory Review: 01-foundations/agentic-memory-review.md
   - Development Lifecycle:
     - Overview: 02-lifecycle/overview.md
+    - Delivery Pipeline: 02-lifecycle/delivery-pipeline.md
     - 1. Design & Spec: 02-lifecycle/01-design-spec.md
     - 2. Planning: 02-lifecycle/02-planning.md
     - 3. Implementation: 02-lifecycle/03-implementation.md

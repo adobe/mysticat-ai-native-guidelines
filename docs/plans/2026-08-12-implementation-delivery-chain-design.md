@@ -274,6 +274,22 @@ the spec's machine-readable block. During the transition both are valid, with a 
 wins; when there is no spec or no block, hand-written section 9 prose remains the source of
 truth.** The last mile reads section 9 either way and never needs to know which regime produced it.
 
+### 7. Byproduct findings
+
+Errors or warnings that are **unrelated to the work item** but become visible during a run — in
+an API response, a UI, or logs, at any phase from exploration through local verification to
+`pr-validate` — are tracked, not dropped and not fixed in-scope:
+
+- The finding is filed as a work item with the evidence attached (log excerpt, reproduction
+  steps, run link): a Jira Bug for defects, a Story or GitHub issue otherwise, per the receiving
+  repo's conventions.
+- The current run's scope does not expand: the fix, if any, re-enters the pipeline through the
+  task/defect lane as its own run.
+- The filed key or issue link is named in the run's report (the `ship-feature` summary or the
+  `pr-validate` comment), so the observation and its tracking are auditable together.
+- Silently dropping such a finding is a defect of the run's report, the same class as rounding
+  up a `could not validate`.
+
 ## Implementation Phases
 
 - **Phase 0 — Gate.** PR 160 merges. Every pinned contract reference in this document is
@@ -337,6 +353,8 @@ them.
   up when one is missing.
 - Every `could not validate` outcome and every exhausted fix loop ends in a named hand-back to a
   human with a state report — never a silent stop and never a rounded-up success.
+- An unrelated error or warning observed during a run is traceable from the run's report to a
+  filed work item with evidence attached — no byproduct finding is dropped.
 
 ## Dependencies
 

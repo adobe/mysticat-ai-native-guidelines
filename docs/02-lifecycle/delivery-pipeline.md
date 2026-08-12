@@ -114,6 +114,16 @@ The middle stage accepts more than specs. `/implement` classifies the input and 
 Unversioned inputs (issue bodies) are snapshot-pinned by content hash so the text cannot change
 under the run — the same property SHA-pinning gives a spec.
 
+## Byproduct findings
+
+Runs see more than their own work item. When an error or warning **unrelated to the task**
+becomes visible during research, implementation, or validation — in an API response, a UI, or
+logs — it is tracked: filed as a Jira Bug or GitHub issue with the evidence attached (log
+excerpt, reproduction, run link), named in the run's report, and left for its own run through
+the task/defect lane. The current run's scope does not expand, and silently dropping the
+finding is a reporting defect. This is how the pipeline turns incidental observations into
+tracked work instead of losing them in a session transcript.
+
 ## Verification, in four layers
 
 Four different things called "verification" happen at four different points; they are not

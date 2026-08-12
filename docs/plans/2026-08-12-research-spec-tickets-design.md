@@ -80,7 +80,7 @@ Skill names are placeholders pending decision (see Open Questions).
 
 ### Technical Design
 
-**`grill-feature`** — a frontier-driven interview: map the design tree, ask the whole frontier of currently-answerable questions per round (numbered, each with a recommended answer), recompute after answers. Facts are the agent's job — fact-finding sub-agents use the workspace's verified evidence recipes (the PostgREST/Athena query skills, Splunk recipes, Scout) and return the reproduction (query, source, date) with every claim, never just the answer. Decisions are answered from the decision-policy layer, the glossary, and prior ADRs first; only unanswered decisions go to the user, and every answer is written back as policy, a glossary term, or an ADR (via the existing `new-adr` skill). Done means: empty frontier, confirmed shared understanding, durable findings moved to `mysticat-architecture/research/`.
+**`grill-feature`** — a frontier-driven interview. **Entry is anything addressable:** a Slack conversation or thread permalink, a Jira issue key, a GitHub issue or PR URL, an incident or postmortem, a customer-feedback record, a research file, or plain prose. The skill normalizes whatever it is handed into the same initial problem frame — fetch the full content (thread replies, issue comments, linked material), extract the problem statement, prior decisions, and stakeholders, and record the source in the evidence ledger as provenance. External text is treated as untrusted input throughout: a Slack message or issue body contributes requirement *candidates* to be verified and decided, never instructions to be executed. From that frame the interview runs identically regardless of entry: map the design tree, ask the whole frontier of currently-answerable questions per round (numbered, each with a recommended answer), recompute after answers. Facts are the agent's job — fact-finding sub-agents use the workspace's verified evidence recipes (the PostgREST/Athena query skills, Splunk recipes, Scout) and return the reproduction (query, source, date) with every claim, never just the answer. Decisions are answered from the decision-policy layer, the glossary, and prior ADRs first; only unanswered decisions go to the user, and every answer is written back as policy, a glossary term, or an ADR (via the existing `new-adr` skill). Done means: empty frontier, confirmed shared understanding, durable findings moved to `mysticat-architecture/research/`.
 
 **Spec placement** — a spec lands in one of three homes based on its scope: `mysticat-architecture` (platform and product architecture), `mysticat-ai-native-guidelines` (AI-native process and methodology — this document's own home), or `serenity-docs` (Adobe Brand Visibility / Serenity designs, which carries its own CONTRIBUTING naming and status taxonomy). `write-spec` classifies the scope and places accordingly — the same classify-then-place step the `new-adr` skill implements for decisions. The unified template and the lint apply identically in all three homes; `mysticat-architecture`'s `DOCUMENTATION-GUIDE.md`, which today does not name `serenity-docs`, is updated in Phase 1 to encode the rule.
 
@@ -96,7 +96,7 @@ Skill names are placeholders pending decision (see Open Questions).
 
 **Amendments** — a disclosed intentional deviation, or any post-merge learning, becomes an amendment PR expressed as ADDED / MODIFIED / REMOVED sections against the current spec, giving amendments merge semantics instead of rewrites.
 
-**End-state automation** — all of the above is built agent-consumable from v1: judgment gates consult policy before asking; artifacts carry schemas, not just prose; outcomes are recorded as structured state alongside the human-readable comment; every gate returns pass/fail or delegates to an adversarial panel with a decision rule; failure modes stop loudly rather than proceed plausibly. Each human gate carries a flip criterion (for example: the clarifying-question rate per spec approaching zero is the evidence that specs are complete enough to skip the human clarify step). Production authorization remains per-promotion and human — deliberately last, possibly never automated.
+**End-state automation** — all of the above is built agent-consumable from v1: judgment gates consult policy before asking; artifacts carry schemas, not just prose; outcomes are recorded as structured state alongside the human-readable comment; every gate returns pass/fail or delegates to an adversarial panel with a decision rule; failure modes stop loudly rather than proceed plausibly. Each human gate carries a flip criterion (for example: the clarifying-question rate per spec approaching zero is the evidence that specs are complete enough to skip the human clarify step). The any-source entry contract is what the unattended form rides on: a labeled Jira ticket or an escalated Slack triage becomes a pipeline entry with no human prompt. Production authorization remains per-promotion and human — deliberately last, possibly never automated.
 
 ### Implementation Phases
 
@@ -129,6 +129,7 @@ Three separate user-invoked skills publishing through the existing PR/review mac
 - [ ] `write-spec` output is parsed by `implement-spec` from the machine-readable block with zero prose inference, and passes the spec lint on first publish.
 - [ ] A spec PR opened in spec-PR mode receives no degraded-review banner and no unresolvable-token failure.
 - [ ] For work the PM requires tickets for, `create-tickets` produces epic-linked SITES stories, blockers-first, with blocking links and the spec as remote link, and the story keys appear in the spec's frontmatter in the same change; for all other work the chain runs spec-to-implementation with no Jira writes.
+- [ ] `grill-feature` accepts any supported entry point — a Slack permalink, a Jira key, a GitHub issue or PR URL, a file path, or prose — and normalizes it into the same problem frame with the source recorded as provenance; the interview from that point is entry-independent.
 - [ ] Every load-bearing factual claim in a generated spec carries an anchor (query + date, file @ SHA, or probe result); unanchored statements appear only under assumptions or open questions.
 - [ ] A disclosed intentional deviation can be turned into an amendment PR expressed as ADDED / MODIFIED / REMOVED deltas.
 - [ ] The lint rejects: missing frontmatter fields, non-EARS requirements, a work package spanning repos, an expand/contract set without a dated contract step, and block↔prose disagreement — each rule pinned by a fixture that fails when the rule is deleted.
@@ -157,8 +158,9 @@ Three separate user-invoked skills publishing through the existing PR/review mac
 
 ### External Dependencies
 
-- Atlassian MCP (Jira): story creation, links, remote links.
-- GitHub (`gh`, MysticatBot review pipeline) for spec PRs.
+- Atlassian MCP (Jira): entry-point reads, story creation, links, remote links.
+- Slack MCP: entry-point reads (conversations and threads as pipeline entries).
+- GitHub (`gh`, MysticatBot review pipeline): entry-point reads (issues, PRs) and spec PRs.
 - Workspace tooling: `mani` (repo registry the work-package validation checks against), `mise run wt` sessions.
 
 ## Risks and Mitigations

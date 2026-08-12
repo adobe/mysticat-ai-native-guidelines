@@ -31,13 +31,18 @@ must not decide alone.
 
 ### Current State
 
-`feature-delivery:implement-spec` resolves a spec to a pinned commit and opens a
+`/implement` (feature-delivery) resolves a spec to a pinned commit and opens a
 worktree session on `feature-delivery:ship-feature`, which explores, designs,
 implements, reviews, verifies locally, commits, and opens a PR through
 `review-kit:create-pr`. `review-kit:pr-review-cycle` then drives the bot review loop,
 gates on every CI check being green, and hands the runtime half to
 `review-kit:pr-validate`, which exercises the change on whatever environment already
-serves the branch and posts the result as a PR comment.
+serves the branch and posts the result as a PR comment. That chain is in review
+( https://github.com/adobe/experience-success-skills/pull/160 ); every contract
+reference to it in this document tracks that branch and MUST be re-verified against
+the merged state before this procedure is implemented. The chain's contracts are
+recorded in the middle-stage design of record
+( https://github.com/adobe/mysticat-ai-native-guidelines/pull/48 ).
 
 That chain ends at a PR that is reviewed, green, and validated **pre-merge**. What
 happens next is not modelled anywhere:
@@ -207,7 +212,7 @@ like an empty migration rather than a failed read.
 #### Stage 3 — validate in the environment
 
 Reuse `pr-validate`'s four outcomes — validated, defect found, could not validate,
-skipped — against the environment just deployed, with one addition: **production is
+skipped, defined normatively in the middle-stage design of record — against the environment just deployed, with one addition: **production is
 read-only by default.** A production validation may exercise a read path, inspect
 logs, and query state; it may not seed data, mutate a customer record, or leave
 anything behind. Where a change can only be proven by a write, the outcome is
@@ -219,6 +224,11 @@ After every deploy, and before declaring the environment good: check the service
 error rate against its baseline for the window since the deploy, and look for
 new error signatures rather than absolute counts. A service with a steady background
 error rate will always show errors; what matters is what changed.
+
+Anything new is escalated immediately: a new error signature in the logs or Splunk,
+an error reported in the team Slack channels, or an uptime-monitoring alert after a
+production deploy **alerts a human as soon as possible** — the alert is not deferred
+to the Stage 5 comment.
 
 #### Stage 5 — comment on the PR
 
@@ -245,7 +255,16 @@ credentials that can deploy to production.
 | Shape B/C promotion to production | **Human authorization required**, after a risk assessment (below). |
 
 An agent never merges to production. It prepares the merge, states the risk, notifies
-on-call, and asks. The authorization is per promotion, not standing.
+on-call, and asks. The authorization is per promotion, not standing. It is human
+whenever the deploy risk is high or the promotion carries more than the single change
+— a batched promotion is always authorized by a person. A low-risk single-change
+promotion is the only candidate for ever delegating this gate, and until a flip
+criterion is decided, every promotion asks.
+
+Every gate in this table is main-thread work per the agent orchestration guide
+( https://github.com/adobe/mysticat-ai-native-guidelines/pull/46 ): sub-agents cannot
+ask the user, so the procedure runs its gates in the invoking session, and a
+delegated agent can only escalate to it.
 
 ### Risk assessment before a production promotion
 
@@ -274,7 +293,7 @@ incident starts is the failure this exists to prevent.
 | Migration fails | Stop, and escalate immediately. A partially applied migration is the highest-severity state in this document: the code and the schema disagree, and the next deploy will not fix it. |
 | Validation finds a defect | Stop promoting. On dev or stage, return the change to the fix loop. In production, escalate and state the rollback path. |
 | Validation cannot run | Not a pass. Record `could not validate` with the reason and stop at that boundary; do not promote past an environment that was never exercised. |
-| Logs show a new error signature | Treat as a defect found, even if the deploy and validation both succeeded. |
+| Logs show a new error signature | Treat as a defect found, even if the deploy and validation both succeeded, and alert a human as soon as possible. |
 | Promotion PR carries changes that are not yours | Not a failure, but it removes your authority to promote alone. Name the other changes and their authors in the authorization request. |
 | Anything unrecognised | Stop and report. An unattended procedure holding deploy credentials must not improvise past a state it has no rule for. |
 
@@ -285,7 +304,9 @@ continue.
 ### Multiple PRs in a stated order
 
 A set of related PRs is driven as an ordered list, and the order is the one stated in
-section 9 of the PR bodies (deployment and merge order). The procedure:
+section 9 of the PR bodies (deployment and merge order). Section 9 may be hand-written
+or rendered from the spec's work-package edges; the procedure reads it the same way
+either way. The procedure:
 
 1. Resolves the set and reads the stated order. Refuses to guess: a set whose order
    is not stated anywhere is an input error, not something to infer from timestamps.
@@ -317,9 +338,13 @@ not.
 ## Risks
 
 - **This automates the path to production.** The mitigation is that it does not: it
-  automates the path *to the production gate*, and every production merge remains a
-  human decision. That boundary is the security property of the whole design and
-  should not be relaxed for convenience.
+  automates the path *to the production gate*. Every high-risk or batched promotion
+  is authorized by a person, and no delegation of the low-risk single-change case
+  happens before an explicit flip criterion is decided. That boundary is the security
+  property of the whole design and is not relaxed for convenience.
+- **Contract drift against the in-review chain.** The four skills this document
+  builds on track a moving branch; every contract reference is re-verified against
+  the merged state before implementation.
 - **A wrong shape assignment is worse than no assignment.** Hence the unverified rows
   and the refusal to run without one.
 - **Evidence can look more complete than it is.** `could not validate` posts a comment
@@ -332,6 +357,8 @@ not.
 - `experience-success-skills/skills/feature-delivery/skills/ship-feature/SKILL.md`
 - `experience-success-skills/skills/review-kit/skills/pr-review-cycle/SKILL.md`
 - `experience-success-skills/skills/review-kit/skills/pr-validate/SKILL.md`
+- https://github.com/adobe/mysticat-ai-native-guidelines/pull/48 — middle-stage design of record and delivery-pipeline overview (verdict vocabulary, hand-off contract, human gates)
+- https://github.com/adobe/mysticat-ai-native-guidelines/pull/46 — agent orchestration guide (main-thread human gates, spawn shapes)
 - `mysticat-ci/.github/workflows/service-ci.yaml`
 - `mysticat-data-service/.github/workflows/cd.yml`, `promote.yml`
 - `llmo-data-retrieval-service/.github/workflows/ENVIRONMENTS.md`, `deploy.yml`,

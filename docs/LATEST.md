@@ -7,9 +7,10 @@ Recent changes to the AI-First Development Guidelines, newest first. For the ful
 ## 2026-08-12 - Delivery Pipeline Overview and Middle-Stage Design of Record
 
 Added [Delivery Pipeline](02-lifecycle/delivery-pipeline.md) - how the three stages of
-spec-driven delivery fit together: the hand-off objects at each boundary, the eight human gates
+spec-driven delivery fit together: the hand-off objects at each boundary, the nine human gates
 (spec PRs always need at least one approving human review; unverifiable PRs and unfixable defects
-always hand back to a human; production authorization stays human), the three lanes through the
+always hand back to a human; production authorization is human for high-risk or batched
+promotions, with unconditional post-deploy alerting), the three lanes through the
 middle stage (feature / task / defect), the four verification layers, and the mapping onto the
 5-phase lifecycle. Added the companion design of record for the implemented middle chain
 (`/implement` → `ship-feature` → `create-pr` → `pr-review-cycle` → `pr-validate`) in

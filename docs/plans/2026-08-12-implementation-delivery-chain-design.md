@@ -200,7 +200,21 @@ the same parser that today classifies them `degraded`.
 ### 4. Local-first verification
 
 The workspace `local/` harness (driven by the `local-dev` skill in `adobe/mysticat-workspace`)
-provides three fully autonomous verification loops — no IMS, no Vault, no human:
+is the verification **infrastructure**, not just a set of scripts: it runs the services
+(api-service, data-service/PostgREST, projector, mystique, DRS in mock mode, elmo-ui),
+provisions LocalStack (SNS/SQS/S3/DynamoDB), loads fixture data (tenant seeds, the Serenity mock
+seed, cross-service e2e seeds), and stands up contract-pinned Semrush vendor mocks with
+seed/reset/dump control routes. On that infrastructure the agent self-verifies in two forms.
+
+**Interactive self-verification** — the agent drives the running stack directly:
+
+- call the local api-service and data-service (PostgREST) HTTP APIs against seeded fixtures;
+- exercise the Semrush mock APIs directly (seed → call → assert, `__reset` between scenarios);
+- drive the UIs — elmo-ui and the ASO UI — through a browser (Chrome DevTools MCP) against the
+  local API, in the harness's local auth mode;
+- inject events (SQS/SNS fixtures) and read the results through both the data plane and the API.
+
+**Packaged loops** — the pre-built autonomous recipes, used as gates:
 
 | Loop | What it proves | Command |
 |---|---|---|
@@ -220,8 +234,13 @@ Two insertion points:
 
 Constraints the recipes MUST state:
 
-- **Serialization**: worktree sessions share one set of service ports and PID files; one session
-  verifies at a time, releasing with `make stop-services`.
+- **Session isolation (required)**: each concurrent worktree session (`mise run wt`) MUST be able
+  to run its own harness instance — service ports and URLs parameterized per session, per-session
+  env and PID state, and a per-session compose project, so one session's reset cannot destroy
+  another session's data. Today the harness shares one `local/.env`, one PID directory, and one
+  compose project across all sessions, so verification serializes (one session at a time,
+  releasing with `make stop-services`); that serialization is the interim rule only, and the
+  isolation work in `mysticat-workspace` is a Phase 3 deliverable.
 - **Production-shape assertions**: the local reply-consumer stores the whole SQS envelope, so a
   field lands at `data.data.<field>` locally but `data.<field>` in production; assertions target
   the production shape or they are a false green.
@@ -233,13 +252,14 @@ Constraints the recipes MUST state:
 
 | Gate | Who decides | Delegation condition |
 |---|---|---|
-| Spec PR approval | **At least one human approving review, always** — the bot review does not satisfy this gate; `pr-review-cycle` MUST NOT treat a spec PR as review-complete without it | None planned; specs are the contract everything downstream builds on |
-| Clarifying questions during implementation | Human answers; agents may propose | Per-question, once the first-mile decision-policy layer can answer it with a written policy |
+| Spec PR approval | **At least one human approving review, always** — the bot review does not satisfy this gate; `pr-review-cycle` MUST NOT treat a spec PR as review-complete without it. Approval also asserts that every open question tagged *before implementation* is resolved or explicitly re-phased | None planned; specs are the contract everything downstream builds on |
+| Questions arising during implementation | Human answers; agents may propose. This gate covers only what the implementation newly surfaces — a spec's own open questions are settled before the spec PR is approved (previous row), so reaching this gate for a question the spec already listed is a spec-review failure, not a normal event | Per-question, once the first-mile decision-policy layer can answer it with a written policy |
 | Review-finding pushback that stalls (escalate outcome) | Human arbitrates | None; escalation is by definition the human path |
 | `could not validate` on a PR | **Goes back to a human** — the run does not proceed past the validation gate on its own; the human either supplies the missing environment/evidence, records an accepted-risk typed skip under their name, or holds the PR | None; an unverifiable change is precisely what a person must own |
 | Defect found that the fix loop cannot resolve within its caps | **Human required** — when the review or CI fix loop exhausts its attempt budget, or a validation defect has no in-loop fix, the run ends in a named hand-back to a human with the state report, never a silent stop | None; the caps exist to force this hand-back |
 | Code PR merge | Human approval per repo branch protection; the cycle never arms auto-merge | Governed by the last-mile design, not this one |
-| Production authorization | Human, per promotion | Possibly never — owned by the last-mile design |
+| Production authorization | Human whenever the production deploy risk is high **or** the change promotes together with other changes (a batched promotion is always authorized by a person) | Low-risk single-change promotions are the only delegation candidate; the flip criterion is owned by the last-mile design |
+| Post-deploy anomalies | **A human is alerted as soon as possible** when, after a production deploy, log watching, error reports in the Slack channels, Splunk, or uptime monitoring surface anything new | None; the alerting duty is unconditional |
 
 Everything else in the chain — exploration, implementation, review triage with recorded outcomes,
 CI shepherding, validation — runs agent-side by design, with every human gate structurally
@@ -265,7 +285,9 @@ truth.** The last mile reads section 9 either way and never needs to know which 
   `Exemption:` bullet for the task and defect lanes.
 - **Phase 3 — Local-first verification.** The repo → recipe routing table lands in
   `ship-feature`'s verification phase; harness-backed recipes are added to `pr-validate`'s
-  per-repo table where they convert a typed skip into a check.
+  per-repo table where they convert a typed skip into a check; and the harness gains per-session
+  isolation in `mysticat-workspace` (parameterized ports and URLs, per-session env, PID state,
+  and compose project) so concurrent worktree sessions verify independently.
 - **Phase 4 — Spec-PR human gate.** `pr-review-cycle` learns to recognize a spec PR (the
   spec-PR-mode exemption form) and blocks review-completion until an approving human review
   exists.
@@ -306,6 +328,11 @@ them.
   grounding metric.
 - A change to a harness-covered service is verified by the matching autonomous loop before its PR
   opens, and the recipe's assertion targets the production data shape.
+- An agent can self-verify a change interactively against the local stack — calling the local
+  APIs, driving the UIs through a browser, and exercising the vendor mocks over seeded fixtures —
+  without any human-auth step.
+- Two concurrent worktree sessions verify independently, each on its own ports and data, once the
+  per-session isolation lands.
 - No spec PR merges without an approving human review, and the cycle blocks rather than rounds
   up when one is missing.
 - Every `could not validate` outcome and every exhausted fix loop ends in a named hand-back to a
@@ -318,7 +345,8 @@ them.
 - https://github.com/adobe/experience-success-skills/pull/160 — the implemented chain; Phase 0
   gates on its merge.
 - The workspace `local/` harness and `local-dev` skill in `adobe/mysticat-workspace` — the
-  verification loops and their constraints.
+  verification infrastructure, its fixture seeds and vendor mocks, and the per-session isolation
+  work Phase 3 requires of it.
 - Atlassian MCP availability in the implementing session — the Jira input shape.
 
 **Internal**
@@ -337,7 +365,7 @@ them.
 |---|---|
 | PR 160 is still converging; pinned contracts drift before merge | Phase 0 re-verifies every pinned reference against the merged state; nothing builds on the pins before that |
 | Lane misclassification (a large change arrives as a "task" and skips architecture) | Classification is a recorded decision the operator sees in the hand-off; the ship-feature quality gate and review cycle still apply on every lane |
-| Local-harness false greens (envelope shape, shared ports) | The recipe constraints are normative: production-shape assertions and serialized sessions are part of the recipe, not folklore |
+| Local-harness false greens (envelope shape, shared ports) | The recipe constraints are normative: production-shape assertions are part of the recipe, sessions serialize until the per-session isolation lands, and independently thereafter |
 | The spec-PR human gate is bypassed by merging outside the cycle | Branch protection owns the hard guarantee; the cycle's gate is the pipeline-side check, and the overview document states the rule for humans too |
 
 ## Open Questions

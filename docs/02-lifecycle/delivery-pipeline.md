@@ -73,16 +73,18 @@ below is main-thread work, and a delegated agent can only escalate to it.
 | # | Gate | Rule |
 |---|---|---|
 | 1 | Research decisions | Facts come from evidence; decisions belong to the human. `grill-feature` asks with recommended answers, and the chosen exit (spec / task-defect / knowledge) is a recorded decision. |
-| 2 | **Spec PR approval** | Every spec PR requires **at least one approving human review** before it merges. Bot review does not satisfy this gate. Specs are the contract everything downstream builds on; no one builds on an unread contract. |
+| 2 | **Spec PR approval** | Every spec PR requires **at least one approving human review** before it merges. Bot review does not satisfy this gate. Approval also asserts that every open question tagged *before implementation* is resolved — a spec with unresolved blocking questions is not approvable. Specs are the contract everything downstream builds on; no one builds on an unread contract. |
 | 3 | Ticket creation | Optional and PM-gated: `create-tickets` runs only for work whose PM requires Jira tracking. |
-| 4 | Clarifying questions during implementation | A human answers; agents propose. Delegated per-question only once a written decision policy can answer it. |
+| 4 | Questions arising during implementation | A human answers; agents propose. This gate covers only what implementation newly surfaces — the spec's own open questions were settled at gate 2, so hitting this gate for a question the spec already listed is a spec-review failure. Delegated per-question only once a written decision policy can answer it. |
 | 5 | **Unverifiable PR** | A `could not validate` outcome goes back to a human. The pipeline never proceeds past validation on its own: the human supplies the missing environment or evidence, records an accepted-risk skip under their own name, or holds the PR. |
 | 6 | **Unfixable defect** | When a defect is found and the fix loop cannot resolve it within its attempt caps, a human is required. The run ends in a named hand-back with a state report — never a silent stop, never a rounded-up success. |
 | 7 | Code PR merge | Human approval per branch protection; the review cycle never arms auto-merge. |
-| 8 | **Production authorization** | Human, per promotion — deliberately last, possibly never automated. |
+| 8 | **Production authorization** | Human whenever the production deploy risk is high, **or** whenever the change promotes together with other changes — a batched promotion is always authorized by a person. Low-risk single-change promotions are the only delegation candidate; the flip criterion is owned by the last-mile design. |
+| 9 | **Post-deploy alerting** | After a production deploy, the watch does not end at "deploy green": when log watching, error reports in the Slack channels, Splunk, or uptime monitoring surface anything new, **a human is alerted as soon as possible**. This duty is unconditional. |
 
 Gates 1, 3, 4, and 7 are candidates for policy-based delegation with explicit flip criteria (the
-first-mile design's decision-policy layer). Gates 2, 5, 6, and 8 are not.
+first-mile design's decision-policy layer). Gates 2, 5, and 6 are not; gate 8 delegates only for
+low-risk single-change promotions; gate 9's alerting duty never goes away.
 
 ## What a spec must be
 
@@ -119,9 +121,13 @@ interchangeable:
 
 1. **Spec validation** (first mile): lint, claim verification, coverage checks, adversarial panel,
    acceptance criteria provably failing at base — before the spec merges.
-2. **Local verification** (middle, before the PR opens): scoped tests, repo gates, and — where the
-   workspace `local/` harness covers the service — an autonomous end-to-end loop against the local
-   stack, asserting on production data shapes.
+2. **Local verification** (middle, before the PR opens): scoped tests, repo gates, and agent
+   self-verification against the workspace `local/` stack — calling the local api-service and
+   data-service APIs, driving the UIs through a browser, exercising the Semrush vendor mocks, and
+   injecting events over seeded fixtures — plus the packaged autonomous loops as gates where they
+   cover the service, always asserting on production data shapes. Each concurrent worktree
+   session runs its own harness instance (own ports, env, and data) once the per-session
+   isolation lands; until then sessions serialize.
 3. **Pre-merge validation** (`pr-validate`): the change exercised on the live environment serving
    the branch, recorded as a PR comment with one of four verdicts —
    `validated / defect found / could not validate / skipped` — never rounded up.

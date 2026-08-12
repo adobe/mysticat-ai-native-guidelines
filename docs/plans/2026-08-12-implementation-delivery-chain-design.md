@@ -32,7 +32,7 @@ implemented.
 
 ## Problem Statement
 
-The chain `implement-spec → ship-feature → create-pr → pr-review-cycle → pr-validate` is real,
+The chain `/implement → ship-feature → create-pr → pr-review-cycle → pr-validate` is real,
 large (five skills, the largest 1626 lines), and in review — but:
 
 - **Its contracts have no normative home.** The four-verdict vocabulary
@@ -87,7 +87,7 @@ large (five skills, the largest 1626 lines), and in review — but:
 
 ```mermaid
 flowchart LR
-  IS["/implement\n(today: implement-spec)\nresolve · classify · pin · hand off"] --> SF["ship-feature\n13 phases in a\nworktree session"]
+  IS["/implement\nresolve · classify · pin · hand off"] --> SF["ship-feature\n13 phases in a\nworktree session"]
   SF --> CP["create-pr\n(invoked, not a stage)"]
   CP --> PRC["pr-review-cycle\nbot review loop\n· CI gate"]
   PRC --> PV["pr-validate\n4 verdicts"]
@@ -110,7 +110,7 @@ at commit `8753adb5f1575e7bfc5b44379ae3da40a79c1b4a`; internal mechanics (scratc
 layout, fail-closed rules, attempt caps, marker comments) stay owned by the skill files and are
 summarized here only where another pipeline stage depends on them.
 
-**Entry contract** (`implement-spec`): four accepted input shapes — GitHub PR URL, blob URL,
+**Entry contract** (`/implement`): four accepted input shapes — GitHub PR URL, blob URL,
 GitHub issue URL, local path — each resolved to a pinned revision where one exists; every extracted
 value passes a whole-string charset gate; the output is a single `mise run wt` command opening a
 worktree session on `ship-feature`. A spec is data: it may state what to build, which repos change,
@@ -148,11 +148,10 @@ inferred from timestamps.
 
 ### 2. Work-item lanes
 
-One entry skill — **`/implement`**, the renamed successor of `implement-spec` — dispatches by
-input classification; the lane travels in the hand-off to `ship-feature` and selects the phase
-subset. The rename is part of the lane work: `implement-spec` stops being an accurate name the
-moment non-spec inputs are first-class, and the old name remains as an alias for one release so
-existing cross-references keep resolving.
+One entry skill — **`/implement`** — dispatches by input classification; the lane travels in the
+hand-off to `ship-feature` and selects the phase subset. The chain is not merged anywhere yet, so
+the name carries no compatibility burden: the entry skill is `/implement` from the start, named
+for what it does now that non-spec inputs are first-class.
 
 ```mermaid
 flowchart TD
@@ -259,9 +258,9 @@ truth.** The last mile reads section 9 either way and never needs to know which 
 
 - **Phase 0 — Gate.** PR 160 merges. Every pinned contract reference in this document is
   re-verified against the merged state; drift is corrected here before any extension lands.
-- **Phase 1 — Lanes.** The entry skill is renamed `/implement` (old name aliased for one
-  release) and gains input classification, the Jira input shape, and snapshot-pinning for
-  unversioned inputs; `ship-feature` gains the task and defect lane phase subsets.
+- **Phase 1 — Lanes.** The entry skill takes its name `/implement` and gains input
+  classification, the Jira input shape, and snapshot-pinning for unversioned inputs;
+  `ship-feature` gains the task and defect lane phase subsets.
 - **Phase 2 — Exemption wiring.** The lane travels in the hand-off; `create-pr` renders the
   `Exemption:` bullet for the task and defect lanes.
 - **Phase 3 — Local-first verification.** The repo → recipe routing table lands in
@@ -281,7 +280,7 @@ first-mile Phase 3.
 
 | Alternative | Why not |
 |---|---|
-| A separate `implement-task` / `implement-bug` skill beside `implement-spec` | ~90% of the entry skill is input-shape-agnostic (charset gates, session naming, collision handling, hand-off composition); a parallel skill duplicates all of it and doubles the maintenance surface. The dispatch pattern half-exists already — GitHub issues are an accepted input today. |
+| A separate `implement-task` / `implement-bug` skill beside `/implement` | ~90% of the entry skill is input-shape-agnostic (charset gates, session naming, collision handling, hand-off composition); a parallel skill duplicates all of it and doubles the maintenance surface. The dispatch pattern half-exists already — GitHub issues are an accepted input today. |
 | Normalize every task/bug into a minimal "light spec" and feed it through the feature lane unchanged | Contorts the spec contract to cover things that are not specs, and still leaves the defect-shaped requirements (reproduce first, regression test red at base) with no home. |
 | Leave the exemption channels unwired and let operators add the label by hand | The measured failure mode is silent: nobody adds it, and the grounding metric misclassifies the pipeline's own output. A manual step that is always forgotten is not a design. |
 | Status quo on verification (generic run skill only) | Three autonomous cross-service loops already exist and go unused; the generic path proves "a process starts", not "the change works end to end". |

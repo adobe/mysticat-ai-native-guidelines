@@ -100,8 +100,8 @@ Two requirements sit above the structure:
 
 ## The three lanes through the middle
 
-The middle stage accepts more than specs. `/implement` (the renamed `implement-spec`) classifies
-the input and hands the lane to `ship-feature`:
+The middle stage accepts more than specs. `/implement` classifies the input and hands the lane to
+`ship-feature`:
 
 | Lane | Input | What changes |
 |---|---|---|

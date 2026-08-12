@@ -230,6 +230,11 @@ an error reported in the team Slack channels, or an uptime-monitoring alert afte
 production deploy **alerts a human as soon as possible** — the alert is not deferred
 to the Stage 5 comment.
 
+A new signature that turns out to be **unrelated to the change** is not this change's
+defect, but it is not dropped either: it is filed as a work item with the evidence
+attached (log excerpt, run link) and named in the Stage 5 comment, so the observation
+and its tracking stay auditable together.
+
 #### Stage 5 — comment on the PR
 
 One comment per environment boundary, naming the environment, the deploy run, the
@@ -293,7 +298,7 @@ incident starts is the failure this exists to prevent.
 | Migration fails | Stop, and escalate immediately. A partially applied migration is the highest-severity state in this document: the code and the schema disagree, and the next deploy will not fix it. |
 | Validation finds a defect | Stop promoting. On dev or stage, return the change to the fix loop. In production, escalate and state the rollback path. |
 | Validation cannot run | Not a pass. Record `could not validate` with the reason and stop at that boundary; do not promote past an environment that was never exercised. |
-| Logs show a new error signature | Treat as a defect found, even if the deploy and validation both succeeded, and alert a human as soon as possible. |
+| Logs show a new error signature | Treat as a defect found, even if the deploy and validation both succeeded, and alert a human as soon as possible. A signature established as unrelated to the change is filed as its own tracked work item instead — never dropped. |
 | Promotion PR carries changes that are not yours | Not a failure, but it removes your authority to promote alone. Name the other changes and their authors in the authorization request. |
 | Anything unrecognised | Stop and report. An unattended procedure holding deploy credentials must not improvise past a state it has no rule for. |
 

@@ -100,6 +100,34 @@ PR-creating surface, invoked by `ship-feature` (Phase 9) in the ordinary flow an
 the chain that list it as a peer stage are shorthand; descriptions that attribute PR creation to
 `pr-review-cycle` itself are wrong and get corrected when the surrounding documents are updated.
 
+### The review cycle is a loop, not a step
+
+`pr-review-cycle` is drawn as one box above, but it is the chain's inner loop — review rounds,
+a CI fix loop, and a validation loop-back all run inside it, each with a capped budget and a
+human hand-back when a budget is exhausted:
+
+```mermaid
+flowchart TD
+  A["pre-push gate ·\ncreate the PR if none exists"] --> B["disarm auto-merge ·\nrequest reviews"]
+  B --> C["wait for bot and\nhuman reviews"]
+  C --> D["triage every declared finding:\nimplement · pushback ·\ndefer · escalate"]
+  D --> E["push fixes · one consolidated\ncomment · reply + resolve\nthreads · re-request"]
+  E -->|"new round\n(max 4)"| C
+  E -->|"all findings decided,\nround adds nothing new"| F["CI gate: every check green\n(unknown bucket blocks)"]
+  F -->|"fix and push\n(4 attempts across\nthe whole cycle)"| F
+  F -->|green| G["pr-validate:\nvalidated · defect found ·\ncould not validate · skipped"]
+  G -->|"runtime defect —\nconsumes a review round"| D
+  G -->|"validated or\ntyped skip"| H(["complete: findings decided\n∧ CI green ∧ validated"])
+  D -->|"caps exhausted"| HG{{"human hand-back\nwith state report"}}
+  G -->|"could not validate"| HG
+```
+
+The caps are shared budgets, not per-entry counters: the review loop stops after four rounds or
+two early-stop signals (a declined finding returning; a round producing no net change), the CI
+fix loop counts its four attempts across the whole cycle, and a runtime defect found by
+validation consumes a review round rather than opening a fresh budget. Every exhausted budget
+ends in the named human hand-back — never a silent stop.
+
 ## Technical Design
 
 ### 1. The design of record (implemented behavior, pinned)

@@ -38,6 +38,7 @@ The 5-phase development cycle:
 | 3 | [Implementation](docs/02-lifecycle/03-implementation.md) | Branch/PR workflow |
 | 4 | [Validation](docs/02-lifecycle/04-validation.md) | Testing, CI/CD monitoring |
 | 5 | [Closure](docs/02-lifecycle/05-closure.md) | Docs, Jira, cleanup |
+| + | [Delivery Pipeline](docs/02-lifecycle/delivery-pipeline.md) | The three-stage spec-driven pipeline and its human gates |
 | + | [Multi-Session Patterns](docs/02-lifecycle/multi-session-patterns.md) | State persistence, handoff, parallel agents |
 | + | [Config Evolution](docs/02-lifecycle/06-config-evolution.md) | Maintaining AI configuration |
 

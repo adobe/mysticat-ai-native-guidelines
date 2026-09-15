@@ -2,7 +2,7 @@
 
 ## Service Interactions Deep Dive
 
-> **Last Updated:** 2026-02-05
+> **Last Updated:** 2026-09-15
 > **Note:** This document describes the **target architecture**. Current implementation uses direct method calls (not SNS/SQS). See implementation status notes on each slide.
 
 ---
@@ -20,7 +20,7 @@ flowchart TB
     subgraph Services
         DRS["<b>DRS</b><br/><i>Fetchers</i><br/><br/>External data fetch<br/>HTML, screenshots,<br/>GSC, GA4, Ahrefs"]
 
-        BB["<b>BLACKBOARD</b><br/><i>Long Term Memory</i><br/><br/>Store facts<br/>Track dependencies<br/>TTL management"]
+        BB["<b>BLACKBOARD</b><br/><i>Long Term Memory</i><br/><br/>Store facts<br/>Track dependencies<br/>Freshness eligibility"]
 
         CTRL["<b>CONTROL</b><br/><br/><br/>Orchestration<br/>Scheduling<br/>Policies"]
 
@@ -51,9 +51,11 @@ flowchart TB
 | Service | Responsibility |
 |---------|----------------|
 | **DRS** | Fetch external data (HTML, screenshots, GSC, GA4, Ahrefs) |
-| **Blackboard** | Central fact store, dependency tracking, TTL management |
+| **Blackboard** | Central fact store, dependency tracking, freshness eligibility |
 | **Control** | Orchestration, scheduling, cascade policies |
 | **Reasoning** | AI agents that consume facts and produce derived facts |
+
+`Fact.max_staleness_hours` controls lazy eligibility, not expiry: positive `N` becomes eligible only when touched after `N` hours, `0` is always eligible (with change detection still able to suppress work), and `None` is force-or-signal-only. The field neither deletes facts nor schedules refreshes; `ttl_hours` is a deprecated compatibility alias.
 
 ---
 
@@ -93,7 +95,7 @@ sequenceDiagram
 ```mermaid
 flowchart LR
     subgraph Control
-        SCHED["Scheduler<br/>(cron, TTL)"]
+        SCHED["Scheduler<br/>(cron, touch)"]
         API["API<br/>(/trigger)"]
         CASCADE["Cascade<br/>Policy"]
     end
@@ -132,9 +134,9 @@ flowchart LR
 
 ## Trigger Sources
 
-- **Scheduled**: Control's cron (e.g., weekly refresh)
+- **Scheduled**: Control's cron touches facts (for example, a weekly scan); `Fact.max_staleness_hours` is checked then
 - **Manual**: API call to `/v1/control/trigger`
-- **Cascade**: Upstream fact became stale
+- **Cascade**: Upstream fact changed or emitted an explicit signal
 
 > **Implementation Status:** TierScheduler orchestrates scans and DRS calls. Currently uses direct Python method calls, not SQS queues. SNS events planned for Phase 3.
 
@@ -248,7 +250,7 @@ flowchart LR
 | `fact.created` | `_on_fact_created()` | ✅ Looks up policies, triggers compute |
 | `fact.updated` | `_on_fact_updated()` | ✅ Falls back to on_created policies |
 | `fact.removed` | `_on_fact_removed()` | ✅ Triggers downstream recomputation |
-| `fact.stale` | `_on_fact_stale()` | ⏳ Logs only (refresh not implemented) |
+| `fact.stale` | `_on_fact_stale()` | ⏳ Explicit signal logs only; no autonomous refresh |
 
 ## Policy Structure
 
@@ -395,7 +397,7 @@ sequenceDiagram
     participant REASON as Reasoning
     participant DATA as Data Service
 
-    Note over CTRL: 1. Scheduled refresh
+    Note over CTRL: 1. Scheduled touch requests refresh
     CTRL->>DRS: refresh o_html
 
     Note over DRS: 2. Fetch HTML

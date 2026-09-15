@@ -381,7 +381,7 @@ class GraduationEngine:
         skill_name: str,
         fact_key: str,
         scope: FactScope,
-        ttl_days: int,
+        max_staleness_hours: int | None,
         validation_results: list[ValidationResult],
     ) -> GraduationResult:
         """
@@ -451,7 +451,7 @@ Claude: Done.
 Created: SITEMAP_STATUS (s_sitemap_status) at site scope
 Producer: SitemapStatusProducer
 Consumes: SITE_STRUCTURE
-TTL: 7 days
+Fact.max_staleness_hours: 168 (eligible when touched after 7 days)
 
 It's in the DAG now. Run `uv run python -m scripts.validate_sitemap --limit 100`
 to validate on more sites.

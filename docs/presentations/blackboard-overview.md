@@ -2,7 +2,7 @@
 
 ## Unified Agentic System for ASO & LLMO
 
-> **Last Updated:** 2026-02-05
+> **Last Updated:** 2026-09-15
 > **Implementation Status:** ~85% of core infrastructure complete. See [implementation-plan.md](../implementation-plan.md)
 
 ---
@@ -266,13 +266,23 @@ Key insight: Separate **what we know** (facts) from **how we compute** (determin
 
 **Three Fact Types:**
 
-| Type | Description | TTL | Example |
-|------|-------------|-----|---------|
-| **Observation** | Raw data from external sources | 1-7 days | HTML, screenshot, CWV metrics |
-| **Derived** | Intermediate AI analysis | 1-30 days | page_type, brand_profile |
-| **Assertion** | Final recommendations | 1-7 days | "Add alt text to hero image" |
+| Type | Description | Typical max staleness | Example |
+|------|-------------|-----------------------|---------|
+| **Observation** | Raw data from external sources | 24-168h | HTML, screenshot, CWV metrics |
+| **Derived** | Intermediate AI analysis | 24-720h | page_type, brand_profile |
+| **Assertion** | Final recommendations | 24-168h | "Add alt text to hero image" |
 
 Facts are **typed**, **scoped**, and **have dependencies**.
+
+`Fact.max_staleness_hours` is a lazy freshness contract:
+
+| Value | Behavior when the fact is touched |
+|-------|-----------------------------------|
+| Positive `N` | Age makes the fact eligible only when it is touched after `N` hours |
+| `0` | Never fresh, so always eligible; change detection can still suppress unnecessary work |
+| `None` | Never time-stale; recompute only when forced or signaled |
+
+The threshold does not delete facts or autonomously refresh them. `ttl_hours` is only a deprecated compatibility alias.
 
 ---
 
@@ -324,7 +334,7 @@ flowchart RL
 
 | Benefit | Description | Status |
 |---------|-------------|--------|
-| **~95% compute savings** | Only recompute when inputs change | Infrastructure ready* |
+| **~95% compute savings** | Recompute only when a touch makes work eligible and change detection does not suppress it | Infrastructure ready* |
 | **~80% LLM cost savings** | Shared facts eliminate duplicates | Infrastructure ready* |
 | **Cross-oppie awareness** | Agents can see all page/site facts | ✅ Implemented |
 | **Holistic opportunities** | No contradictory suggestions | ✅ Implemented |
@@ -332,7 +342,7 @@ flowchart RL
 | **Faster DX** | Test individual facts, not whole pipeline | ✅ Implemented |
 | **Data lineage** | Track where every fact came from | ✅ Implemented |
 
-*Cost savings infrastructure deployed (TTL caching, change detection with 8 algorithms, shared fact registry). Actual savings require production metrics - not yet measured.
+*Cost savings infrastructure deployed (lazy max-staleness checks, change detection with 8 algorithms, shared fact registry). Actual savings require production metrics - not yet measured.
 
 ---
 
@@ -491,12 +501,12 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph Blackboard["Blackboard (Cached Facts)"]
-        HTML[o_html<br/>TTL: 7d]
-        SS[o_screenshot<br/>TTL: 7d]
-        WT[f_website_type<br/>TTL: 30d]
-        PT[f_page_type<br/>TTL: 30d]
-        PI[f_page_intent<br/>TTL: 30d]
-        VS[f_visual_analysis<br/>TTL: 7d]
+        HTML[o_html<br/>Max stale: 7d]
+        SS[o_screenshot<br/>Max stale: 7d]
+        WT[f_website_type<br/>Max stale: 30d]
+        PT[f_page_type<br/>Max stale: 30d]
+        PI[f_page_intent<br/>Max stale: 30d]
+        VS[f_visual_analysis<br/>Max stale: 7d]
     end
 
     subgraph Agent["HOTLCTR Agent"]
@@ -522,8 +532,8 @@ flowchart LR
 
 🟡 = Cached/Shared
 
-| Fact | Scope | TTL | Also used by |
-|------|-------|-----|--------------|
+| Fact | Scope | Max staleness | Also used by |
+|------|-------|---------------|--------------|
 | o_html | page | 7d | 8 agents |
 | o_screenshot | page | 7d | 5 agents |
 | f_website_type | site | 30d | 5 agents |
@@ -575,7 +585,7 @@ flowchart LR
     end
 
     subgraph Blackboard["Blackboard (PG + CH)"]
-        SQS --> OBS[o_llm_response<br/>TTL: 7d]
+        SQS --> OBS[o_llm_response<br/>Max stale: 7d]
         OBS --> CITE[f_citation]
         OBS --> MENTION[f_brand_mention]
         CITE --> SCORE[f_visibility]
@@ -597,13 +607,13 @@ flowchart LR
 
 🟡 = Cached/Shared
 
-| Fact | Scope | TTL | Reuse |
-|------|-------|-----|-------|
+| Fact | Scope | Max staleness | Reuse |
+|------|-------|---------------|-------|
 | o_llm_response | prompt+provider+region | 7d | Shared if same prompt text (rare across brands) |
-| f_citation | brand+prompt+provider | ∞ | Deterministic - never recompute |
-| f_brand_mention | brand+prompt+provider | ∞ | Same input = same output |
-| f_visibility | brand+prompt+provider | ∞ | Deterministic formula |
-| a_presence_daily | brand+date | 1d | Refreshed daily, queryable |
+| f_citation | brand+prompt+provider | `None` | Deterministic; force-or-signal-only |
+| f_brand_mention | brand+prompt+provider | `None` | Same input = same output; force-or-signal-only |
+| f_visibility | brand+prompt+provider | `None` | Deterministic formula; force-or-signal-only |
+| a_presence_daily | brand+date | 1d | Eligible when touched after 1 day; queryable |
 
 *Prompt sources: customer-curated (brand-specific), Ahrefs (brand-specific), AI-generated (global/per-industry → shared across brands)*
 

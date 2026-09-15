@@ -167,15 +167,21 @@ Estimated runtime: ~28-32 min.
 
 **Show on screen:**
 
-1. Open a real producer — `app/agents/facts/producers/page_classification.py`:
+1. Open a real producer and its fact definition:
    ```python
+   PAGE_CLASSIFICATION = Fact(
+       key="d_page_classification",
+       scope="page",
+       max_staleness_hours=168,
+       schema=PageClassification,
+   )
+
    @consumes(HTML_CONTENT)
    @produces(PAGE_CLASSIFICATION, schema=PageClassification)
    class PageClassificationProducer(FactProducer):
        fact = PAGE_CLASSIFICATION
-       ttl_hours = 168  # 7 days
    ```
-   "Without reading any docs, the AI knows: input is HTML, output is page classification, schema is enforced, TTL is 7 days."
+   "Without reading any docs, the AI knows: input is HTML, output is page classification, schema is enforced, and age makes the fact eligible when touched after 7 days. Changed inputs can invalidate it sooner."
 
 2. Show the naming convention:
    ```
@@ -208,7 +214,7 @@ Estimated runtime: ~28-32 min.
    O_CWV_METRICS = Observation(
        key="o_cwv_metrics",
        scope="page",
-       ttl_hours=24,
+       max_staleness_hours=24,
        source=PSI,
        schema=CWVMetricsOutput,
        default_change_detection=ChangeDetection(
@@ -217,7 +223,9 @@ Estimated runtime: ~28-32 min.
        ),
    )
    ```
-   "Key, scope, TTL, schema, change detection — all typed. Enums, not strings. No magic values."
+   "Key, scope, max staleness, schema, change detection — all typed. Enums, not strings. No magic values."
+
+   "`Fact.max_staleness_hours` controls time eligibility, not guaranteed recomputation. An input-aware planner can invalidate a positive-`N` fact before its age window. At runtime, `input_fingerprint` grants permission for expensive work when inputs changed and provides a cheap no-op when they did not; an unchanged skip refreshes a positive-`N` fact's freshness clock. `0` is always eligible but can still diff-skip. `None` opts out of automatic time- and input-based invalidation, so only a force or signal makes it eligible. The setting never deletes facts or triggers autonomous refresh; `ttl_hours` is only a deprecated compatibility alias."
 
 6. Show the live DAG at `http://localhost:8080/bb/live-code.html`:
    "The DAG is auto-generated from the decorators. This is how we verify code matches spec — the visualization IS the validation."
@@ -227,7 +235,7 @@ Estimated runtime: ~28-32 min.
 Enums           → valid values (no magic strings)
 Pydantic models → field types, defaults, constraints, descriptions
 Generics        → TypedFactProducer[T] enforces return type
-Fact defs       → scope, TTL, schema, change detection — all typed
+Fact defs       → scope, max staleness, schema, change detection — all typed
 Decorators      → @consumes/@produces on top of it all
 ```
 

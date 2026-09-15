@@ -113,7 +113,15 @@ TMS (Doyle, 1979) tracks **why** each belief is held. Every derived belief has a
 
 The blackboard is a system of materialized views where the "query" is an LLM call instead of SQL. Incremental view maintenance is an active database research area — Oracle, Postgres, and Snowflake each have different refresh strategies. The cascade system solves the same problem.
 
-`Fact.max_staleness_hours` is specifically lazy: a positive value makes a fact eligible only when it is touched after that many hours, `0` makes every touch eligible, and `None` means age alone never makes it eligible. It does not delete facts or schedule refreshes. Explicit schedules and signals decide when to touch facts, while change detection can suppress unnecessary work after an eligibility check. `ttl_hours` remains only as a deprecated compatibility alias.
+`Fact.max_staleness_hours` decides **time eligibility**, not guaranteed recomputation:
+
+| Setting or signal | Effect |
+|---|---|
+| Positive `N` | Age makes the fact eligible when touched after `N` hours; input-aware planner invalidation can make it eligible sooner |
+| `0` | Every touch is eligible, but runtime input diffing can still skip unchanged work |
+| `None` | Excluded from automatic time- and input-based invalidation; only an explicit force or signal makes it eligible |
+
+After eligibility, the runtime compares the current inputs with the stored `input_fingerprint`. A changed fingerprint permits the expensive producer to run; a matching fingerprint is a cheap no-op. For positive `N`, that unchanged-input skip refreshes the freshness clock so each subsequent touch does not repeat the same check immediately. The field does not delete facts or schedule refreshes, and `ttl_hours` remains only as a deprecated compatibility alias.
 
 ---
 

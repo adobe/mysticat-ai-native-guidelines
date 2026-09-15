@@ -181,7 +181,7 @@ Estimated runtime: ~28-32 min.
    class PageClassificationProducer(FactProducer):
        fact = PAGE_CLASSIFICATION
    ```
-   "Without reading any docs, the AI knows: input is HTML, output is page classification, schema is enforced, and the fact becomes eligible for recomputation when touched after 7 days."
+   "Without reading any docs, the AI knows: input is HTML, output is page classification, schema is enforced, and age makes the fact eligible when touched after 7 days. Changed inputs can invalidate it sooner."
 
 2. Show the naming convention:
    ```
@@ -225,7 +225,7 @@ Estimated runtime: ~28-32 min.
    ```
    "Key, scope, max staleness, schema, change detection — all typed. Enums, not strings. No magic values."
 
-   "`Fact.max_staleness_hours` is a lazy threshold: positive `N` becomes eligible only when touched after `N` hours, `0` is always eligible, and `None` is force-or-signal-only. It does not delete facts or trigger autonomous refresh. `ttl_hours` is only a deprecated compatibility alias."
+   "`Fact.max_staleness_hours` controls time eligibility, not guaranteed recomputation. An input-aware planner can invalidate a positive-`N` fact before its age window. At runtime, `input_fingerprint` grants permission for expensive work when inputs changed and provides a cheap no-op when they did not; an unchanged skip refreshes a positive-`N` fact's freshness clock. `0` is always eligible but can still diff-skip. `None` opts out of automatic time- and input-based invalidation, so only a force or signal makes it eligible. The setting never deletes facts or triggers autonomous refresh; `ttl_hours` is only a deprecated compatibility alias."
 
 6. Show the live DAG at `http://localhost:8080/bb/live-code.html`:
    "The DAG is auto-generated from the decorators. This is how we verify code matches spec — the visualization IS the validation."

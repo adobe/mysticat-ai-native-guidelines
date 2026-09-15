@@ -67,7 +67,7 @@ Bottom-up dominates because the "cache miss" cost is too high for interactive us
 | `make` | SiteProcessor + ExecutionPlanBuilder |
 | Incremental rebuild | Cascade invalidation |
 | Build cache | Fact store |
-| `make clean` | TTL expiration / full refresh |
+| `make clean` | Forced recomputation (independent of age) |
 | CI scheduler | SiteScheduler (leaderless, SKIP LOCKED claiming) |
 | `make -j8` | TaskWorker distributed execution (scan_site tasks) / PlanExecutor `asyncio.gather()` (per-fact, in-process) |
 | Content hash (Bazel) | Change detection |
@@ -108,12 +108,12 @@ TMS (Doyle, 1979) tracks **why** each belief is held. Every derived belief has a
 | `REFRESH MATERIALIZED VIEW` | SiteScheduler triggering scans → producers re-run |
 | `REFRESH ... CONCURRENTLY` | Change detection (update only if result differs) |
 | Incremental view maintenance | Cascade policies |
-| Stale view | Fact past TTL |
+| Stale view | Fact eligible when touched after `Fact.max_staleness_hours` |
 | View-on-view dependency | DAG: derived fact depending on another derived fact |
 
 The blackboard is a system of materialized views where the "query" is an LLM call instead of SQL. Incremental view maintenance is an active database research area — Oracle, Postgres, and Snowflake each have different refresh strategies. The cascade system solves the same problem.
 
-The change detection debate (8 algorithms) maps to "when to refresh a materialized view" — eagerly, lazily, or periodically. The blackboard supports all three.
+`Fact.max_staleness_hours` is specifically lazy: a positive value makes a fact eligible only when it is touched after that many hours, `0` makes every touch eligible, and `None` means age alone never makes it eligible. It does not delete facts or schedule refreshes. Explicit schedules and signals decide when to touch facts, while change detection can suppress unnecessary work after an eligibility check. `ttl_hours` remains only as a deprecated compatibility alias.
 
 ---
 

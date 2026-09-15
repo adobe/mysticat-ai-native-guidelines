@@ -87,7 +87,7 @@ class Fact:
 | **Edges** | Derived-from (dependency) | Next-step (sequence) |
 | **Triggers** | Data change events | Step completion |
 | **Blocking** | No (async cascade) | Yes (approval gates) |
-| **Purpose** | Keep data fresh | Coordinate human + agent |
+| **Purpose** | React to data changes and explicit touches | Coordinate human + agent |
 
 **However:** ASO already integrates with **WorkFront** for human approval workflows.
 
@@ -173,7 +173,7 @@ class Fact:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-The "5-minute loop" is the **Control Service** scheduling fact refreshes - that's deterministic, not RL.
+The "5-minute loop" is the **Control Service** scheduling touches. It is deterministic, not RL, and distinct from `Fact.max_staleness_hours`, which only determines lazy recomputation eligibility when a fact is touched.
 
 ---
 
@@ -486,7 +486,7 @@ MetaMemoryManager builds context:
 
 4. **Memory layer classification:** Who decides which fact type goes in which layer? Hard-coded mapping or configurable?
 
-5. **Authority override:** When a human assertion expires, does agent-derived automatically take over, or require confirmation?
+5. **Authority override:** When a human assertion is superseded or explicitly invalidated, does agent-derived automatically take over, or require confirmation?
 
 6. **Cross-pollination governance:** If training produces new policies, what's the review/deploy process?
 
